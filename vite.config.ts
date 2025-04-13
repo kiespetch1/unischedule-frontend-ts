@@ -14,6 +14,7 @@ export default defineConfig({
         jsxRuntime: "classic",
         svgo: true,
         svgoConfig: { floatPrecision: 4 },
+        replaceAttrValues: { "#000": "currentColor" },
         plugins: ["@svgr/plugin-svgo", "@svgr/plugin-jsx"],
       },
     }),

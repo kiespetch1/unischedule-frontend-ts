@@ -7,3 +7,42 @@
         font-feature-settings: 'pnum' on, 'lnum' on;
     }
 }
+
+@layer components {
+    .switch-inner-untoggled {
+        display: flex;
+        width: 153px;
+        height: 37px;
+        position: relative;
+        transition: transform 0.2s ease-in-out;
+        background: #CDCDCD;
+        border-radius: 20px;
+        z-index: 1;
+    }
+
+    .switch-inner-toggled {
+        display: flex;
+        width: 153px;
+        height: 37px;
+        position: relative;
+        transition: transform 0.2s ease-in-out;
+        background: #CDCDCD;
+        border-radius: 20px;
+        z-index: 1;
+        transform: translateX(153px);
+    }
+}
+
+@theme {
+    --color-iateblue: #0966BB;
+    --animate-disable: disable 0.2s ease-in-out forwards;
+
+    @keyframes disable {
+        0% {
+            filter: grayscale(0%) contrast(100%) brightness(100%);
+        }
+        100% {
+            filter: grayscale(100%) contrast(50%) brightness(175%);
+        }
+    }
+}

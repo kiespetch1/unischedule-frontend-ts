@@ -1,8 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router-dom"
 import { Routes } from "./routes.ts"
 import { Layout } from "../ui/components/Layout/Layout.tsx"
-import { SchedulePage } from "../ui/SchedulePage.tsx"
-import { HomePage } from "../ui/HomePage.tsx"
+import { SchedulePage } from "../ui/pages/SchedulePage.tsx"
+import { HomePage } from "../ui/pages/HomePage.tsx"
 
 export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
   {

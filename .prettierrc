@@ -7,5 +7,7 @@
   "bracketSpacing": true,
   "objectWrap": "collapse",
   "bracketSameLine": true,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./resources/css/app.css"
 }
