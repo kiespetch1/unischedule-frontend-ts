@@ -13,7 +13,7 @@ export const GroupSelector: FC<GroupSelectorProps> = ({ labelText, groupText }) 
       <div className="flex min-h-[47px] flex-row items-center space-x-1">
         <div className="font-raleway text-3xl font-semibold">{groupText}</div>
         <a href="/groups" aria-label="Сменить группу">
-          <Switch className="rotate-45 text-red-500" width="20" height="20" color="#757575" />
+          <Switch className="rotate-45" width="20" height="20" color="#757575" />
         </a>
       </div>
     </div>

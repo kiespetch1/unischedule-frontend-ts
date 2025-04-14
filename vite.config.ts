@@ -12,10 +12,7 @@ export default defineConfig({
       svgrOptions: {
         typescript: false,
         jsxRuntime: "classic",
-        svgo: true,
-        svgoConfig: { floatPrecision: 4 },
-        replaceAttrValues: { "#000": "currentColor" },
-        plugins: ["@svgr/plugin-svgo", "@svgr/plugin-jsx"],
+        replaceAttrValues: { "#000": "{props.color}" },
       },
     }),
   ],

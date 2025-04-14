@@ -13,7 +13,17 @@
     "types": [
       "vite-plugin-svgr/client"
     ],
-
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+      "@components/*": [
+        "./src/ui/components/*"
+        ],
+    },
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
