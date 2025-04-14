@@ -5,7 +5,7 @@ import User from "@assets/user.svg?react"
 
 export const Header: FC = () => {
   return (
-    <header className="sticky top-0 mb-6 box-content flex h-[90px] items-center border-b-2 border-zinc-300 bg-zinc-50">
+    <header className="sticky top-0 mb-6 box-content flex h-[90px] items-center border-b-2 border-zinc-300 bg-zinc-100">
       <ul className="flex w-full flex-row justify-between px-8 *:flex">
         <li>
           <a className="flex flex-row items-center space-x-8" href="/home" aria-label="На главную">

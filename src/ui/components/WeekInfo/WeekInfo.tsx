@@ -1,10 +1,10 @@
 ﻿import { WeeksText } from "./WeeksText.tsx"
-import { WeekType } from "@/types/classes-types.ts"
+import { WeekTypeStrict } from "@/types/classes-types.ts"
 import { FC } from "react"
 
 export interface WeekInfoProps {
-  currentWeekType: WeekType
-  setCurrentWeekType: (weekType: WeekType) => void
+  currentWeekType: WeekTypeStrict
+  setCurrentWeekType: (weekType: WeekTypeStrict) => void
 }
 
 export const WeekInfo: FC<WeekInfoProps> = ({ currentWeekType, setCurrentWeekType }) => {

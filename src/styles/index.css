@@ -35,6 +35,7 @@
 
 @theme {
     --color-iateblue: #0966BB;
+    --color-whiteish: #f2f2f2;
     --animate-disable: disable 0.2s ease-in-out forwards;
 
     @keyframes disable {
