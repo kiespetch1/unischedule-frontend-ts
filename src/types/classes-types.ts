@@ -7,6 +7,11 @@ export interface GroupModelCollectionResult {
   total_count: number
 }
 
+export interface GroupModelResult {
+  data: GroupModel
+  total_count: number
+}
+
 export interface GroupModel {
   id: string
   name: string
@@ -53,14 +58,15 @@ export interface DayModel {
   classes?: ClassModel[] | null
 }
 
-export type DayOfWeek =
-  | "sunday"
-  | "monday"
-  | "tuesday"
-  | "wednesday"
-  | "thursday"
-  | "friday"
-  | "saturday"
+export enum DayOfWeek {
+  Sunday = "sunday",
+  Monday = "monday",
+  Tuesday = "tuesday",
+  Wednesday = "wednesday",
+  Thursday = "thursday",
+  Friday = "friday",
+  Saturday = "saturday",
+}
 
 export interface ClassModel {
   id: string

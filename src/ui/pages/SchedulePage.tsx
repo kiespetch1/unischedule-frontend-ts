@@ -7,6 +7,7 @@ import { LastAnnouncementBlock } from "@components/LastNotificationBlock/LastAnn
 export const SchedulePage = () => {
   const [currentWeekType, setCurrentWeekType] = useState<WeekTypeStrict>("even")
   const [currentSubgroup, setCurrentSubgroup] = useState<SubgroupStrict>("first")
+
   return (
     <div className="mx-8 flex flex-col items-start space-y-2">
       <WeekOptions
