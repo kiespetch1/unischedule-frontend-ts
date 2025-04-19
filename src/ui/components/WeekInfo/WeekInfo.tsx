@@ -1,5 +1,5 @@
 ﻿import { WeeksText } from "./WeeksText.tsx"
-import { WeekTypeStrict } from "@/types/classes-types.ts"
+import { WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.ts"
 import { FC } from "react"
 
 export interface WeekInfoProps {

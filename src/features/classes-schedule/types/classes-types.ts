@@ -2,14 +2,22 @@
 
 export type SubgroupStrict = "first" | "second"
 
-export interface GroupModelCollectionResult {
-  data: GroupModel[] | null
-  total_count: number
-}
+export type AnnouncementPriority = "normal" | "high" | "very_high"
 
-export interface GroupModelResult {
-  data: GroupModel
-  total_count: number
+export type WeekType = "every" | "even" | "odd"
+
+export type Subgroup = "none" | "first" | "second" | "third"
+
+export type LocationType = "irl" | "online"
+
+export enum DayOfWeek {
+  Sunday = "sunday",
+  Monday = "monday",
+  Tuesday = "tuesday",
+  Wednesday = "wednesday",
+  Thursday = "thursday",
+  Friday = "friday",
+  Saturday = "saturday",
 }
 
 export interface GroupModel {
@@ -21,8 +29,6 @@ export interface GroupModel {
   last_announcement?: AnnouncementModel
   weeks: WeekModel[]
 }
-
-export type AnnouncementPriority = "normal" | "high" | "very_high"
 
 export interface AnnouncementModel {
   id: string
@@ -48,7 +54,7 @@ export interface WeekModel {
   group_id: string
   type: WeekType
   subgroup: Subgroup
-  days?: DayModel[] | null
+  days: DayModel[]
 }
 
 export interface DayModel {
@@ -56,16 +62,6 @@ export interface DayModel {
   day_of_week: DayOfWeek
   week_id: string
   classes?: ClassModel[] | null
-}
-
-export enum DayOfWeek {
-  Sunday = "sunday",
-  Monday = "monday",
-  Tuesday = "tuesday",
-  Wednesday = "wednesday",
-  Thursday = "thursday",
-  Friday = "friday",
-  Saturday = "saturday",
 }
 
 export interface ClassModel {
@@ -81,18 +77,12 @@ export interface ClassModel {
   teacher: TeacherModel
 }
 
-export type WeekType = "every" | "even" | "odd"
-
-export type Subgroup = "none" | "first" | "second" | "third"
-
 export interface LocationModel {
   id: string
   name: string
   link?: string | null
   location_type: LocationType
 }
-
-export type LocationType = "irl" | "online"
 
 export interface TeacherModel {
   id: string

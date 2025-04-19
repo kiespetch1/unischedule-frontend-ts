@@ -1,6 +1,6 @@
 import { FC } from "react"
 import clsx from "clsx"
-import { WeekTypeStrict } from "@/types/classes-types.ts"
+import { WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.ts"
 
 export interface WeeksTextProps {
   startYear?: number

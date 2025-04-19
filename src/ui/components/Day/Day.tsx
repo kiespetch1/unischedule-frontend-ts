@@ -1,15 +1,18 @@
 ﻿import { FC } from "react"
-import { DayModel, DayOfWeek } from "@/types/classes-types.ts"
+import { DayModel, DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
 import Dot from "@components/Dot.tsx"
 
 export interface DayProps {
-  dayData: DayModel
+  dayData: DayModel | undefined
 }
 
 export const Day: FC<DayProps> = ({ dayData }) => {
   return (
     <div className="flex flex-col">
-      <DayHeader dayOfWeek={dayData.day_of_week} classesCount={dayData.classes?.length || 0} />
+      <DayHeader
+        dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
+        classesCount={dayData?.classes?.length || 0}
+      />
     </div>
   )
 }

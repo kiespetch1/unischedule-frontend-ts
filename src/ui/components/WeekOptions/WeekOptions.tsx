@@ -4,7 +4,7 @@ import EvenWeek from "@assets/even-week.svg?react"
 import OddWeek from "@assets/odd-week.svg?react"
 import { Toggle } from "./Toggle.tsx"
 import { GroupSelector } from "./GroupSelector.tsx"
-import { SubgroupStrict, WeekTypeStrict } from "@/types/classes-types.ts"
+import { SubgroupStrict, WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.ts"
 import { FC } from "react"
 
 export interface WeekOptionsProps {
