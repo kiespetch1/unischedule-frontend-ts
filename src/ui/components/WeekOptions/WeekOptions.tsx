@@ -43,7 +43,7 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
   }
 
   return (
-    <div className="flex flex-row items-center justify-center space-x-8">
+    <div className="flex flex-row items-center justify-start space-x-8">
       <GroupSelector labelText="Группа" groupText="ИВТ-Б21" />
       <Toggle
         labelText="Неделя"

@@ -4,6 +4,7 @@ import Dot from "@components/Dot.tsx"
 import Edit from "@assets/edit.svg?react"
 import { TooltipWrapper } from "@/components/ui/TooltipWrapper.tsx"
 import { Class } from "@components/Day/Class.tsx"
+import { getPluralForm, getRussianDayName } from "@/utils/formatters.ts"
 
 export interface DayProps {
   dayData: DayModel | undefined
@@ -28,30 +29,12 @@ interface DayHeaderProps {
 }
 
 export const DayHeader: FC<DayHeaderProps> = ({ dayOfWeek, classesCount }) => {
-  const getRussianDayName = (dayName: DayOfWeek) => {
-    switch (dayName) {
-      case DayOfWeek.Monday:
-        return "Понедельник"
-      case DayOfWeek.Tuesday:
-        return "Вторник"
-      case DayOfWeek.Wednesday:
-        return "Среда"
-      case DayOfWeek.Thursday:
-        return "Четверг"
-      case DayOfWeek.Friday:
-        return "Пятница"
-      case DayOfWeek.Saturday:
-        return "Суббота"
+  const getClassesCount = (count: number) => {
+    if (count == 0) {
+      return "выходной"
+    } else {
+      return `${count} ${getPluralForm(count, ["пара", "пары", "пар"])}`
     }
-  }
-
-  const getNoun = (value: number, words: string[]) => {
-    value = Math.abs(value) % 100
-    const num = value % 10
-    if (value > 10 && value < 20) return words[2]
-    if (num > 1 && num < 5) return words[1]
-    if (num === 1) return words[0]
-    return words[2]
   }
 
   return (
@@ -62,7 +45,7 @@ export const DayHeader: FC<DayHeaderProps> = ({ dayOfWeek, classesCount }) => {
         </div>
         <Dot colorClass={"bg-zinc-100"} sizeClass={"w-1 h-1"} />
         <div className="font-raleway text-[27px] font-light text-zinc-100">
-          {classesCount} {getNoun(classesCount, ["пара", "пары", "пар"])}
+          {getClassesCount(classesCount)}
         </div>
       </div>
       <TooltipWrapper message="Редактировать день">
@@ -87,7 +70,7 @@ const ClassesList: FC<ClassesListProps> = ({ dayData }) => {
     }
 
     return classes.map((classData, index) => (
-      <Class key={classData.id} isFirst={index === 0} isWeekend={false} />
+      <Class key={classData.id} data={classData} isFirst={index === 0} isWeekend={false} />
     ))
   }
 

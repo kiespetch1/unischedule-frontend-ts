@@ -6,6 +6,8 @@ export type AnnouncementPriority = "normal" | "high" | "very_high"
 
 export type WeekType = "every" | "even" | "odd"
 
+export type ClassType = "lecture" | "practice" | "labwork"
+
 export type Subgroup = "none" | "first" | "second" | "third"
 
 export type LocationType = "irl" | "online"
@@ -27,6 +29,7 @@ export interface GroupModel {
   has_subgroups: boolean
   has_fixed_subgroups: boolean
   last_announcement: AnnouncementModel | null
+  last_academic_week_number: number
   weeks: WeekModel[]
 }
 
@@ -69,6 +72,7 @@ export interface ClassModel {
   name: string
   started_at: string
   finished_at: string
+  type: ClassType
   week_type: WeekType
   subgroup: Subgroup
   is_cancelled: boolean
@@ -81,7 +85,7 @@ export interface LocationModel {
   id: string
   name: string
   link?: string | null
-  location_type: LocationType
+  type: LocationType
 }
 
 export interface TeacherModel {

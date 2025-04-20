@@ -1,4 +1,5 @@
 import { isNullableOrEmpty } from "@/utils/equality-comparers.ts"
+import { DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
 
 export type UnformattedSearchParams = Record<
   string,
@@ -20,4 +21,44 @@ export const formatSearchParams = (params: UnformattedSearchParams) => {
     }
   }
   return searchParam
+}
+
+export const trimEndChars = (string: string, count: number): string => {
+  if (string.length <= count) {
+    return ""
+  }
+  return string.substring(0, string.length - count)
+}
+
+export function trimStartChars(str: string, count: number): string {
+  if (count <= 0) {
+    return ""
+  }
+  return str.length > count ? str.slice(0, count) : str
+}
+
+export const getPluralForm = (value: number, words: string[]) => {
+  value = Math.abs(value) % 100
+  const num = value % 10
+  if (value > 10 && value < 20) return words[2]
+  if (num > 1 && num < 5) return words[1]
+  if (num === 1) return words[0]
+  return words[2]
+}
+
+export const getRussianDayName = (dayName: DayOfWeek) => {
+  switch (dayName) {
+    case DayOfWeek.Monday:
+      return "Понедельник"
+    case DayOfWeek.Tuesday:
+      return "Вторник"
+    case DayOfWeek.Wednesday:
+      return "Среда"
+    case DayOfWeek.Thursday:
+      return "Четверг"
+    case DayOfWeek.Friday:
+      return "Пятница"
+    case DayOfWeek.Saturday:
+      return "Суббота"
+  }
 }
