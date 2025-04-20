@@ -20,8 +20,11 @@ export const SchedulePage = () => {
         setCurrentWeekType={setCurrentWeekType}
       />
       <WeekInfo currentWeekType={currentWeekType} setCurrentWeekType={setCurrentWeekType} />
-      <LastAnnouncementBlock message="вассап кони" />
-      <Day dayData={group && group.weeks[0].days[0]} />
+      <LastAnnouncementBlock message={group && group.last_announcement?.message} />
+
+      <div className="mt-4 flex flex-row flex-wrap items-start justify-evenly space-x-3 space-y-4">
+        {group?.weeks[0]?.days.map(day => <Day key={day.id} dayData={day} />)}
+      </div>
     </div>
   )
 }

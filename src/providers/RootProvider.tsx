@@ -2,6 +2,7 @@
 import { FC, PropsWithChildren } from "react"
 import { ToasterProvider } from "@/providers/ToasterProvider.tsx"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { TooltipProvider } from "@/components/ui/tooltip.tsx"
 
 const queryClient = new QueryClient()
 
@@ -9,8 +10,10 @@ export const RootProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <ToasterProvider/>
-      {children}
+      <TooltipProvider>
+        <ToasterProvider />
+        {children}
+      </TooltipProvider>
     </QueryClientProvider>
   )
 }

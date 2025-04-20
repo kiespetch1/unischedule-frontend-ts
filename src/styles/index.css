@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+@import "./shadcn.css";
 
 @layer base {
     .font-raleway {
@@ -36,6 +37,8 @@
 @theme {
     --color-iateblue: #0966BB;
     --color-whiteish: #f2f2f2;
+    --color-zinc-120: oklch(95.53% 0.00175 286.36);
+    --color-zinc-150: oklch(94.35% 0.0025 286.35);
     --animate-disable: disable 0.2s ease-in-out forwards;
 
     @keyframes disable {

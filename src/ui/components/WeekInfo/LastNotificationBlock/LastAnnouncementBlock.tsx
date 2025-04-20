@@ -3,7 +3,7 @@ import ExpandTriangle from "@assets/expand-triangle.svg?react"
 import clsx from "clsx"
 
 export interface LastAnnouncementBlockProps {
-  message: string
+  message: string | undefined
 }
 
 export const LastAnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ message }) => {
@@ -12,6 +12,10 @@ export const LastAnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ message 
   const finalContentClass = clsx(contentClass, !isOpen ? "hidden" : undefined)
   const triangleClass = "transition duration-300 ease-in-out"
   const finalTriangleClass = clsx(triangleClass, isOpen ? "rotate-180" : undefined)
+
+  if (!message) {
+    return null
+  }
 
   return (
     <div className="flex flex-col space-y-px">
@@ -24,9 +28,9 @@ export const LastAnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ message 
           </div>
           <ExpandTriangle className={finalTriangleClass} />
         </button>
-        <div className="font-raleway cursor-pointer text-lg font-normal text-neutral-500">
+        <button className="font-raleway cursor-pointer text-lg font-normal text-neutral-500">
           посмотреть другие объявления
-        </div>
+        </button>
       </div>
       <div className={finalContentClass}>{message}</div>
     </div>

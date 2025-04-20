@@ -26,7 +26,7 @@ export interface GroupModel {
   grade: number
   has_subgroups: boolean
   has_fixed_subgroups: boolean
-  last_announcement?: AnnouncementModel
+  last_announcement: AnnouncementModel | null
   weeks: WeekModel[]
 }
 

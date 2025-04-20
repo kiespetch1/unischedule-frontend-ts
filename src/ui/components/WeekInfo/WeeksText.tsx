@@ -47,7 +47,7 @@ export const WeeksText: FC<WeeksTextProps> = ({
     const timeDiff = date.getTime() - startOfAcademicYear.getTime()
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
 
-    return Math.ceil(dayDiff / 7) + 1
+    return Math.ceil(dayDiff / 7)
   }
   const isTodayWeekEven = getTodayWeekNumber() % 2 === 0
   const weekTextClass = "font-raleway text-lg text-black"
@@ -86,12 +86,16 @@ export const WeeksText: FC<WeeksTextProps> = ({
     return new Date(date.setDate(diff))
   }
 
-  const getWeekEndDate = (offsetDays?: number): Date => {
+  const getWeekEndDate = (offsetDays = 0): Date => {
     const date = getDateWithOffset(offsetDays)
-    const day = date.getDay()
-    const diff = date.getDate() - day + 6
+    const dayOfWeek = date.getDay()
 
-    return new Date(date.setDate(diff))
+    // сколько дней двигаться до субботы
+    // для воскресенья (0) — шаг = −1 (вчера была суббота),
+    // в остальных случаях — до 6 − current
+    const daysToSaturday = dayOfWeek === 0 ? -1 : 6 - dayOfWeek
+
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate() + daysToSaturday)
   }
 
   const formatDate = (date: Date, referenceDate: Date = new Date()): string => {
@@ -110,8 +114,8 @@ export const WeeksText: FC<WeeksTextProps> = ({
   }
 
   const getWeekEndString = (offsetDays?: number): string => {
-    const endDate = getWeekEndDate(offsetDays)
     const startDate = getWeekStartDate(offsetDays)
+    const endDate = getWeekEndDate(offsetDays)
 
     return formatDate(endDate, startDate)
   }
