@@ -1,26 +1,25 @@
-import { cloneElement, FC, JSX, useState } from "react"
+import { cloneElement, FC, JSX } from "react"
 
 export interface ToggleProps {
   labelText: string
-  firstIcon: JSX.Element
-  secondIcon: JSX.Element
-  firstText: string
-  secondText: string
+  optionTexts: string[]
+  optionIcons: JSX.Element[]
   setOppositeOption: () => void
+  value: string
+  onValue: string
 }
 
 export const Toggle: FC<ToggleProps> = ({
   labelText,
-  firstIcon,
-  secondIcon,
-  firstText,
-  secondText,
-  setOppositeOption
+  optionIcons,
+  optionTexts,
+  setOppositeOption,
+  value,
+  onValue,
 }) => {
-  const [isToggled, setIsToggled] = useState(false)
+  const isToggled = value === onValue
 
   const handleToggle = () => {
-    setIsToggled(!isToggled)
     setOppositeOption()
   }
 
@@ -31,17 +30,21 @@ export const Toggle: FC<ToggleProps> = ({
         <div className="w-0 overflow-visible">
           <div className={isToggled ? "switch-inner-toggled" : "switch-inner-untoggled"}></div>
         </div>
-        <button className="toggle-inner z-20 flex h-[37px] w-[157px] cursor-pointer items-center justify-center space-x-3 rounded-[40px] transition duration-150 dark:bg-zinc-100" onClick={() => handleToggle()}>
+        <button
+          className="toggle-inner z-20 flex h-[37px] w-[157px] cursor-pointer items-center justify-center space-x-3 rounded-[40px] transition duration-150 dark:bg-zinc-100"
+          onClick={() => handleToggle()}>
           <span className={isToggled ? "animate-disable" : undefined}>
-            {cloneElement(firstIcon, { width: "20px", height: "20px" })}
+            {cloneElement(optionIcons[0], { width: "20px", height: "20px" })}
           </span>
-          <span className="font-raleway text-lg text-neutral-900">{firstText}</span>
+          <span className="font-raleway text-lg text-neutral-900">{optionTexts[0]}</span>
         </button>
-        <button className="toggle-inner z-20 flex h-[37px] w-[157px] cursor-pointer items-center justify-center space-x-3 rounded-[40px] transition duration-150 dark:bg-zinc-100" onClick={() => handleToggle()}>
+        <button
+          className="toggle-inner z-20 flex h-[37px] w-[157px] cursor-pointer items-center justify-center space-x-3 rounded-[40px] transition duration-150 dark:bg-zinc-100"
+          onClick={() => handleToggle()}>
           <span className={isToggled ? undefined : "animate-disable"}>
-            {cloneElement(secondIcon, { width: "20px", height: "20px" })}
+            {cloneElement(optionIcons[1], { width: "20px", height: "20px" })}
           </span>
-          <span className="font-raleway text-lg text-neutral-900">{secondText}</span>
+          <span className="font-raleway text-lg text-neutral-900">{optionTexts[1]}</span>
         </button>
       </div>
     </div>
