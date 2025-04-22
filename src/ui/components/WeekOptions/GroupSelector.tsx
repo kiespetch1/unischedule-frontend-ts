@@ -1,6 +1,6 @@
 import { FC } from "react"
 import Switch from "@assets/switch.svg?react"
-import { TooltipWrapper } from "@/components/ui/TooltipWrapper.tsx"
+import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { Skeleton } from "@/components/ui/skeleton.tsx"
 
 export interface GroupSelectorProps {

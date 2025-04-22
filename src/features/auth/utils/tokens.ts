@@ -8,4 +8,7 @@ export const setAccessTokenInStorage = (token: AccessToken): void =>
 export const getAccessTokenFromStorage = (): AccessToken | null =>
   JSON.parse(localStorage.getItem("access-token") ?? "null")
 
+export const getXsrfTokenFromCookie = (): string | null =>
+  document.cookie.split("; ").find(row => row.startsWith("XSRF-TOKEN" + "=")) ?? "null"
+
 export const removeAccessTokenFromStorage = (): void => localStorage.removeItem("access-token")

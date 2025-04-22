@@ -2,6 +2,7 @@ import { ApiError } from "./api-error"
 import toast from "react-hot-toast"
 import {
   getAccessTokenFromStorage,
+  getXsrfTokenFromCookie,
   isAccessTokenExpired,
   setAccessTokenInStorage,
 } from "@/features/auth/utils/tokens.ts"
@@ -12,6 +13,7 @@ export const apiFetch = async (
   init: RequestInit & { refresh?: boolean } = { refresh: true }
 ): Promise<Response> => {
   const accessToken = getAccessTokenFromStorage()
+  const xsrfToken = getXsrfTokenFromCookie()
   const doRefresh = init?.refresh === undefined || init.refresh
 
   if (doRefresh && accessToken && isAccessTokenExpired(accessToken)) {
@@ -21,6 +23,7 @@ export const apiFetch = async (
 
   const headers = new Headers(init?.headers)
   if (accessToken) headers.set("Authorization", `Bearer ${accessToken.token}`)
+  if (xsrfToken) headers.set("X-XSRF-TOKEN", xsrfToken)
 
   const response = await fetch(input, { ...init, headers }).catch(() => null)
   if (!response?.ok) {

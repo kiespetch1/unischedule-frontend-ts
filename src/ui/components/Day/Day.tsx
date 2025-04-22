@@ -2,7 +2,7 @@
 import { DayModel, DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
 import Dot from "@components/Dot.tsx"
 import Edit from "@assets/edit.svg?react"
-import { TooltipWrapper } from "@/components/ui/TooltipWrapper.tsx"
+import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { Class } from "@components/Day/Class.tsx"
 import { getPluralForm, getRussianDayName } from "@/utils/formatters.ts"
 

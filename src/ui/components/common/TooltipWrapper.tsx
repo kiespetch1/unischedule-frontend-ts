@@ -1,11 +1,13 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip.tsx"
 import { JSX, ReactNode } from "react"
 import { TooltipProps } from "@radix-ui/react-tooltip"
 
-interface TooltipWrapperProps extends TooltipProps {
+interface TooltipWrapperProps extends Omit<TooltipProps, "open" | "onOpenChange"> {
   message: ReactNode
   children: ReactNode
   disabled?: boolean
+  isOpen?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 /**
@@ -16,13 +18,22 @@ export function TooltipWrapper({
   message,
   children,
   disabled = false,
+  isOpen,
+  onOpenChange,
   ...tooltipProps
 }: TooltipWrapperProps) {
   if (disabled) {
     return <>{children}</>
   }
+
+  const controlled = typeof isOpen === "boolean"
+
   return (
-    <Tooltip {...tooltipProps}>
+    <Tooltip
+      open={controlled ? isOpen : undefined}
+      delayDuration={controlled ? 0 : undefined}
+      onOpenChange={onOpenChange}
+      {...tooltipProps}>
       <TooltipTrigger asChild>{children as JSX.Element}</TooltipTrigger>
       <TooltipContent>{message}</TooltipContent>
     </Tooltip>

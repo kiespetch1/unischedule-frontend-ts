@@ -27,8 +27,6 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
 }) => {
   const navigate = useNavigate()
   const searchParams = new URLSearchParams(location.search)
-  console.log(currentSubgroup)
-  console.log(currentWeekType)
 
   useEffect(() => {
     if (searchParams.has("subgroup")) {

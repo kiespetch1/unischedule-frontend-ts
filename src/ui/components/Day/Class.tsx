@@ -7,7 +7,7 @@ import EvenWeek from "@assets/even-week.svg?react"
 import OddWeek from "@assets/odd-week.svg?react"
 import { ClassModel, Subgroup, WeekType } from "@/features/classes-schedule/types/classes-types.ts"
 import { trimEndChars, trimStartChars } from "@/utils/formatters.ts"
-import { TooltipWrapper } from "@/components/ui/TooltipWrapper.tsx"
+import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { getRussianClassTypeName, getRussianLocationTypeName } from "@components/Day/formatters.ts"
 
 export interface ClassProps {

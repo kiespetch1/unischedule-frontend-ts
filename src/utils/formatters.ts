@@ -1,5 +1,6 @@
 import { isNullableOrEmpty } from "@/utils/equality-comparers.ts"
 import { DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
+import type { ZodIssue } from "zod"
 
 export type UnformattedSearchParams = Record<
   string,
@@ -61,4 +62,26 @@ export const getRussianDayName = (dayName: DayOfWeek) => {
     case DayOfWeek.Saturday:
       return "Суббота"
   }
+}
+
+export const getErrorMessages = (
+  errors: Array<string | { message?: string } | ZodIssue | undefined>
+): string => {
+  return errors
+    .filter((err): err is string | { message?: string } | ZodIssue => Boolean(err))
+    .map(err => {
+      if (typeof err === "string") {
+        return err
+      }
+      if (typeof err.message === "string") {
+        if (Array.isArray((err as ZodIssue).path) && (err as ZodIssue).path.length > 0) {
+          const zi = err as ZodIssue
+          return `${zi.message}`
+        }
+        return err.message
+      }
+      return JSON.stringify(err)
+    })
+    .filter(Boolean)
+    .join(", ")
 }

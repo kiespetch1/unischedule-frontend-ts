@@ -15,11 +15,11 @@ export const Footer: FC = () => {
         </div>
         <div className="mx-auto flex flex-row items-center justify-start space-x-5">
           <a
-            className="font-raleway text-neutral-500"
-            href="https://yoomoney.ru/to/410017122242919">
+            href="https://yoomoney.ru/to/410017122242919"
+            className="font-raleway text-neutral-500">
             Поддержать проект
           </a>
-          <a className="font-raleway text-neutral-500" href="https://t.me/kiespetchq">
+          <a href="https://t.me/kiespetchq" className="font-raleway text-neutral-500">
             Контакты
           </a>
         </div>
