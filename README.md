@@ -1,54 +1,27 @@
-# React + TypeScript + Vite
+### Информационный сервис для высших учебных заведений
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Данный проект позволяет студентам и сотрудникам университета создавать, просматривать и управлять актуальным расписанием
+занятий, а также получать своевременные обновления по важным новостям и изменениям.
+Сервис поддерживает режимы очного и дистанционного обучения.
 
-Currently, two official plugins are available:
+#### Основные возможности
+- Составление расписания прямо в браузере по блокам
+- Поддержка персонализированного вывода расписания - в зависимости от группы, подгруппы, типа недели и прочих условий, без лишней информации
+- Центр объявлений разного вида: обычных и длительных, гибкая настройка получателей объявлений по нескольким критериям
+- Строгий аудит чувствительных изменений
+- Интеграция бота в мессенджерах для более удобного и надежного задания частых объявлений
+- Интеграция со сторонними календарями
+- Блок релевантных ссылок и других материалов необходимых для учебного процесса или отдельных предметов
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Используемые технологии (в рамках данного репозитория)
+- TypeScript
+- React 19
+- React Compiler
+- Vite
+- TailwindCSS
+- Tanstack Query
+- Tanstack React Form
+- Zod
+- Docker
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Репозиторий серверной части приложения находится по ссылке: https://github.com/kiespetch1/unischedule-backend
