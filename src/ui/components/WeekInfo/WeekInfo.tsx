@@ -3,19 +3,19 @@ import { WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.
 import { FC } from "react"
 
 export interface WeekInfoProps {
-  currentWeekType: WeekTypeStrict
-  setCurrentWeekType: (weekType: WeekTypeStrict) => void
+  selectedWeekType: WeekTypeStrict
+  setSelectedWeekType: (weekType: WeekTypeStrict) => void
 }
 
-export const WeekInfo: FC<WeekInfoProps> = ({ currentWeekType, setCurrentWeekType }) => {
+export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, setSelectedWeekType }) => {
   return (
     <div>
       <WeeksText
         startYear={new Date().getFullYear()}
         startMonth={2}
         startDay={3}
-        currentWeekType={currentWeekType}
-        setCurrentWeekType={setCurrentWeekType}
+        selectedWeekType={selectedWeekType}
+        setSelectedWeekType={setSelectedWeekType}
       />
     </div>
   )

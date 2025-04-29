@@ -6,16 +6,16 @@ export interface WeeksTextProps {
   startYear?: number
   startMonth: number
   startDay: number
-  currentWeekType: WeekTypeStrict
-  setCurrentWeekType: (weekType: WeekTypeStrict) => void
+  selectedWeekType: WeekTypeStrict
+  setSelectedWeekType: (weekType?: WeekTypeStrict) => void
 }
 
 export const WeeksText: FC<WeeksTextProps> = ({
   startYear,
   startMonth,
   startDay,
-  currentWeekType,
-  setCurrentWeekType,
+  selectedWeekType,
+  setSelectedWeekType,
 }) => {
   const getDateWithOffset = (offsetDays?: number, baseDate?: Date): Date => {
     let date: Date
@@ -53,15 +53,15 @@ export const WeeksText: FC<WeeksTextProps> = ({
   const weekTextClass = "font-raleway text-lg text-black"
   const firstWeekClass = clsx(
     weekTextClass,
-    (currentWeekType === "odd" && isTodayWeekEven) ||
-      (currentWeekType === "even" && !isTodayWeekEven)
+    (selectedWeekType === "odd" && !isTodayWeekEven) ||
+      (selectedWeekType === "even" && isTodayWeekEven)
       ? "font-semibold"
       : "cursor-pointer"
   )
   const secondWeekClass = clsx(
     weekTextClass,
-    (currentWeekType === "odd" && !isTodayWeekEven) ||
-      (currentWeekType === "even" && isTodayWeekEven)
+    (selectedWeekType === "odd" && isTodayWeekEven) ||
+      (selectedWeekType === "even" && !isTodayWeekEven)
       ? "font-semibold"
       : "cursor-pointer"
   )
@@ -127,13 +127,23 @@ export const WeeksText: FC<WeeksTextProps> = ({
     <div className="mt-3 flex flex-col items-start justify-center space-y-px">
       <p
         className={firstWeekClass}
-        onClick={() => setCurrentWeekType(isTodayWeekEven ? "even" : "odd")}>
+        onClick={
+          (selectedWeekType === "odd" && !isTodayWeekEven) ||
+          (selectedWeekType === "even" && isTodayWeekEven)
+            ? undefined
+            : () => setSelectedWeekType()
+        }>
         Сейчас {getWeekTypeString()} неделя с {getWeekStartString()} по {getWeekEndString()} -{" "}
         {currentWeekNumber} неделя
       </p>
       <p
         className={secondWeekClass}
-        onClick={() => setCurrentWeekType(isTodayWeekEven ? "odd" : "even")}>
+        onClick={
+          (selectedWeekType === "odd" && isTodayWeekEven) ||
+          (selectedWeekType === "even" && !isTodayWeekEven)
+            ? undefined
+            : () => setSelectedWeekType()
+        }>
         Следующая неделя {getWeekTypeString(7)} c {getWeekStartString(7)} по {getWeekEndString(7)} -{" "}
         {nextWeekNumber} неделя
       </p>

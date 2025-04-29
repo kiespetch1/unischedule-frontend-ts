@@ -6,51 +6,51 @@ import { Toggle } from "./Toggle.tsx"
 import { GroupSelector } from "./GroupSelector.tsx"
 import { SubgroupStrict, WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.ts"
 import { FC, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
 export interface WeekOptionsProps {
-  currentSubgroup: SubgroupStrict
-  setCurrentSubgroup: (subgroup: SubgroupStrict) => void
-  currentWeekType: WeekTypeStrict
-  setCurrentWeekType: (weekType: WeekTypeStrict) => void
+  selectedSubgroup: SubgroupStrict
+  setSelectedSubgroup: (subgroup?: SubgroupStrict) => void
+  selectedWeekType: WeekTypeStrict
+  setSelectedWeekType: (weekType?: WeekTypeStrict) => void
   groupName: string | undefined
   isLoading: boolean
 }
 
 export const WeekOptions: FC<WeekOptionsProps> = ({
-  currentSubgroup,
-  setCurrentSubgroup,
-  currentWeekType,
-  setCurrentWeekType,
+  selectedSubgroup,
+  setSelectedSubgroup,
+  selectedWeekType,
+  setSelectedWeekType,
   groupName,
   isLoading,
 }) => {
-  const navigate = useNavigate()
-  const searchParams = new URLSearchParams(location.search)
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (searchParams.has("subgroup")) {
-      setCurrentSubgroup(searchParams.get("subgroup") as SubgroupStrict)
+      setSelectedSubgroup(searchParams.get("subgroup") as SubgroupStrict)
     }
     if (searchParams.has("week")) {
-      setCurrentWeekType(searchParams.get("week") as WeekTypeStrict)
+      setSelectedWeekType(searchParams.get("week") as WeekTypeStrict)
     }
-  })
+  }, [searchParams, setSelectedSubgroup, setSelectedWeekType])
 
-  const handleSubgroupChange = () => {
-    const oppositeSubgroup: SubgroupStrict = currentSubgroup === "first" ? "second" : "first"
+  const handleSubgroupToggle = () => {
+    const oppositeSubgroup: SubgroupStrict = selectedSubgroup === "first" ? "second" : "first"
 
     searchParams.set("subgroup", oppositeSubgroup)
     navigate(`?${searchParams.toString()}`)
-    setCurrentSubgroup(oppositeSubgroup)
+    setSelectedSubgroup()
   }
 
-  const handleWeekTypeChange = () => {
-    const nextWeekType: WeekTypeStrict = currentWeekType === "even" ? "odd" : "even"
+  const handleWeekTypeToggle = () => {
+    const oppositeWeekType: WeekTypeStrict = selectedWeekType === "even" ? "odd" : "even"
 
-    searchParams.set("week", nextWeekType)
+    searchParams.set("week", oppositeWeekType)
     navigate(`?${searchParams.toString()}`)
-    setCurrentWeekType(nextWeekType)
+    setSelectedWeekType()
   }
 
   return (
@@ -60,16 +60,16 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
         labelText="Неделя"
         optionTexts={["Нечетная", "Четная"]}
         optionIcons={[<OddWeek />, <EvenWeek />]}
-        setOppositeOption={handleWeekTypeChange}
-        value={currentWeekType}
+        setOppositeOption={handleWeekTypeToggle}
+        value={selectedWeekType}
         onValue="even"
       />
       <Toggle
         labelText="Подгруппа"
         optionTexts={["Первая", "Вторая"]}
         optionIcons={[<FirstGroup />, <SecondGroup />]}
-        setOppositeOption={handleSubgroupChange}
-        value={currentSubgroup}
+        setOppositeOption={handleSubgroupToggle}
+        value={selectedSubgroup}
         onValue="second"
       />
     </div>
