@@ -10,7 +10,7 @@ import { refresh } from "@/features/auth/refresh.ts"
 
 export const apiFetch = async (
   input: RequestInfo | URL,
-  init: RequestInit & { refresh?: boolean; isPublic: boolean } = { refresh: true, isPublic: false }
+  init: RequestInit & { refresh?: boolean; isPublic?: boolean } = { refresh: true, isPublic: false }
 ): Promise<Response> => {
   const headers = new Headers(init?.headers)
   if (!init.isPublic) {
