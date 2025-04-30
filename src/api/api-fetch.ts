@@ -10,21 +10,22 @@ import { refresh } from "@/features/auth/refresh.ts"
 
 export const apiFetch = async (
   input: RequestInfo | URL,
-  init: RequestInit & { refresh?: boolean } = { refresh: true }
+  init: RequestInit & { refresh?: boolean; isPublic: boolean } = { refresh: true, isPublic: false }
 ): Promise<Response> => {
-  const accessToken = getAccessTokenFromStorage()
-  const xsrfToken = getXsrfTokenFromCookie()
-  const doRefresh = init?.refresh === undefined || init.refresh
-
-  if (doRefresh && accessToken && isAccessTokenExpired(accessToken)) {
-    const accessToken = await refresh()
-    setAccessTokenInStorage(accessToken)
-  }
-
   const headers = new Headers(init?.headers)
-  if (accessToken) headers.set("Authorization", `Bearer ${accessToken.token}`)
-  if (xsrfToken) headers.set("X-XSRF-TOKEN", xsrfToken)
+  if (!init.isPublic) {
+    const accessToken = getAccessTokenFromStorage()
+    const xsrfToken = getXsrfTokenFromCookie()
+    const doRefresh = init?.refresh === undefined || init.refresh
 
+    if (doRefresh && accessToken && isAccessTokenExpired(accessToken)) {
+      const accessToken = await refresh()
+      setAccessTokenInStorage(accessToken)
+    }
+
+    if (accessToken) headers.set("Authorization", `Bearer ${accessToken.token}`)
+    if (xsrfToken) headers.set("X-XSRF-TOKEN", xsrfToken)
+  }
   const response = await fetch(input, { ...init, headers }).catch(() => null)
   if (!response?.ok) {
     const data = await response?.json()

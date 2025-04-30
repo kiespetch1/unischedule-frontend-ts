@@ -19,5 +19,7 @@ export const getGroups = async (params?: GroupsRequestParams): Promise<DataPage<
   const url = new URL(getGroupsUrl())
   if (isNonNullable(params)) url.search = getSearchParams(params).toString()
 
-  return apiFetch(url).then(response => response.json() as Promise<DataPage<GroupModel>>)
+  return apiFetch(url, { isPublic: true }).then(
+    response => response.json() as Promise<DataPage<GroupModel>>
+  )
 }
