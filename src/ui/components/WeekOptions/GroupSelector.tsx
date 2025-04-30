@@ -11,9 +11,9 @@ export interface GroupSelectorProps {
 
 export const GroupSelector: FC<GroupSelectorProps> = ({ labelText, groupName, isLoading }) => {
   return (
-    <div className="flex flex-col items-start space-y-2">
+    <div className="flex flex-col items-start gap-2">
       <div className="font-raleway text-base font-normal">{labelText}</div>
-      <div className="flex min-h-[47px] flex-row items-center space-x-1">
+      <div className="flex min-h-[47px] flex-row items-center gap-1">
         {isLoading ? (
           <Skeleton className="h-[47px] w-[125px]" />
         ) : (

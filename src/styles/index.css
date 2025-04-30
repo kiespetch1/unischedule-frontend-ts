@@ -32,6 +32,18 @@
         z-index: 1;
         transform: translateX(153px);
     }
+    .search-input::-webkit-search-cancel-button {
+        display: none;
+    }
+
+    @keyframes smooth-expanding-14px {
+        from {
+            width: 0;
+        }
+        to {
+            width: 14px;
+        }
+    }
 }
 
 @theme {

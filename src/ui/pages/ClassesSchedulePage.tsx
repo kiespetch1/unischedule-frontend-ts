@@ -1,18 +1,22 @@
 import { WeekOptions } from "../components/WeekOptions/WeekOptions.tsx"
 import { WeekInfo } from "../components/WeekInfo/WeekInfo.tsx"
 import { useEffect } from "react"
-import { LastAnnouncementBlock } from "@components/WeekInfo/LastNotificationBlock/LastAnnouncementBlock.tsx"
+import { AnnouncementBlock } from "@components/WeekInfo/AnnouncementBlock/AnnouncementBlock.tsx"
 import { useGetGroupById } from "@/features/classes-schedule/groups/hooks/use-group-query.ts"
-import { Day } from "@components/Day/Day.tsx"
 import { useSubgroup, useWeekType } from "@/hooks/use-toggle.ts"
+import { useParams } from "react-router-dom"
+import { defaultWeek } from "@/utils/default-entities.ts"
+import { DaysBlock } from "../components/DaysBlock/DaysBlock.tsx"
 
-export const SchedulePage = () => {
+export const ClassesSchedulePage = () => {
   const [selectedWeekType, setSelectedWeekType] = useWeekType()
   const [selectedSubgroup, setSelectedSubgroup] = useSubgroup()
+  const { groupId } = useParams()
+  if (!groupId) throw new Error("groupId search param is not defined")
 
-  const { data: group, isLoading } = useGetGroupById({ id: "340cb1cf-b29f-4d21-b0b5-6a5f68e26647" })
-  const oddWeek = group?.weeks.find(week => week.type === "odd")
-  const evenWeek = group?.weeks.find(week => week.type === "even")
+  const { data: group, isLoading } = useGetGroupById({ id: groupId })
+  const oddWeek = group?.weeks.find(week => week.type === "odd") || defaultWeek
+  const evenWeek = group?.weeks.find(week => week.type === "even") || defaultWeek
 
   useEffect(() => {
     if (group) {
@@ -21,7 +25,7 @@ export const SchedulePage = () => {
   }, [group])
 
   return (
-    <div className="mx-8 flex flex-col items-start space-y-2">
+    <div className="mx-8 flex flex-col items-start gap-2">
       <WeekOptions
         selectedWeekType={selectedWeekType}
         selectedSubgroup={selectedSubgroup}
@@ -31,13 +35,14 @@ export const SchedulePage = () => {
         isLoading={isLoading}
       />
       <WeekInfo selectedWeekType={selectedWeekType} setSelectedWeekType={setSelectedWeekType} />
-      <LastAnnouncementBlock message={group && group.last_announcement?.message} />
+      <AnnouncementBlock message={group && group.last_announcement?.message} loading={isLoading} />
 
-      <div className="mt-4 flex flex-row flex-wrap items-start justify-evenly space-x-3 space-y-4">
-        {selectedWeekType === "odd"
-          ? oddWeek?.days.map(day => <Day key={day.id} dayData={day} />)
-          : evenWeek?.days.map(day => <Day key={day.id} dayData={day} />)}
-      </div>
+      <DaysBlock
+        selectedWeekType={selectedWeekType}
+        oddWeek={oddWeek}
+        evenWeek={evenWeek}
+        loading={isLoading}
+      />
     </div>
   )
 }

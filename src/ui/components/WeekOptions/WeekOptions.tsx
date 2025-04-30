@@ -26,7 +26,7 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
   isLoading,
 }) => {
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (searchParams.has("subgroup")) {
@@ -54,7 +54,7 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
   }
 
   return (
-    <div className="flex flex-row items-center justify-start space-x-8">
+    <div className="flex flex-row items-center justify-start gap-8">
       <GroupSelector labelText="Группа" groupName={groupName} isLoading={isLoading} />
       <Toggle
         labelText="Неделя"

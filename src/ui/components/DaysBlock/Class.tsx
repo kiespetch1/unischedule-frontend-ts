@@ -8,7 +8,10 @@ import OddWeek from "@assets/odd-week.svg?react"
 import { ClassModel, Subgroup, WeekType } from "@/features/classes-schedule/types/classes-types.ts"
 import { trimEndChars, trimStartChars } from "@/utils/formatters.ts"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
-import { getRussianClassTypeName, getRussianLocationTypeName } from "@components/Day/formatters.ts"
+import {
+  getRussianClassTypeName,
+  getRussianLocationTypeName,
+} from "@components/DaysBlock/formatters.ts"
 
 export interface ClassProps {
   isFirst?: boolean
@@ -44,7 +47,7 @@ export const Class: FC<ClassProps> = ({ isFirst = false, isWeekend, data }) => {
   return (
     <div className={finalBaseBlockClass}>
       <div className="box-content flex h-full flex-col items-start justify-evenly">
-        <div className="flex flex-row items-center space-x-4">
+        <div className="flex flex-row items-center gap-4">
           <span className="font-raleway text-2xl font-semibold">
             {trimEndChars(classData.started_at, 3)} - {trimEndChars(classData.finished_at, 3)}
           </span>
@@ -82,7 +85,7 @@ interface IconsSectionProps {
 
 const IconsSection: FC<IconsSectionProps> = ({ weekType, subgroup }) => {
   return (
-    <div className="flex flex-row items-center justify-end space-x-4">
+    <div className="flex flex-row items-center justify-end gap-4">
       {(weekType !== "every" || subgroup !== "none") && (
         <Dot sizeClass={"w-1 h-1"} colorClass={"bg-black"} />
       )}

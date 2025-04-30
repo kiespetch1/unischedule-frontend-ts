@@ -1,5 +1,5 @@
 export enum Routes {
   MAIN = "/",
   HOME = "/home",
-  CLASSES = "/classes",
+  CLASSES = "/classes/:groupId",
 }

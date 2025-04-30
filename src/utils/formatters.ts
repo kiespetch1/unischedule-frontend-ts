@@ -4,7 +4,7 @@ import type { ZodIssue } from "zod"
 
 export type UnformattedSearchParams = Record<
   string,
-  number | string | Date | (number | string | Date)[] | null | undefined
+  number | string | Date | (number | string | Date)[] | boolean | null | undefined
 >
 
 export const formatSearchParams = (params: UnformattedSearchParams) => {

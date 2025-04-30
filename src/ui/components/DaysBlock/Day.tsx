@@ -3,7 +3,7 @@ import { DayModel, DayOfWeek } from "@/features/classes-schedule/types/classes-t
 import Dot from "@components/Dot.tsx"
 import Edit from "@assets/edit.svg?react"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
-import { Class } from "@components/Day/Class.tsx"
+import { Class } from "@components/DaysBlock/Class.tsx"
 import { getPluralForm, getRussianDayName } from "@/utils/formatters.ts"
 
 export interface DayProps {
@@ -38,8 +38,8 @@ export const DayHeader: FC<DayHeaderProps> = ({ dayOfWeek, classesCount }) => {
   }
 
   return (
-    <div className="bg-iateblue flex h-[49px] w-[600px] flex-row items-center justify-between space-x-4 rounded-t-sm px-5">
-      <div className="flex flex-row items-center justify-start space-x-4">
+    <div className="bg-iateblue flex h-[49px] w-[600px] flex-row items-center justify-between gap-4 rounded-t-sm px-5">
+      <div className="flex flex-row items-center justify-start gap-4">
         <div className="font-raleway text-[27px] font-bold text-zinc-100">
           {getRussianDayName(dayOfWeek)}
         </div>

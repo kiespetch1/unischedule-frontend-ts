@@ -7,7 +7,7 @@ export const Layout: FC = () => {
   return (
     <>
       <Header />
-      <main className="flex-grow">
+      <main className="mb-3 flex-grow">
         <Outlet />
       </main>
       <Footer />

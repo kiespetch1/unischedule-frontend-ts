@@ -124,7 +124,7 @@ export const WeeksText: FC<WeeksTextProps> = ({
   const nextWeekNumber = currentWeekNumber + 1
 
   return (
-    <div className="mt-3 flex flex-col items-start justify-center space-y-px">
+    <div className="mt-3 flex flex-col items-start justify-center gap-px">
       <p
         className={firstWeekClass}
         onClick={

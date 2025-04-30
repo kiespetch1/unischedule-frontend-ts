@@ -10,12 +10,12 @@ export const Header: FC = () => {
     <header className="sticky top-0 z-40 mb-6 box-content flex h-[90px] items-center border-b-2 border-zinc-300 bg-zinc-100">
       <ul className="flex w-full flex-row justify-between px-8 *:flex *:items-center">
         <li>
-          <a href="/home" className="flex flex-row items-center space-x-8" aria-label="На главную">
+          <a href="/home" className="flex flex-row items-center gap-8" aria-label="На главную">
             <IateLogo />
             <p className="font-raleway text-2xl font-semibold">Расписание занятий</p>
           </a>
         </li>
-        <li className="flex-row space-x-9">
+        <li className="flex-row gap-9">
           <DialogWrapper
             title="Объявления группы"
             description="Объявления"

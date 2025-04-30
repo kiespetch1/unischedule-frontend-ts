@@ -4,7 +4,7 @@ import { FC } from "react"
 
 export interface WeekInfoProps {
   selectedWeekType: WeekTypeStrict
-  setSelectedWeekType: (weekType: WeekTypeStrict) => void
+  setSelectedWeekType: (weekType?: WeekTypeStrict) => void
 }
 
 export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, setSelectedWeekType }) => {

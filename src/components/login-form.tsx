@@ -112,7 +112,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             </div>
             <div className="font-raleway mt-4 text-center text-sm">
               Нет аккаунта?{" "}
-              <TooltipWrapper message="На данный момент никак :) Доступ предоставляется только сотрудникам вуза, старостам, и другим ответственным лицам в личном порядке. Но все может поменяться!">
+              <TooltipWrapper message="На данный момент никак :) Доступ предоставляется только сотрудникам вуза, старостам, и другим ответственным лицам в личном порядке. Регистрация студентам станет доступна позже.">
                 <a href="#" className="font-raleway underline underline-offset-4">
                   Узнать, как создать
                 </a>
