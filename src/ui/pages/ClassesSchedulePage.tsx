@@ -9,6 +9,7 @@ import { defaultWeek } from "@/utils/default-entities.ts"
 import { DaysBlock } from "../components/DaysBlock/DaysBlock.tsx"
 
 export const ClassesSchedulePage = () => {
+  console.log(import.meta.env)
   const [selectedWeekType, setSelectedWeekType] = useWeekType()
   const [selectedSubgroup, setSelectedSubgroup] = useSubgroup()
   const { groupId } = useParams()

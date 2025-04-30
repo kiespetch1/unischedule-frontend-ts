@@ -2,6 +2,7 @@ import { useGetGroups } from "@/features/classes-schedule/groups/hooks/use-group
 import { GroupsList } from "@components/GroupsList/GroupsList.tsx"
 
 export const HomePage = () => {
+  console.log(import.meta.env)
   const { data: groups, isLoading } = useGetGroups({ grade: null })
   console.log(groups?.data)
   return (
