@@ -8,16 +8,12 @@ import { formOptions, useForm } from "@tanstack/react-form"
 import { z } from "zod"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { getErrorMessages } from "@/utils/formatters"
-
-export interface Credentials {
-  email: string
-  password: string
-}
+import { login, LoginParams } from "@/features/auth/login.ts"
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  const defaultCredentials: Credentials = { email: "", password: "" }
+  const defaultCredentials: LoginParams = { login: "", password: "" }
   const credentialsSchema = z.object({
-    email: z.string().trim().email("Некорректный формат почты"),
+    login: z.string().trim().email("Некорректный формат почты"),
     password: z.string().trim().min(8, "Пароль должен содержать минимум 8 символов"),
   })
 
@@ -30,6 +26,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const loginForm = useForm({
     ...loginFormOptions,
     onSubmit: async ({ value }) => {
+      await login(value)
       console.log(value)
     },
   })
@@ -52,7 +49,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               loginForm.handleSubmit()
             }}>
             <div className="flex flex-col gap-6">
-              <loginForm.Field name="email">
+              <loginForm.Field name="login">
                 {field => {
                   const { errors, isTouched } = field.state.meta
                   return (

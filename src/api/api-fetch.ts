@@ -1,39 +1,47 @@
 import { ApiError } from "./api-error"
 import toast from "react-hot-toast"
-import {
-  getAccessTokenFromStorage,
-  getXsrfTokenFromCookie,
-  isAccessTokenExpired,
-  setAccessTokenInStorage,
-} from "@/features/auth/utils/tokens.ts"
+import { getXsrfToken, setXsrfToken } from "@/features/auth/utils/tokens.ts"
 import { refresh } from "@/features/auth/refresh.ts"
 
-export const apiFetch = async (
-  input: RequestInfo | URL,
-  init: RequestInit & { refresh?: boolean; isPublic?: boolean } = { refresh: true, isPublic: false }
-): Promise<Response> => {
-  const headers = new Headers(init?.headers)
-  if (!init.isPublic) {
-    const accessToken = getAccessTokenFromStorage()
-    const xsrfToken = getXsrfTokenFromCookie()
-    const doRefresh = init?.refresh === undefined || init.refresh
+export async function apiFetch(
+  input: RequestInfo,
+  init?: RequestInit & { isPublic?: boolean }
+): Promise<Response> {
+  const { isPublic = false, ...fetchInit } = init || {}
 
-    if (doRefresh && accessToken && isAccessTokenExpired(accessToken)) {
-      const accessToken = await refresh()
-      setAccessTokenInStorage(accessToken)
+  const headers = new Headers(fetchInit.headers)
+  fetchInit.headers = headers
+  fetchInit.credentials = isPublic ? "omit" : "include"
+
+  if (!isPublic) {
+    const xsrf = getXsrfToken()
+    if (xsrf) {
+      headers.set("XSRF-TOKEN", xsrf)
     }
-
-    if (accessToken) headers.set("Authorization", `Bearer ${accessToken.token}`)
-    if (xsrfToken) headers.set("X-XSRF-TOKEN", xsrfToken)
   }
-  const response = await fetch(input, { ...init, headers }).catch(() => null)
-  if (!response?.ok) {
-    const data = await response?.json()
 
-    if (!(response?.status === 401 || response?.status === 403)) {
-      toast.error(data)
+  async function doFetch(retried = false): Promise<Response> {
+    const res = await fetch(input, fetchInit)
+
+    if (res.status === 401 && !isPublic && !retried) {
+      await refresh()
+      return doFetch(true)
     }
-    throw new ApiError(response, data)
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => null)
+      toast.error(data?.message || "Ошибка запроса")
+      throw new ApiError(res, data)
+    }
+
+    return res
+  }
+
+  const response = await doFetch()
+
+  const newXsrf = response.headers.get("XSRF-TOKEN")
+  if (newXsrf) {
+    setXsrfToken(newXsrf)
   }
 
   return response
