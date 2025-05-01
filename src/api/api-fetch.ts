@@ -5,26 +5,34 @@ import { refresh } from "@/features/auth/refresh.ts"
 
 export async function apiFetch(
   input: RequestInfo,
-  init?: RequestInit & { isPublic?: boolean }
+  init?: RequestInit & { useCredentials?: boolean; useXsrfProtection?: boolean }
 ): Promise<Response> {
-  const { isPublic = false, ...fetchInit } = init || {}
+  const { useCredentials = true, useXsrfProtection = true, ...fetchInit } = init || {}
+
+  fetchInit.credentials = useCredentials ? "include" : "omit"
 
   const headers = new Headers(fetchInit.headers)
-  headers.set("Content-Type", "application/json-patch+json")
-  fetchInit.headers = headers
-  fetchInit.credentials = isPublic ? "omit" : "include"
+  const method = fetchInit.method?.toUpperCase() || "GET"
 
-  if (!isPublic) {
+  if (method === "PATCH") {
+    headers.set("Content-Type", "application/json-patch+json")
+  } else if (fetchInit.body) {
+    headers.set("Content-Type", "application/json")
+  }
+
+  if (useXsrfProtection && ["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
     const xsrf = getXsrfToken()
     if (xsrf) {
       headers.set("XSRF-TOKEN", xsrf)
     }
   }
 
+  fetchInit.headers = headers
+
   async function doFetch(retried = false): Promise<Response> {
     const res = await fetch(input, fetchInit)
 
-    if (res.status === 401 && !isPublic && !retried) {
+    if (res.status === 401 && useCredentials && !retried) {
       await refresh()
       return doFetch(true)
     }
