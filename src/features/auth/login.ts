@@ -10,6 +10,7 @@ export interface LoginParams {
 
 export const login = async (credentials: LoginParams) => {
   const response = await apiFetch(getLoginUrl(), {
+    method: "POST",
     body: JSON.stringify(credentials),
     isPublic: true,
   })

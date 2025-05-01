@@ -10,6 +10,7 @@ export async function apiFetch(
   const { isPublic = false, ...fetchInit } = init || {}
 
   const headers = new Headers(fetchInit.headers)
+  headers.set("Content-Type", "application/json-patch+json")
   fetchInit.headers = headers
   fetchInit.credentials = isPublic ? "omit" : "include"
 
