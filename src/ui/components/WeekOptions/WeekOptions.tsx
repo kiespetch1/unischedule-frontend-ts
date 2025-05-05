@@ -10,39 +10,39 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 
 export interface WeekOptionsProps {
   selectedSubgroup: SubgroupStrict
-  setSelectedSubgroup: (subgroup?: SubgroupStrict) => void
+  onSubgroupSelect: (subgroup?: SubgroupStrict) => void
   selectedWeekType: WeekTypeStrict
-  setSelectedWeekType: (weekType?: WeekTypeStrict) => void
+  onWeekTypeSelect: (weekType?: WeekTypeStrict) => void
   groupName: string | undefined
-  isLoading: boolean
+  loading: boolean
 }
 
 export const WeekOptions: FC<WeekOptionsProps> = ({
   selectedSubgroup,
-  setSelectedSubgroup,
+  onSubgroupSelect,
   selectedWeekType,
-  setSelectedWeekType,
+  onWeekTypeSelect,
   groupName,
-  isLoading,
+  loading,
 }) => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
   useEffect(() => {
     if (searchParams.has("subgroup")) {
-      setSelectedSubgroup(searchParams.get("subgroup") as SubgroupStrict)
+      onSubgroupSelect(searchParams.get("subgroup") as SubgroupStrict)
     }
     if (searchParams.has("week")) {
-      setSelectedWeekType(searchParams.get("week") as WeekTypeStrict)
+      onWeekTypeSelect(searchParams.get("week") as WeekTypeStrict)
     }
-  }, [searchParams, setSelectedSubgroup, setSelectedWeekType])
+  }, [searchParams, onSubgroupSelect, onWeekTypeSelect])
 
   const handleSubgroupToggle = () => {
     const oppositeSubgroup: SubgroupStrict = selectedSubgroup === "first" ? "second" : "first"
 
     searchParams.set("subgroup", oppositeSubgroup)
     navigate(`?${searchParams.toString()}`)
-    setSelectedSubgroup()
+    onSubgroupSelect()
   }
 
   const handleWeekTypeToggle = () => {
@@ -50,12 +50,12 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
 
     searchParams.set("week", oppositeWeekType)
     navigate(`?${searchParams.toString()}`)
-    setSelectedWeekType()
+    onWeekTypeSelect()
   }
 
   return (
     <div className="flex flex-row items-center justify-start gap-8">
-      <GroupSelector labelText="Группа" groupName={groupName} isLoading={isLoading} />
+      <GroupSelector labelText="Группа" groupName={groupName} isLoading={loading} />
       <Toggle
         labelText="Неделя"
         optionTexts={["Нечетная", "Четная"]}

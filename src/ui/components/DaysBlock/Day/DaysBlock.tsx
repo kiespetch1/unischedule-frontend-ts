@@ -1,7 +1,7 @@
 import { WeekModel, WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.ts"
 import { FC } from "react"
-import { Day } from "@components/DaysBlock/Day.tsx"
-import { DaySkeleton } from "./DaySkeleton"
+import { Day } from "@components/DaysBlock/Day/Day.tsx"
+import { DaySkeleton } from "./DaySkeleton.tsx"
 
 export interface DaysBlockProps {
   selectedWeekType: WeekTypeStrict

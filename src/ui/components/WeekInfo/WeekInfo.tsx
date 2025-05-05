@@ -4,10 +4,10 @@ import { FC } from "react"
 
 export interface WeekInfoProps {
   selectedWeekType: WeekTypeStrict
-  setSelectedWeekType: (weekType?: WeekTypeStrict) => void
+  onWeekTypeSelect: (weekType?: WeekTypeStrict) => void
 }
 
-export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, setSelectedWeekType }) => {
+export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, onWeekTypeSelect }) => {
   return (
     <div>
       <WeeksText
@@ -15,7 +15,7 @@ export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, setSelectedWeekT
         startMonth={2}
         startDay={3}
         selectedWeekType={selectedWeekType}
-        setSelectedWeekType={setSelectedWeekType}
+        onWeekTypeSelect={onWeekTypeSelect}
       />
     </div>
   )

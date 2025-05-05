@@ -28,7 +28,7 @@ export interface GroupModel {
   grade: number
   has_subgroups: boolean
   has_fixed_subgroups: boolean
-  last_announcement: AnnouncementModel | null
+  announcements_block: AnnouncementBlockModel | null
   last_academic_week_number: number
   weeks: WeekModel[]
 }
@@ -38,10 +38,17 @@ export interface AnnouncementModel {
   message: string
   priority: AnnouncementPriority
   is_anonymous: boolean
+  is_time_limited: boolean
+  available_until: string
   created_at: string
   created_by: UserModel
   updated_at: string
   updated_by: UserModel
+}
+
+export interface AnnouncementBlockModel {
+  last?: AnnouncementModel
+  last_time_limited?: AnnouncementModel
 }
 
 export interface UserModel {

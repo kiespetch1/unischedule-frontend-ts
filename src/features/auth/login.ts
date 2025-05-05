@@ -8,7 +8,7 @@ export interface LoginParams {
   password: string
 }
 
-export const login = async (credentials: LoginParams) => {
+export const login = async (credentials: LoginParams): Promise<boolean> => {
   const response = await apiFetch(getLoginUrl(), {
     method: "POST",
     body: JSON.stringify(credentials),
@@ -17,6 +17,7 @@ export const login = async (credentials: LoginParams) => {
 
   if (response.ok) {
     toast.success("Успешная авторизация!")
+    return true
   } else {
     const data = await response.json().catch(() => null)
     toast.error(data?.message || "Ошибка запроса")

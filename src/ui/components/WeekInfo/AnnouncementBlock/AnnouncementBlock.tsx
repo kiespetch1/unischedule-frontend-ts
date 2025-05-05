@@ -2,13 +2,14 @@ import { FC, useState } from "react"
 import ExpandTriangle from "@assets/expand-triangle.svg?react"
 import clsx from "clsx"
 import { AnnouncementSkeleton } from "./AnnouncementSkeleton"
+import { AnnouncementBlockModel } from "@/features/classes-schedule/types/classes-types.ts"
 
 export interface LastAnnouncementBlockProps {
-  message: string | undefined
+  blockData: AnnouncementBlockModel | undefined
   loading: boolean
 }
 
-export const AnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ message, loading }) => {
+export const AnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ blockData, loading }) => {
   const [isOpen, setIsOpen] = useState(true)
   const contentClass = "font-raleway text-lg text-zinc-950"
   const finalContentClass = clsx(contentClass, !isOpen ? "hidden" : undefined)
@@ -19,7 +20,7 @@ export const AnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ message, loa
     return <AnnouncementSkeleton />
   }
 
-  if (!message) {
+  if (!blockData) {
     return null
   }
 
@@ -30,7 +31,7 @@ export const AnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ message, loa
           className="flex cursor-pointer flex-row items-center gap-2"
           onClick={() => setIsOpen(!isOpen)}>
           <div className="font-raleway text-lg font-semibold text-zinc-950">
-            Последнее объявление
+            Последние объявления
           </div>
           <ExpandTriangle className={finalTriangleClass} />
         </button>
@@ -38,7 +39,14 @@ export const AnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ message, loa
           посмотреть другие объявления
         </button>
       </div>
-      <div className={finalContentClass}>{message}</div>
+      <div className="flex flex-col gap-px">
+        {blockData.last?.message && (
+          <div className={finalContentClass}>{blockData.last?.message}</div>
+        )}
+        {blockData.last_time_limited?.message && (
+          <div className={finalContentClass}>{blockData.last_time_limited?.message}</div>
+        )}
+      </div>
     </div>
   )
 }

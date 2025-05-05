@@ -64,6 +64,25 @@ export const getRussianDayName = (dayName: DayOfWeek) => {
   }
 }
 
+export const numberToDayOfWeek = (dayNumber: number) => {
+  switch (dayNumber) {
+    case 0:
+      return DayOfWeek.Sunday
+    case 1:
+      return DayOfWeek.Monday
+    case 2:
+      return DayOfWeek.Tuesday
+    case 3:
+      return DayOfWeek.Wednesday
+    case 4:
+      return DayOfWeek.Thursday
+    case 5:
+      return DayOfWeek.Friday
+    case 6:
+      return DayOfWeek.Saturday
+  }
+}
+
 export const getErrorMessages = (
   errors: Array<string | { message?: string } | ZodIssue | undefined>
 ): string => {

@@ -1,5 +1,9 @@
 ﻿import { useReducer } from "react"
-import { LocationType, SubgroupStrict, WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.ts"
+import {
+  LocationType,
+  SubgroupStrict,
+  WeekTypeStrict,
+} from "@/features/classes-schedule/types/classes-types.ts"
 
 export const useWeekType = (initial: WeekTypeStrict = "odd") => {
   return useReducer((prevWeekType, newWeekType) => {
@@ -22,5 +26,12 @@ export const useLocationType = (initial: LocationType = "irl") => {
     if (newLocationType) return newLocationType
     if (prevLocationType === "irl") return "online"
     if (prevLocationType === "online") return "irl"
+  }, initial)
+}
+
+export const useToggle = (initial: boolean = false) => {
+  return useReducer((prevState, newState?: boolean) => {
+    if (newState === true || newState === false) return newState
+    return !prevState
   }, initial)
 }

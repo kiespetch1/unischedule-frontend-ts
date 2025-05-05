@@ -1,6 +1,6 @@
 import { FC } from "react"
 import Search from "@assets/search.svg?react"
-import Cross from "@assets/cross.svg?react"
+import Cross from "@assets/cross-light.svg?react"
 
 export interface GroupSearchProps {
   input: string
@@ -19,7 +19,7 @@ export const GroupSearch: FC<GroupSearchProps> = ({ input, onInputChange }) => {
         id="group-search"
         type="search"
         placeholder="Введите название группы"
-        className="search-input all-[unset] font-raleway mr-3 w-[400px] border-0 leading-[14px] focus:outline-none"
+        className="search-input all-[unset] font-raleway mr-3 w-[401px] border-0 leading-[14px] focus:outline-none"
         value={input}
         onChange={e => onInputChange(e.target.value)}
       />

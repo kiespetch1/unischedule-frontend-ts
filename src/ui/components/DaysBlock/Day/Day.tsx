@@ -1,0 +1,123 @@
+﻿import { FC, ReactNode, useOptimistic, useState } from "react"
+import { ClassModel, DayModel, DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
+import Add from "@assets/add.svg?react"
+import { Class } from "@components/DaysBlock/Class/Class.tsx"
+import { useToggle } from "@/hooks/use-toggle.ts"
+import clsx from "clsx"
+import { DayHeader } from "@components/DaysBlock/Day/DayHeader.tsx"
+import { defaultClass } from "@/utils/default-entities.ts"
+
+export interface DayProps {
+  dayData: DayModel | undefined
+}
+
+export const Day: FC<DayProps> = ({ dayData }) => {
+  const initialClasses: ClassModel[] = dayData?.classes ?? [defaultClass]
+  const [isEditing, setIsEditing] = useToggle(false)
+  const [classes, setClasses] = useState(initialClasses)
+  const [optimisticClasses, addOptimisticClass] = useOptimistic<ClassModel[], ClassModel>(
+    classes,
+    (state, newOptimisticClasses) => [...state, newOptimisticClasses]
+  )
+  const [activeClassIndex, setActiveClassIndex] = useState<number | undefined>(undefined)
+
+  const handleAddClass = () => {
+    addOptimisticClass(defaultClass)
+  }
+
+  if (isEditing) {
+    return (
+      <div className="group flex flex-col">
+        <DayHeader
+          dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
+          classesCount={dayData?.classes?.length || 0}
+          editing={isEditing}
+          onEditing={setIsEditing}
+          onActiveChange={setActiveClassIndex}
+        />
+        <ClassesList
+          classes={optimisticClasses}
+          editing={isEditing}
+          activeIndex={activeClassIndex}
+          onActiveChange={setActiveClassIndex}
+        />
+        <EndBlock editing={isEditing} onClassAdd={handleAddClass} />
+      </div>
+    )
+  }
+
+  return (
+    <div className="group flex flex-col">
+      <DayHeader
+        dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
+        classesCount={dayData?.classes?.length || 0}
+        editing={isEditing}
+        onEditing={setIsEditing}
+        onActiveChange={setActiveClassIndex}
+      />
+      <ClassesList
+        classes={optimisticClasses}
+        editing={isEditing}
+        activeIndex={activeClassIndex}
+        onActiveChange={setActiveClassIndex}
+      />
+      <EndBlock editing={isEditing} />
+    </div>
+  )
+}
+
+interface ClassesListProps {
+  classes: ClassModel[]
+  editing: boolean
+  activeIndex: number | undefined
+  onActiveChange: (index: number | undefined) => void
+}
+
+const ClassesList: FC<ClassesListProps> = ({ classes, editing, activeIndex, onActiveChange }) => {
+  const renderClasses = (): ReactNode => {
+    if (classes.length === 0) {
+      return <Class isWeekend={true} />
+    }
+
+    return classes.map((classData, index) => (
+      <Class
+        key={classData.id}
+        data={classData}
+        isFirst={index === 0}
+        isWeekend={false}
+        editing={index === activeIndex}
+        clickable={editing && index !== activeIndex}
+        onClick={() => (editing ? onActiveChange(index) : undefined)}
+        onActiveChange={onActiveChange}
+      />
+    ))
+  }
+
+  return <>{renderClasses()}</>
+}
+
+interface EndBlockProps {
+  editing: boolean
+  onClassAdd?: () => void
+}
+
+const EndBlock: FC<EndBlockProps> = ({ editing, onClassAdd }) => {
+  const wrapperClass = clsx(
+    "flex items-center justify-center rounded-sm",
+    "transition-all duration-200 w-[600px]",
+    editing ? "h-8 bg-zinc-200" : "h-2 bg-zinc-150"
+  )
+
+  const iconClass = clsx(
+    "transition-opacity",
+    editing ? "opacity-100 duration-200 delay-150" : "opacity-0 duration-0 delay-0"
+  )
+
+  return (
+    <div onClick={onClassAdd} className={wrapperClass}>
+      <div className={iconClass}>
+        <Add />
+      </div>
+    </div>
+  )
+}

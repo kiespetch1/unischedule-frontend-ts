@@ -7,7 +7,7 @@ export interface WeeksTextProps {
   startMonth: number
   startDay: number
   selectedWeekType: WeekTypeStrict
-  setSelectedWeekType: (weekType?: WeekTypeStrict) => void
+  onWeekTypeSelect: (weekType?: WeekTypeStrict) => void
 }
 
 export const WeeksText: FC<WeeksTextProps> = ({
@@ -15,7 +15,7 @@ export const WeeksText: FC<WeeksTextProps> = ({
   startMonth,
   startDay,
   selectedWeekType,
-  setSelectedWeekType,
+  onWeekTypeSelect,
 }) => {
   const getDateWithOffset = (offsetDays?: number, baseDate?: Date): Date => {
     let date: Date
@@ -131,7 +131,7 @@ export const WeeksText: FC<WeeksTextProps> = ({
           (selectedWeekType === "odd" && !isTodayWeekEven) ||
           (selectedWeekType === "even" && isTodayWeekEven)
             ? undefined
-            : () => setSelectedWeekType()
+            : () => onWeekTypeSelect()
         }>
         Сейчас {getWeekTypeString()} неделя с {getWeekStartString()} по {getWeekEndString()} -{" "}
         {currentWeekNumber} неделя
@@ -142,7 +142,7 @@ export const WeeksText: FC<WeeksTextProps> = ({
           (selectedWeekType === "odd" && isTodayWeekEven) ||
           (selectedWeekType === "even" && !isTodayWeekEven)
             ? undefined
-            : () => setSelectedWeekType()
+            : () => onWeekTypeSelect()
         }>
         Следующая неделя {getWeekTypeString(7)} c {getWeekStartString(7)} по {getWeekEndString(7)} -{" "}
         {nextWeekNumber} неделя

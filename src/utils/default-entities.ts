@@ -16,6 +16,7 @@ import {
   LocationType,
   AnnouncementPriority,
 } from "@/features/classes-schedule/types/classes-types.ts"
+import { ClassEditModel } from "@/features/classes-schedule/dto/edit-class-model.ts"
 
 export const defaultWeekType: WeekTypeStrict = "odd"
 export const defaultSubgroup: SubgroupStrict = "first"
@@ -38,22 +39,22 @@ export const defaultWeek: WeekModel = {
 
 export const defaultLocation: LocationModel = {
   id: "00000000-0000-0000-0000-000000000000",
-  name: "",
+  name: "4-321",
   link: null,
   type: "irl" as LocationType,
 }
 
 export const defaultTeacher: TeacherModel = {
   id: "00000000-0000-0000-0000-000000000000",
-  name: "",
+  name: "Иванов И. И.",
   full_name: null,
 }
 
 export const defaultClass: ClassModel = {
   id: "00000000-0000-0000-0000-000000000000",
-  name: "",
-  started_at: "",
-  finished_at: "",
+  name: "Новая пара",
+  started_at: "09:00",
+  finished_at: "10:45",
   type: "lecture" as ClassType,
   week_type: "every" as WeekType,
   subgroup: "none" as Subgroup,
@@ -61,6 +62,16 @@ export const defaultClass: ClassModel = {
   day_id: "00000000-0000-0000-0000-000000000000",
   location: defaultLocation,
   teacher: defaultTeacher,
+}
+
+export const defaultClassEdit: ClassEditModel = {
+  name: "Новая пара",
+  started_at: "09:00",
+  finished_at: "10:45",
+  type: "lecture" as ClassType,
+  features: { week_type: "every" as WeekType, subgroup: "none" as Subgroup },
+  location_id: "00000000-0000-0000-0000-000000000000",
+  teacher_id: "00000000-0000-0000-0000-000000000000",
 }
 
 export const defaultUser: UserModel = {
@@ -76,6 +87,8 @@ export const defaultAnnouncement: AnnouncementModel = {
   message: "",
   priority: "normal" as AnnouncementPriority,
   is_anonymous: false,
+  is_time_limited: false,
+  available_until: "",
   created_at: "",
   created_by: defaultUser,
   updated_at: "",
@@ -88,7 +101,7 @@ export const defaultGroup: GroupModel = {
   grade: 0,
   has_subgroups: false,
   has_fixed_subgroups: false,
-  last_announcement: null,
+  announcements_block: null,
   last_academic_week_number: 0,
   weeks: [],
 }

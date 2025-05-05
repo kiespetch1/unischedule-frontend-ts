@@ -6,7 +6,7 @@ import { useGetGroupById } from "@/features/classes-schedule/groups/hooks/use-gr
 import { useSubgroup, useWeekType } from "@/hooks/use-toggle.ts"
 import { useParams } from "react-router-dom"
 import { defaultWeek } from "@/utils/default-entities.ts"
-import { DaysBlock } from "../components/DaysBlock/DaysBlock.tsx"
+import { DaysBlock } from "@components/DaysBlock/Day/DaysBlock.tsx"
 
 export const ClassesSchedulePage = () => {
   const [selectedWeekType, setSelectedWeekType] = useWeekType()
@@ -29,13 +29,13 @@ export const ClassesSchedulePage = () => {
       <WeekOptions
         selectedWeekType={selectedWeekType}
         selectedSubgroup={selectedSubgroup}
-        setSelectedSubgroup={setSelectedSubgroup}
-        setSelectedWeekType={setSelectedWeekType}
+        onSubgroupSelect={setSelectedSubgroup}
+        onWeekTypeSelect={setSelectedWeekType}
         groupName={group?.name}
-        isLoading={isLoading}
+        loading={isLoading}
       />
-      <WeekInfo selectedWeekType={selectedWeekType} setSelectedWeekType={setSelectedWeekType} />
-      <AnnouncementBlock message={group && group.last_announcement?.message} loading={isLoading} />
+      <WeekInfo selectedWeekType={selectedWeekType} onWeekTypeSelect={setSelectedWeekType} />
+      <AnnouncementBlock blockData={group?.announcements_block || undefined} loading={isLoading} />
 
       <DaysBlock
         selectedWeekType={selectedWeekType}
