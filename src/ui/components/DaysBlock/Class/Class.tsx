@@ -33,6 +33,7 @@ import { TeacherPicker } from "@components/DaysBlock/Class/TeacherPicker.tsx"
 import { LocationPicker } from "@components/DaysBlock/Class/LocationPicker.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { Check } from "lucide-react"
+import toast from "react-hot-toast"
 
 export interface ClassProps {
   isFirst?: boolean
@@ -76,6 +77,7 @@ export const Class: FC<ClassProps> = ({
   const classForm = useForm({
     ...classFormOptions,
     onSubmit: async ({ value }) => {
+      toast.success("Успешное сохранение!")
       console.log(value)
     },
   })
@@ -88,6 +90,9 @@ export const Class: FC<ClassProps> = ({
           e.preventDefault()
           e.stopPropagation()
           classForm.handleSubmit()
+          if (onActiveChange) {
+            onActiveChange(undefined)
+          }
         }}>
         <div className={baseBlockFinalClass}>
           <div className="box-content flex h-full flex-col items-start justify-evenly">
@@ -224,8 +229,7 @@ export const Class: FC<ClassProps> = ({
             type="submit"
             variant="block"
             size="thin"
-            className="absolute left-[606px] top-0 h-[133px] w-[60px] flex-col"
-            onClick={() => onActiveChange && onActiveChange(undefined)}>
+            className="absolute left-[606px] top-0 h-[133px] w-[60px] flex-col">
             <Check />
           </Button>
         </TooltipWrapper>
