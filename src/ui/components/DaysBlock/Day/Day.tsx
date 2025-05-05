@@ -6,6 +6,7 @@ import { useToggle } from "@/hooks/use-toggle.ts"
 import clsx from "clsx"
 import { DayHeader } from "@components/DaysBlock/Day/DayHeader.tsx"
 import { defaultClass } from "@/utils/default-entities.ts"
+import { BlurElement } from "@components/DaysBlock/BlurElement.tsx"
 
 export interface DayProps {
   dayData: DayModel | undefined
@@ -27,22 +28,25 @@ export const Day: FC<DayProps> = ({ dayData }) => {
 
   if (isEditing) {
     return (
-      <div className="group flex flex-col">
-        <DayHeader
-          dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
-          classesCount={dayData?.classes?.length || 0}
-          editing={isEditing}
-          onEditing={setIsEditing}
-          onActiveChange={setActiveClassIndex}
-        />
-        <ClassesList
-          classes={optimisticClasses}
-          editing={isEditing}
-          activeIndex={activeClassIndex}
-          onActiveChange={setActiveClassIndex}
-        />
-        <EndBlock editing={isEditing} onClassAdd={handleAddClass} />
-      </div>
+      <>
+        <div className="group relative flex flex-col *:z-20">
+          <DayHeader
+            dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
+            classesCount={dayData?.classes?.length || 0}
+            editing={isEditing}
+            onEditing={setIsEditing}
+            onActiveChange={setActiveClassIndex}
+          />
+          <ClassesList
+            classes={optimisticClasses}
+            editing={isEditing}
+            activeIndex={activeClassIndex}
+            onActiveChange={setActiveClassIndex}
+          />
+          <EndBlock editing={isEditing} onClassAdd={handleAddClass} />
+        </div>
+        <BlurElement />
+      </>
     )
   }
 

@@ -58,7 +58,7 @@ export const Class: FC<ClassProps> = ({
   const baseBlockFinalClass = clsx(
     baseBlockClass,
     !isFirst ? "rounded-t-sm" : "",
-    editing ? "bg-zinc-200 px-4" : "bg-zinc-120 px-8",
+    editing ? "bg-zinc-200 px-3" : "bg-zinc-120 px-8",
     clickable ? "cursor-pointer" : "cursor-default"
   )
 
@@ -219,14 +219,16 @@ export const Class: FC<ClassProps> = ({
             </classForm.Field>
           </div>
         </div>
-        <Button
-          type="submit"
-          variant="block"
-          className="absolute left-[606px] top-0 h-[133px] w-[80px] flex-col"
-          onClick={() => onActiveChange && onActiveChange(undefined)}>
-          <Check />
-          Сохранить
-        </Button>
+        <TooltipWrapper message="Сохранить изменения">
+          <Button
+            type="submit"
+            variant="block"
+            size="thin"
+            className="absolute left-[606px] top-0 h-[133px] w-[60px] flex-col"
+            onClick={() => onActiveChange && onActiveChange(undefined)}>
+            <Check />
+          </Button>
+        </TooltipWrapper>
       </form>
     )
   }

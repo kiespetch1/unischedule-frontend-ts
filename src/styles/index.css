@@ -70,8 +70,12 @@
         }
     }
 
-    .animate-fade-in-scale {
+    .animate-fade-in-scale-100 {
         animation: fade-in-scale 100ms ease-out forwards;
+    }
+
+    .animate-fade-in-scale-200 {
+        animation: fade-in-scale 200ms ease-out forwards;
     }
 
     .animate-fade-out-scale {

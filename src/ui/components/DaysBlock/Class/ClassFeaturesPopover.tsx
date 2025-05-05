@@ -36,10 +36,10 @@ export const ClassFeaturesPopover: FC<ClassFeaturesPopoverProps> = ({
             type="button">
             <span className="flex w-full items-center justify-around">
               {weekType === "every" && subgroup === "none" && <EmptyWeekType />}
-              {weekType === "odd" && <OddWeek className="animate-fade-in-scale" />}
-              {weekType === "even" && <EvenWeek className="animate-fade-in-scale" />}
-              {subgroup === "first" && <FirstGroup className="animate-fade-in-scale" />}
-              {subgroup === "second" && <SecondGroup className="animate-fade-in-scale" />}
+              {weekType === "odd" && <OddWeek className="animate-fade-in-scale-100" />}
+              {weekType === "even" && <EvenWeek className="animate-fade-in-scale-100" />}
+              {subgroup === "first" && <FirstGroup className="animate-fade-in-scale-100" />}
+              {subgroup === "second" && <SecondGroup className="animate-fade-in-scale-100" />}
             </span>
           </Button>
         </PopoverTrigger>

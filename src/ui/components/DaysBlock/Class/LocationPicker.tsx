@@ -45,7 +45,7 @@ export const LocationPicker: FC<LocationPickerProps> = ({
 
   const displayLabel = currentLocation?.name ?? "Выбрать..."
   const displayType =
-    (currentLocation && getRussianLocationTypeName(currentLocation?.type)) ?? "Тип локации"
+    (currentLocation && getRussianLocationTypeName(currentLocation?.type)) ?? "Очно"
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -57,8 +57,8 @@ export const LocationPicker: FC<LocationPickerProps> = ({
           aria-expanded={open}
           className={cn("h-full justify-between p-0", widthClass, className)}>
           <div className="flex flex-col items-center justify-center gap-2">
-            <div className="font-raleway text-lg font-semibold">{displayType}</div>
-            <div className="font-raleway text-lg font-normal">{displayLabel}</div>
+            <div className="font-raleway text-lg font-normal">{displayType}</div>
+            <div className="font-raleway text-lg font-semibold">{displayLabel}</div>
           </div>
           <Switch className="rotate-45 opacity-50" />
         </Button>
