@@ -6,7 +6,7 @@ export type AnnouncementPriority = "normal" | "high" | "very_high"
 
 export type WeekType = "every" | "even" | "odd"
 
-export type ClassType = "lecture" | "practice" | "labwork"
+export type ClassType = "lecture" | "practice" | "lab_work"
 
 export type Subgroup = "none" | "first" | "second" | "third"
 

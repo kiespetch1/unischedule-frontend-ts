@@ -20,7 +20,7 @@ export const classDefaultSchema = z.object({
     },
     z.string().time({ precision: 0, message: "Некорректное время конца пары" })
   ),
-  type: z.enum(["lecture", "practice", "labwork"] as const, {
+  type: z.enum(["lecture", "practice", "lab_work"] as const, {
     errorMap: (issue, ctx) => {
       if (issue.code === ZodIssueCode.invalid_enum_value) {
         return { message: "Тип пары должен быть одним из списка" }

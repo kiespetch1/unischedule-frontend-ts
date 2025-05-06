@@ -4,7 +4,7 @@ import { ClassType, Subgroup, WeekType } from "@/features/classes-schedule/types
 export const ClassTypeOptions: Options<ClassType>[] = [
   { value: "lecture", label: "Лекция" },
   { value: "practice", label: "Практика" },
-  { value: "labwork", label: "Лаб. работа" },
+  { value: "lab_work", label: "Лаб. работа" },
 ]
 
 export const WeekTypeOptions: Options<WeekType>[] = [

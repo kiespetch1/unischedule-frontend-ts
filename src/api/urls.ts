@@ -11,3 +11,5 @@ export const getGroupsUrl = () => `${SCHEDULE_URL}/api/v1/groups`
 export const getTeachersUrl = () => `${SCHEDULE_URL}/api/v1/teachers`
 
 export const getLocationsUrl = () => `${SCHEDULE_URL}/api/v1/locations`
+
+export const getClassByIdUrl = (classId: string) => `${SCHEDULE_URL}/api/v1/classes/${classId}`

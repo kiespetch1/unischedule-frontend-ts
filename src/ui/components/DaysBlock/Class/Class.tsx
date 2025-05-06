@@ -23,6 +23,7 @@ import { classDefaultSchema } from "@/utils/zod-schemas.ts"
 import {
   ClassEditModel,
   toClassEditModel,
+  toClassEditModelFlat,
 } from "@/features/classes-schedule/dto/edit-class-model.ts"
 import { Input } from "@/components/ui/input.tsx"
 import { Combobox } from "@/components/ui/combobox"
@@ -32,8 +33,11 @@ import { ClassTypeOptions } from "@components/DaysBlock/Class/combobox-options.t
 import { TeacherPicker } from "@components/DaysBlock/Class/TeacherPicker.tsx"
 import { LocationPicker } from "@components/DaysBlock/Class/LocationPicker.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { Check } from "lucide-react"
-import toast from "react-hot-toast"
+import { Check, Trash } from "lucide-react"
+import {
+  useDeleteClass,
+  useUpdateClass,
+} from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
 
 export interface ClassProps {
   isFirst?: boolean
@@ -43,6 +47,7 @@ export interface ClassProps {
   clickable?: boolean
   onClick?: () => void
   onActiveChange?: (index: number | undefined) => void
+  groupId?: string
 }
 
 export const Class: FC<ClassProps> = ({
@@ -53,6 +58,7 @@ export const Class: FC<ClassProps> = ({
   data,
   onClick,
   onActiveChange,
+  groupId = "",
 }) => {
   const baseBlockClass =
     "flex flex-row items-center justify-between py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
@@ -64,12 +70,17 @@ export const Class: FC<ClassProps> = ({
   )
 
   const classData: ClassModel = data ?? defaultClass
+  const { mutateAsync: updateClass } = useUpdateClass({ classData, group_id: groupId })
+  const { mutateAsync: deleteClass } = useDeleteClass({ classData, group_id: groupId })
+  const handleClassDelete = () => {
+    deleteClass()
+  }
 
   const classFormOptions = formOptions({
     defaultValues: classData ? toClassEditModel(classData) : defaultClassEdit,
     validators: {
       onChange: classDefaultSchema as ZodType<ClassEditModel>,
-      onChangeAsyncDebounceMs: 500,
+      onChangeAsyncDebounceMs: 400,
     },
     canSubmitWhenInvalid: false,
   })
@@ -77,8 +88,12 @@ export const Class: FC<ClassProps> = ({
   const classForm = useForm({
     ...classFormOptions,
     onSubmit: async ({ value }) => {
-      toast.success("Успешное сохранение!")
       console.log(value)
+      await updateClass(toClassEditModelFlat(value))
+
+      if (onActiveChange) {
+        onActiveChange(undefined)
+      }
     },
   })
 
@@ -88,11 +103,7 @@ export const Class: FC<ClassProps> = ({
         className="relative"
         onSubmit={e => {
           e.preventDefault()
-          e.stopPropagation()
-          classForm.handleSubmit()
-          if (onActiveChange) {
-            onActiveChange(undefined)
-          }
+          classForm.handleSubmit(e)
         }}>
         <div className={baseBlockFinalClass}>
           <div className="box-content flex h-full flex-col items-start justify-evenly">
@@ -224,15 +235,27 @@ export const Class: FC<ClassProps> = ({
             </classForm.Field>
           </div>
         </div>
-        <TooltipWrapper message="Сохранить изменения">
-          <Button
-            type="submit"
-            variant="block"
-            size="thin"
-            className="absolute left-[606px] top-0 h-[133px] w-[60px] flex-col">
-            <Check />
-          </Button>
-        </TooltipWrapper>
+        <div>
+          <TooltipWrapper message="Сохранить изменения">
+            <Button
+              type="submit"
+              variant="block"
+              size="thin"
+              className="absolute left-[606px] top-0 h-[63px] w-[60px] flex-col">
+              <Check />
+            </Button>
+          </TooltipWrapper>
+          <TooltipWrapper message="Удалить пару">
+            <Button
+              type="button"
+              variant="block"
+              size="thin"
+              className="absolute left-[606px] top-[69px] h-[63px] w-[60px] flex-col"
+              onClick={handleClassDelete}>
+              <Trash color="red" />
+            </Button>
+          </TooltipWrapper>
+        </div>
       </form>
     )
   }

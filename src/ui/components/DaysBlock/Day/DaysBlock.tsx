@@ -8,9 +8,16 @@ export interface DaysBlockProps {
   oddWeek: WeekModel
   evenWeek: WeekModel
   loading: boolean
+  groupId?: string
 }
 
-export const DaysBlock: FC<DaysBlockProps> = ({ selectedWeekType, oddWeek, evenWeek, loading }) => {
+export const DaysBlock: FC<DaysBlockProps> = ({
+  selectedWeekType,
+  oddWeek,
+  evenWeek,
+  loading,
+  groupId,
+}) => {
   if (loading) {
     return (
       <div className="mt-4 flex flex-row flex-wrap items-start justify-evenly gap-x-3 gap-y-4">
@@ -23,8 +30,8 @@ export const DaysBlock: FC<DaysBlockProps> = ({ selectedWeekType, oddWeek, evenW
   return (
     <div className="mt-4 flex flex-row flex-wrap items-start justify-evenly gap-x-3 gap-y-4">
       {selectedWeekType === "odd"
-        ? oddWeek?.days.map(day => <Day key={day.id} dayData={day} />)
-        : evenWeek?.days.map(day => <Day key={day.id} dayData={day} />)}
+        ? oddWeek?.days.map(day => <Day key={day.id} dayData={day} groupId={groupId} />)
+        : evenWeek?.days.map(day => <Day key={day.id} dayData={day} groupId={groupId} />)}
     </div>
   )
 }

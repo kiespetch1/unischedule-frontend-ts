@@ -12,4 +12,13 @@ export interface GetGroupByIdQueryParams {
 export const useGetGroupById: ApiQueryWithParams<GetGroupByIdQueryParams, GroupModel> = (
   { id },
   options
-) => useQuery({ queryKey: [groupKey, id], queryFn: () => getGroupById(id), ...options })
+) =>
+  useQuery({
+    queryKey: [groupKey, id],
+    queryFn: () => getGroupById(id),
+    staleTime: 60 * 60_000,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    ...options,
+  })

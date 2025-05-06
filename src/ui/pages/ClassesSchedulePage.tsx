@@ -42,6 +42,7 @@ export const ClassesSchedulePage = () => {
         oddWeek={oddWeek}
         evenWeek={evenWeek}
         loading={isLoading}
+        groupId={groupId}
       />
     </div>
   )

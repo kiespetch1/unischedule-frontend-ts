@@ -16,6 +16,17 @@ export interface ClassEditModel {
   teacher_id: string
 }
 
+export interface ClassEditModelFlat {
+  name: string
+  started_at: string
+  finished_at: string
+  type: ClassType
+  week_type: WeekType
+  subgroup: Subgroup
+  location_id: string
+  teacher_id: string
+}
+
 export const toClassEditModel = (classModel: ClassModel): ClassEditModel => {
   return {
     name: classModel.name,
@@ -25,5 +36,17 @@ export const toClassEditModel = (classModel: ClassModel): ClassEditModel => {
     features: { week_type: classModel.week_type, subgroup: classModel.subgroup },
     location_id: classModel.location.id,
     teacher_id: classModel.teacher.id,
+  }
+}
+export const toClassEditModelFlat = (classModel: ClassEditModel): ClassEditModelFlat => {
+  return {
+    name: classModel.name,
+    started_at: classModel.started_at + ":00",
+    finished_at: classModel.finished_at + ":00",
+    type: classModel.type,
+    week_type: classModel.features.week_type,
+    subgroup: classModel.features.subgroup,
+    location_id: classModel.location_id,
+    teacher_id: classModel.teacher_id,
   }
 }

@@ -1,4 +1,4 @@
-﻿import { FC, ReactNode, useOptimistic, useState } from "react"
+﻿import { FC, ReactNode, useState } from "react"
 import { ClassModel, DayModel, DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
 import Add from "@assets/add.svg?react"
 import { Class } from "@components/DaysBlock/Class/Class.tsx"
@@ -7,24 +7,18 @@ import clsx from "clsx"
 import { DayHeader } from "@components/DaysBlock/Day/DayHeader.tsx"
 import { defaultClass } from "@/utils/default-entities.ts"
 import { BlurElement } from "@components/DaysBlock/BlurElement.tsx"
+import { sortByStartTime } from "@components/DaysBlock/formatters.ts"
 
 export interface DayProps {
   dayData: DayModel | undefined
+  groupId?: string
 }
 
-export const Day: FC<DayProps> = ({ dayData }) => {
-  const initialClasses: ClassModel[] = dayData?.classes ?? [defaultClass]
+export const Day: FC<DayProps> = ({ dayData, groupId }) => {
+  const classes: ClassModel[] = dayData?.classes ?? [defaultClass]
   const [isEditing, setIsEditing] = useToggle(false)
-  const [classes, setClasses] = useState(initialClasses)
-  const [optimisticClasses, addOptimisticClass] = useOptimistic<ClassModel[], ClassModel>(
-    classes,
-    (state, newOptimisticClasses) => [...state, newOptimisticClasses]
-  )
   const [activeClassIndex, setActiveClassIndex] = useState<number | undefined>(undefined)
-
-  const handleAddClass = () => {
-    addOptimisticClass(defaultClass)
-  }
+  const handleAddClass = () => {}
 
   if (isEditing) {
     return (
@@ -38,10 +32,11 @@ export const Day: FC<DayProps> = ({ dayData }) => {
             onActiveChange={setActiveClassIndex}
           />
           <ClassesList
-            classes={optimisticClasses}
+            classes={classes}
             editing={isEditing}
             activeIndex={activeClassIndex}
             onActiveChange={setActiveClassIndex}
+            groupId={groupId}
           />
           <EndBlock editing={isEditing} onClassAdd={handleAddClass} />
         </div>
@@ -60,7 +55,7 @@ export const Day: FC<DayProps> = ({ dayData }) => {
         onActiveChange={setActiveClassIndex}
       />
       <ClassesList
-        classes={optimisticClasses}
+        classes={classes}
         editing={isEditing}
         activeIndex={activeClassIndex}
         onActiveChange={setActiveClassIndex}
@@ -75,26 +70,40 @@ interface ClassesListProps {
   editing: boolean
   activeIndex: number | undefined
   onActiveChange: (index: number | undefined) => void
+  groupId?: string
 }
 
-const ClassesList: FC<ClassesListProps> = ({ classes, editing, activeIndex, onActiveChange }) => {
+const ClassesList: FC<ClassesListProps> = ({
+  classes,
+  editing,
+  activeIndex,
+  onActiveChange,
+  groupId,
+}) => {
   const renderClasses = (): ReactNode => {
     if (classes.length === 0) {
       return <Class isWeekend={true} />
     }
 
-    return classes.map((classData, index) => (
-      <Class
-        key={classData.id}
-        data={classData}
-        isFirst={index === 0}
-        isWeekend={false}
-        editing={index === activeIndex}
-        clickable={editing && index !== activeIndex}
-        onClick={() => (editing ? onActiveChange(index) : undefined)}
-        onActiveChange={onActiveChange}
-      />
-    ))
+    const sorted = sortByStartTime(classes)
+
+    return (
+      <>
+        {sorted.map((classData, index) => (
+          <Class
+            key={classData.id}
+            data={classData}
+            isFirst={index === 0}
+            isWeekend={false}
+            editing={editing && index === activeIndex}
+            clickable={editing && index !== activeIndex}
+            onClick={() => editing && onActiveChange?.(index)}
+            onActiveChange={onActiveChange}
+            groupId={groupId}
+          />
+        ))}
+      </>
+    )
   }
 
   return <>{renderClasses()}</>

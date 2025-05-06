@@ -1,4 +1,8 @@
-import { ClassType, LocationType } from "@/features/classes-schedule/types/classes-types.ts"
+import {
+  ClassModel,
+  ClassType,
+  LocationType,
+} from "@/features/classes-schedule/types/classes-types.ts"
 
 export const getRussianClassTypeName = (classType: ClassType) => {
   switch (classType) {
@@ -6,7 +10,7 @@ export const getRussianClassTypeName = (classType: ClassType) => {
       return "Лекция"
     case "practice":
       return "Практика"
-    case "labwork":
+    case "lab_work":
       return "Лаб. работа"
   }
 }
@@ -19,3 +23,10 @@ export const getRussianLocationTypeName = (location: LocationType) => {
       return "Дистант"
   }
 }
+
+export const sortByStartTime = (classes: ClassModel[]) =>
+  classes.slice().sort((a, b) => {
+    if (a.started_at < b.started_at) return -1
+    if (a.started_at > b.started_at) return 1
+    return 0
+  })
