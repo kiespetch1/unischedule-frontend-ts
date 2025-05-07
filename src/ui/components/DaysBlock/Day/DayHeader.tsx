@@ -16,6 +16,8 @@ export interface DayHeaderProps {
   onEditing: ActionDispatch<[newState: boolean | undefined]>
   onActiveChange: (index: number | undefined) => void
   onEditingExit: () => void
+  onClassesCopy: () => void
+  onClassesClear: () => void
 }
 
 export const DayHeader: FC<DayHeaderProps> = ({
@@ -25,6 +27,8 @@ export const DayHeader: FC<DayHeaderProps> = ({
   onEditing,
   onActiveChange,
   onEditingExit,
+  onClassesCopy,
+  onClassesClear,
 }) => {
   const getClassesCount = (count: number) => {
     if (count == 0) {
@@ -54,6 +58,8 @@ export const DayHeader: FC<DayHeaderProps> = ({
         setIsEditing={onEditing}
         onActiveChange={onActiveChange}
         onEditingExit={onEditingExit}
+        onClassesCopy={onClassesCopy}
+        onClassesClear={onClassesClear}
       />
     </div>
   )
@@ -64,6 +70,8 @@ interface ButtonsBlock {
   setIsEditing: ActionDispatch<[newState: boolean | undefined]>
   onActiveChange: (index: number | undefined) => void
   onEditingExit: () => void
+  onClassesCopy: () => void
+  onClassesClear: () => void
 }
 
 const ButtonsBlock: FC<ButtonsBlock> = ({
@@ -71,17 +79,19 @@ const ButtonsBlock: FC<ButtonsBlock> = ({
   setIsEditing,
   onActiveChange,
   onEditingExit,
+  onClassesCopy,
+  onClassesClear,
 }) => {
   if (editing) {
     return (
       <div className="flex items-center gap-5">
         <TooltipWrapper message="Скопировать день с текущей недели на противоположную">
-          <button className="cursor-pointer pb-px">
+          <button className="cursor-pointer pb-px" onClick={onClassesCopy}>
             <Copy />
           </button>
         </TooltipWrapper>
         <TooltipWrapper message="Удалить все пары текущего дня">
-          <button className="cursor-pointer pb-px">
+          <button className="cursor-pointer pb-px" onClick={onClassesClear}>
             <Eraser />
           </button>
         </TooltipWrapper>

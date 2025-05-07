@@ -19,6 +19,8 @@ import { deleteClass } from "@/features/classes-schedule/classes/delete-class.ts
 import { ApiError } from "@/api/api-error.ts"
 import toast from "react-hot-toast"
 import { createClass } from "@/features/classes-schedule/classes/create-class.ts"
+import { copyClasses } from "@/features/classes-schedule/classes/copy-classes.ts"
+import { clearClasses } from "@/features/classes-schedule/classes/clear-classes.ts"
 
 const groupKey = "group"
 
@@ -132,6 +134,64 @@ export const useDeleteClass: ApiMutationWithParams<ClassMutateParameters> = <TCo
     onSuccess: (...args) => {
       toast.success("Пара успешно удалена")
       options?.onSuccess?.(...args)
+    },
+    retry: 3,
+    ...options,
+  })
+}
+
+export interface ClassesCopyParameters {
+  dayId: string
+  groupId: string
+}
+
+export const useCopyClasses: ApiMutationWithParams<ClassesCopyParameters> = <TContext = unknown>(
+  { dayId, groupId }: ClassesCopyParameters,
+  options?: ApiMutationOptions<void, void, TContext>
+): ApiMutationResult<void, void, TContext> => {
+  const queryClient = useQueryClient()
+
+  return useMutation<void, ApiError, void, TContext>({
+    mutationFn: async () => {
+      await copyClasses(dayId)
+    },
+    onSuccess: (...args) => {
+      toast.success("Пары успешно скопированы")
+      void queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
+      options?.onSuccess?.(...args)
+    },
+    onError: (err, _vars, context) => {
+      toast.error("Не удалось скопировать пары")
+      options?.onError?.(err, _vars, context)
+    },
+    retry: 3,
+    ...options,
+  })
+}
+
+export interface ClassesClearParameters {
+  dayId: string
+  groupId: string
+}
+
+export const useClearClasses: ApiMutationWithParams<ClassesClearParameters> = <TContext = unknown>(
+  { dayId, groupId }: ClassesClearParameters,
+  options?: ApiMutationOptions<void, void, TContext>
+): ApiMutationResult<void, void, TContext> => {
+  const queryClient = useQueryClient()
+
+  return useMutation<void, ApiError, void, TContext>({
+    mutationFn: async () => {
+      await clearClasses(dayId)
+    },
+    onSuccess: (...args) => {
+      toast.success("Все пары дня успешно удалены")
+      void queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
+      options?.onSuccess?.(...args)
+    },
+    onError: (err, _vars, context) => {
+      toast.error("Не удалось удалить пары дня")
+      options?.onError?.(err, _vars, context)
     },
     retry: 3,
     ...options,

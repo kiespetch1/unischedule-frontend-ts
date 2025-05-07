@@ -15,3 +15,9 @@ export const getLocationsUrl = () => `${SCHEDULE_URL}/api/v1/locations`
 export const getClassUrl = () => `${SCHEDULE_URL}/api/v1/classes`
 
 export const getClassByIdUrl = (classId: string) => `${SCHEDULE_URL}/api/v1/classes/${classId}`
+
+export const getClassesCopyByDayIdUrl = (dayId: string) =>
+  `${SCHEDULE_URL}/api/v1/classes/copy/${dayId}`
+
+export const getClassesClearByDayIdUrl = (dayId: string) =>
+  `${SCHEDULE_URL}/api/v1/classes/clear/${dayId}`

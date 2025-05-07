@@ -17,18 +17,24 @@ import { useQueryClient } from "@tanstack/react-query"
 import toast from "react-hot-toast"
 import { Button } from "@/components/ui/button.tsx"
 import { getWarningToastSettings } from "@/lib/toastSettings.tsx"
+import {
+  useClearClasses,
+  useCopyClasses,
+} from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
 
 export interface DayProps {
   dayData: DayModel | undefined
   groupId?: string
 }
 
-export const Day: FC<DayProps> = ({ dayData, groupId }) => {
+export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
   const day: DayModel = dayData ?? defaultDay
   const classes: ClassModel[] = dayData?.classes ?? [defaultClass]
   const [isEditing, setIsEditing] = useToggle(false)
   const [activeClassIndex, setActiveClassIndex] = useState<number | undefined>(undefined)
   const queryClient = useQueryClient()
+  const { mutateAsync: copyClasses } = useCopyClasses({ dayId: day.id, groupId: groupId })
+  const { mutateAsync: clearClasses } = useClearClasses({ dayId: day.id, groupId: groupId })
   const handleAddClass = (weekId: string, dayId: string) => {
     queryClient.setQueryData<GroupModel>(["group", groupId], oldGroup => {
       if (!oldGroup) return oldGroup
@@ -102,6 +108,8 @@ export const Day: FC<DayProps> = ({ dayData, groupId }) => {
             onEditing={setIsEditing}
             onActiveChange={setActiveClassIndex}
             onEditingExit={() => handleClearUnsavedClasses(day.week_id, day.id)}
+            onClassesCopy={copyClasses}
+            onClassesClear={clearClasses}
           />
           <ClassesList
             classes={classes}
@@ -132,6 +140,8 @@ export const Day: FC<DayProps> = ({ dayData, groupId }) => {
         onEditing={setIsEditing}
         onActiveChange={setActiveClassIndex}
         onEditingExit={() => handleClearUnsavedClasses(day.week_id, day.id)}
+        onClassesCopy={copyClasses}
+        onClassesClear={clearClasses}
       />
       <ClassesList
         classes={classes}
