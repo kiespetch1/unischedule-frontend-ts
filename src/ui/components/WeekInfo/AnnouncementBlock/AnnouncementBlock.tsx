@@ -3,6 +3,7 @@ import ExpandTriangle from "@assets/expand-triangle.svg?react"
 import clsx from "clsx"
 import { AnnouncementSkeleton } from "./AnnouncementSkeleton"
 import { AnnouncementBlockModel } from "@/features/classes-schedule/types/classes-types.ts"
+import { useDialog } from "@/contexts/dialog-context.tsx"
 
 export interface AnnouncementBlockProps {
   blockData: AnnouncementBlockModel | undefined
@@ -11,6 +12,8 @@ export interface AnnouncementBlockProps {
 
 export const AnnouncementBlock: FC<AnnouncementBlockProps> = ({ blockData, loading }) => {
   const [isOpen, setIsOpen] = useState(true)
+  const { openAnnouncements } = useDialog()
+  
   const contentClass = "font-raleway text-lg text-zinc-950"
   const finalContentClass = clsx(contentClass, !isOpen ? "hidden" : undefined)
   const triangleClass = "transition duration-300 ease-in-out"
@@ -35,7 +38,10 @@ export const AnnouncementBlock: FC<AnnouncementBlockProps> = ({ blockData, loadi
           </div>
           <ExpandTriangle className={finalTriangleClass} />
         </button>
-        <button className="font-raleway cursor-pointer text-lg font-normal text-neutral-500">
+        <button 
+          className="font-raleway cursor-pointer text-lg font-normal text-neutral-500"
+          onClick={openAnnouncements}
+        >
           посмотреть другие объявления
         </button>
       </div>
