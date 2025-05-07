@@ -45,7 +45,7 @@ export const LocationPicker: FC<LocationPickerProps> = ({
 
   const displayLabel = currentLocation?.name ?? "Выбрать..."
   const displayType =
-    (currentLocation && getRussianLocationTypeName(currentLocation?.type)) ?? "Очно"
+    (currentLocation && getRussianLocationTypeName(currentLocation?.type)) ?? "Н/Д"
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

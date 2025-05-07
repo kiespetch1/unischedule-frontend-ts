@@ -18,10 +18,11 @@ import {
   getRussianLocationTypeName,
 } from "@components/DaysBlock/formatters.ts"
 import { formOptions, useForm } from "@tanstack/react-form"
-import { defaultClass, defaultClassEdit } from "@/utils/default-entities.ts"
+import { defaultClass, defaultClassEdit, defaultId } from "@/utils/default-entities.ts"
 import { classDefaultSchema } from "@/utils/zod-schemas.ts"
 import {
   ClassEditModel,
+  toClassCreateModel,
   toClassEditModel,
   toClassEditModelFlat,
 } from "@/features/classes-schedule/dto/edit-class-model.ts"
@@ -32,12 +33,12 @@ import { ZodType } from "zod"
 import { ClassTypeOptions } from "@components/DaysBlock/Class/combobox-options.ts"
 import { TeacherPicker } from "@components/DaysBlock/Class/TeacherPicker.tsx"
 import { LocationPicker } from "@components/DaysBlock/Class/LocationPicker.tsx"
-import { Button } from "@/components/ui/button.tsx"
-import { Check, Trash } from "lucide-react"
 import {
+  useCreateClass,
   useDeleteClass,
   useUpdateClass,
 } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
+import { ClassSideButtons } from "@components/DaysBlock/Class/ClassSideButtons.tsx"
 
 export interface ClassProps {
   isFirst?: boolean
@@ -48,6 +49,8 @@ export interface ClassProps {
   onClick?: () => void
   onActiveChange?: (index: number | undefined) => void
   groupId?: string
+  dayId?: string
+  onUnsavedDelete?: () => void
 }
 
 export const Class: FC<ClassProps> = ({
@@ -59,6 +62,8 @@ export const Class: FC<ClassProps> = ({
   onClick,
   onActiveChange,
   groupId = "",
+  dayId = "",
+  onUnsavedDelete = () => {},
 }) => {
   const baseBlockClass =
     "flex flex-row items-center justify-between py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
@@ -70,10 +75,15 @@ export const Class: FC<ClassProps> = ({
   )
 
   const classData: ClassModel = data ?? defaultClass
+  const { mutateAsync: createClass } = useCreateClass({ group_id: groupId })
   const { mutateAsync: updateClass } = useUpdateClass({ classData, group_id: groupId })
   const { mutateAsync: deleteClass } = useDeleteClass({ classData, group_id: groupId })
   const handleClassDelete = () => {
-    deleteClass()
+    if (classData.id === defaultId) {
+      onUnsavedDelete()
+    } else {
+      deleteClass()
+    }
   }
 
   const classFormOptions = formOptions({
@@ -88,8 +98,11 @@ export const Class: FC<ClassProps> = ({
   const classForm = useForm({
     ...classFormOptions,
     onSubmit: async ({ value }) => {
-      console.log(value)
-      await updateClass(toClassEditModelFlat(value))
+      if (value.is_new) {
+        await createClass(toClassCreateModel(value, dayId))
+      } else {
+        await updateClass(toClassEditModelFlat(value))
+      }
 
       if (onActiveChange) {
         onActiveChange(undefined)
@@ -235,27 +248,7 @@ export const Class: FC<ClassProps> = ({
             </classForm.Field>
           </div>
         </div>
-        <div>
-          <TooltipWrapper message="Сохранить изменения">
-            <Button
-              type="submit"
-              variant="block"
-              size="thin"
-              className="absolute left-[606px] top-0 h-[63px] w-[60px] flex-col">
-              <Check />
-            </Button>
-          </TooltipWrapper>
-          <TooltipWrapper message="Удалить пару">
-            <Button
-              type="button"
-              variant="block"
-              size="thin"
-              className="absolute left-[606px] top-[69px] h-[63px] w-[60px] flex-col"
-              onClick={handleClassDelete}>
-              <Trash color="red" />
-            </Button>
-          </TooltipWrapper>
-        </div>
+        <ClassSideButtons onClassDelete={handleClassDelete} />
       </form>
     )
   }

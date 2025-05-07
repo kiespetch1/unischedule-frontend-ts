@@ -58,4 +58,5 @@ export const classDefaultSchema = z.object({
     .refine(val => val !== "00000000-0000-0000-0000-000000000000", {
       message: "Преподаватель должен быть заполнен",
     }),
+  is_new: z.boolean(),
 })

@@ -15,6 +15,7 @@ export interface DayHeaderProps {
   editing: boolean
   onEditing: ActionDispatch<[newState: boolean | undefined]>
   onActiveChange: (index: number | undefined) => void
+  onEditingExit: () => void
 }
 
 export const DayHeader: FC<DayHeaderProps> = ({
@@ -23,6 +24,7 @@ export const DayHeader: FC<DayHeaderProps> = ({
   editing,
   onEditing,
   onActiveChange,
+  onEditingExit,
 }) => {
   const getClassesCount = (count: number) => {
     if (count == 0) {
@@ -47,7 +49,12 @@ export const DayHeader: FC<DayHeaderProps> = ({
           {getClassesCount(classesCount)}
         </div>
       </div>
-      <ButtonsBlock editing={editing} setIsEditing={onEditing} onActiveChange={onActiveChange} />
+      <ButtonsBlock
+        editing={editing}
+        setIsEditing={onEditing}
+        onActiveChange={onActiveChange}
+        onEditingExit={onEditingExit}
+      />
     </div>
   )
 }
@@ -56,9 +63,15 @@ interface ButtonsBlock {
   editing: boolean
   setIsEditing: ActionDispatch<[newState: boolean | undefined]>
   onActiveChange: (index: number | undefined) => void
+  onEditingExit: () => void
 }
 
-const ButtonsBlock: FC<ButtonsBlock> = ({ editing, setIsEditing, onActiveChange }) => {
+const ButtonsBlock: FC<ButtonsBlock> = ({
+  editing,
+  setIsEditing,
+  onActiveChange,
+  onEditingExit,
+}) => {
   if (editing) {
     return (
       <div className="flex items-center gap-5">
@@ -77,6 +90,7 @@ const ButtonsBlock: FC<ButtonsBlock> = ({ editing, setIsEditing, onActiveChange 
             onClick={() => {
               setIsEditing(undefined)
               onActiveChange(undefined)
+              onEditingExit()
             }}
             className="cursor-pointer">
             <Cross width="20px" height="20px" color="#fff" />

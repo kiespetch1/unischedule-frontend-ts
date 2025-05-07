@@ -3,7 +3,10 @@ import {
   ApiMutationResult,
   ApiMutationWithParams,
 } from "@/types/api-mutation.ts"
-import { ClassEditModelFlat } from "@/features/classes-schedule/dto/edit-class-model.ts"
+import {
+  ClassCreateModel,
+  ClassEditModelFlat,
+} from "@/features/classes-schedule/dto/edit-class-model.ts"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { updateClass } from "@/features/classes-schedule/classes/update-class.ts"
 import {
@@ -15,15 +18,46 @@ import {
 import { deleteClass } from "@/features/classes-schedule/classes/delete-class.ts"
 import { ApiError } from "@/api/api-error.ts"
 import toast from "react-hot-toast"
+import { createClass } from "@/features/classes-schedule/classes/create-class.ts"
 
 const groupKey = "group"
 
-interface ClassMutationParameters {
+interface ClassMutateParameters {
   classData: ClassModel
   group_id: string
 }
 
-export const useUpdateClass: ApiMutationWithParams<ClassMutationParameters, ClassEditModelFlat> = (
+interface ClassCreateParameters {
+  group_id: string
+}
+
+export const useCreateClass: ApiMutationWithParams<ClassCreateParameters, ClassCreateModel> = (
+  { group_id },
+  options
+) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async editModel => {
+      return createClass(editModel)
+    },
+    onSettled: (...args) => {
+      queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      options?.onSettled?.(...args)
+    },
+    onError: (err, _vars, context) => {
+      toast.error("Не удалось создать пару")
+      options?.onError?.(err, _vars, context)
+    },
+    onSuccess: (...args) => {
+      toast.success("Пара успешно создана")
+      options?.onSuccess?.(...args)
+    },
+    retry: 3,
+    ...options,
+  })
+}
+
+export const useUpdateClass: ApiMutationWithParams<ClassMutateParameters, ClassEditModelFlat> = (
   { classData, group_id },
   options
 ) => {
@@ -44,6 +78,7 @@ export const useUpdateClass: ApiMutationWithParams<ClassMutationParameters, Clas
       toast.success("Пара успешно обновлена")
       options?.onSuccess?.(...args)
     },
+    retry: 3,
     ...options,
   })
 }
@@ -52,8 +87,8 @@ interface DeleteClassContext {
   previousGroup?: GroupModel
 }
 
-export const useDeleteClass: ApiMutationWithParams<ClassMutationParameters> = <TContext = unknown>(
-  { classData, group_id }: ClassMutationParameters,
+export const useDeleteClass: ApiMutationWithParams<ClassMutateParameters> = <TContext = unknown>(
+  { classData, group_id }: ClassMutateParameters,
   options?: ApiMutationOptions<void, void, TContext>
 ): ApiMutationResult<void, void, TContext> => {
   const queryClient = useQueryClient()
@@ -98,7 +133,7 @@ export const useDeleteClass: ApiMutationWithParams<ClassMutationParameters> = <T
       toast.success("Пара успешно удалена")
       options?.onSuccess?.(...args)
     },
-
+    retry: 3,
     ...options,
   })
 }

@@ -4,12 +4,12 @@ import clsx from "clsx"
 import { AnnouncementSkeleton } from "./AnnouncementSkeleton"
 import { AnnouncementBlockModel } from "@/features/classes-schedule/types/classes-types.ts"
 
-export interface LastAnnouncementBlockProps {
+export interface AnnouncementBlockProps {
   blockData: AnnouncementBlockModel | undefined
   loading: boolean
 }
 
-export const AnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ blockData, loading }) => {
+export const AnnouncementBlock: FC<AnnouncementBlockProps> = ({ blockData, loading }) => {
   const [isOpen, setIsOpen] = useState(true)
   const contentClass = "font-raleway text-lg text-zinc-950"
   const finalContentClass = clsx(contentClass, !isOpen ? "hidden" : undefined)
@@ -20,7 +20,7 @@ export const AnnouncementBlock: FC<LastAnnouncementBlockProps> = ({ blockData, l
     return <AnnouncementSkeleton />
   }
 
-  if (!blockData) {
+  if (!blockData?.last && !blockData?.last_time_limited) {
     return null
   }
 

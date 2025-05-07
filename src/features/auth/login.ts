@@ -20,7 +20,7 @@ export const login = async (credentials: LoginParams): Promise<boolean> => {
     return true
   } else {
     const data = await response.json().catch(() => null)
-    toast.error(data?.message || "Ошибка запроса")
+    toast.error(data?.message || "Не удалось авторизоваться")
     throw new ApiError(response, data)
   }
 }

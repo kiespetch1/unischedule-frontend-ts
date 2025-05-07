@@ -1,5 +1,4 @@
 import { ApiError } from "./api-error"
-import toast from "react-hot-toast"
 import { getXsrfToken, setXsrfToken } from "@/features/auth/utils/tokens.ts"
 import { refresh } from "@/features/auth/refresh.ts"
 
@@ -39,7 +38,6 @@ export async function apiFetch(
 
     if (!res.ok) {
       const data = await res.json().catch(() => null)
-      toast.error(data?.message || "Ошибка запроса")
       throw new ApiError(res, data)
     }
 

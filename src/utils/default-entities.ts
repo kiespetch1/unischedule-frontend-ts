@@ -21,45 +21,42 @@ import { ClassEditModel } from "@/features/classes-schedule/dto/edit-class-model
 export const defaultWeekType: WeekTypeStrict = "odd"
 export const defaultSubgroup: SubgroupStrict = "first"
 export const defaultDayOfWeek: DayOfWeek = DayOfWeek.Monday
+export const defaultId = "00000000-0000-0000-0000-000000000000"
 
 export const defaultDay: DayModel = {
-  id: "00000000-0000-0000-0000-000000000000",
-  week_id: "00000000-0000-0000-0000-000000000000",
+  id: defaultId,
+  week_id: defaultId,
   day_of_week: defaultDayOfWeek,
   classes: [],
 }
 
 export const defaultWeek: WeekModel = {
-  id: "00000000-0000-0000-0000-000000000000",
-  group_id: "00000000-0000-0000-0000-000000000000",
+  id: defaultId,
+  group_id: defaultId,
   type: "every" as WeekType,
   subgroup: "none" as Subgroup,
   days: [],
 }
 
 export const defaultLocation: LocationModel = {
-  id: "00000000-0000-0000-0000-000000000000",
+  id: defaultId,
   name: "4-321",
   link: null,
   type: "irl" as LocationType,
 }
 
-export const defaultTeacher: TeacherModel = {
-  id: "00000000-0000-0000-0000-000000000000",
-  name: "Иванов И. И.",
-  full_name: null,
-}
+export const defaultTeacher: TeacherModel = { id: defaultId, name: "Иванов И. И.", full_name: null }
 
 export const defaultClass: ClassModel = {
-  id: "00000000-0000-0000-0000-000000000000",
+  id: defaultId,
   name: "Новая пара",
-  started_at: "09:00",
-  finished_at: "10:45",
+  started_at: "09:00:00",
+  finished_at: "10:45:00",
   type: "lecture" as ClassType,
   week_type: "every" as WeekType,
   subgroup: "none" as Subgroup,
   is_cancelled: false,
-  day_id: "00000000-0000-0000-0000-000000000000",
+  day_id: defaultId,
   location: defaultLocation,
   teacher: defaultTeacher,
 }
@@ -70,12 +67,13 @@ export const defaultClassEdit: ClassEditModel = {
   finished_at: "10:45",
   type: "lecture" as ClassType,
   features: { week_type: "every" as WeekType, subgroup: "none" as Subgroup },
-  location_id: "00000000-0000-0000-0000-000000000000",
-  teacher_id: "00000000-0000-0000-0000-000000000000",
+  location_id: defaultId,
+  teacher_id: defaultId,
+  is_new: true,
 }
 
 export const defaultUser: UserModel = {
-  id: "00000000-0000-0000-0000-000000000000",
+  id: defaultId,
   surname: null,
   name: null,
   patronymic: null,
@@ -83,7 +81,7 @@ export const defaultUser: UserModel = {
 }
 
 export const defaultAnnouncement: AnnouncementModel = {
-  id: "00000000-0000-0000-0000-000000000000",
+  id: defaultId,
   message: "",
   priority: "normal" as AnnouncementPriority,
   is_anonymous: false,
@@ -96,7 +94,7 @@ export const defaultAnnouncement: AnnouncementModel = {
 }
 
 export const defaultGroup: GroupModel = {
-  id: "00000000-0000-0000-0000-000000000000",
+  id: defaultId,
   name: "",
   grade: 0,
   has_subgroups: false,
