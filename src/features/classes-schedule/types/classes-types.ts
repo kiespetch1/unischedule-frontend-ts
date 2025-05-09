@@ -12,6 +12,8 @@ export type Subgroup = "none" | "first" | "second" | "third"
 
 export type LocationType = "irl" | "online"
 
+export type RoleType = "admin" | "staff" | "group_leader" | "user"
+
 export enum DayOfWeek {
   Sunday = "sunday",
   Monday = "monday",
@@ -57,6 +59,17 @@ export interface UserModel {
   name?: string | null
   patronymic?: string | null
   email?: string | null
+}
+
+export interface UserExtendedModel {
+  id: string
+  surname?: string | null
+  name?: string | null
+  patronymic?: string | null
+  email?: string | null
+  role: string
+  group_id: string
+  managed_group_ids: string[]
 }
 
 export interface WeekModel {

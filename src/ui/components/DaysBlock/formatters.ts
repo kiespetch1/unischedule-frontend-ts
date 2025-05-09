@@ -2,6 +2,7 @@ import {
   ClassModel,
   ClassType,
   LocationType,
+  RoleType,
 } from "@/features/classes-schedule/types/classes-types.ts"
 
 export const getRussianClassTypeName = (classType: ClassType) => {
@@ -21,6 +22,19 @@ export const getRussianLocationTypeName = (location: LocationType) => {
       return "Очно"
     case "online":
       return "Дистант"
+  }
+}
+
+export const getRussianRoleName = (role: RoleType) => {
+  switch (role) {
+    case "admin":
+      return "Администратор"
+    case "staff":
+      return "Сотрудник ВУЗа"
+    case "group_leader":
+      return "Староста группы"
+    case "user":
+      return "Студент"
   }
 }
 

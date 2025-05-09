@@ -15,8 +15,10 @@ import {
   ClassType,
   LocationType,
   AnnouncementPriority,
+  UserExtendedModel,
 } from "@/features/classes-schedule/types/classes-types.ts"
 import { ClassEditModel } from "@/features/classes-schedule/dto/edit-class-model.ts"
+import { PermissionsResult, UserPermissions } from "@/features/auth/types/auth-types.ts"
 
 export const defaultWeekType: WeekTypeStrict = "odd"
 export const defaultSubgroup: SubgroupStrict = "first"
@@ -80,6 +82,17 @@ export const defaultUser: UserModel = {
   email: null,
 }
 
+export const defaultExtendedUser: UserExtendedModel = {
+  id: defaultId,
+  surname: null,
+  name: null,
+  patronymic: null,
+  email: null,
+  role: "User",
+  group_id: defaultId,
+  managed_group_ids: [],
+}
+
 export const defaultAnnouncement: AnnouncementModel = {
   id: defaultId,
   message: "",
@@ -103,3 +116,32 @@ export const defaultGroup: GroupModel = {
   last_academic_week_number: 0,
   weeks: [],
 }
+
+export const defaultPermissions: UserPermissions = {
+  can_register_user: false,
+  can_update_user: false,
+  can_get_current_user: false,
+  can_create_announcement: false,
+  can_update_announcement: false,
+  can_delete_announcement: false,
+  can_create_class: false,
+  can_update_class: false,
+  can_delete_class: false,
+  can_cancel_class: false,
+  can_restore_class: false,
+  can_copy_class: false,
+  can_create_group: false,
+  can_update_group: false,
+  can_delete_group: false,
+  can_update_grades: false,
+  can_create_location: false,
+  can_update_location: false,
+  can_delete_location: false,
+  can_create_teacher: false,
+  can_update_teacher: false,
+  can_delete_teacher: false,
+  can_create_week: false,
+  can_delete_week: false,
+}
+
+export const defaultPermissionsResult: PermissionsResult = { data: defaultPermissions, error: null }

@@ -5,10 +5,13 @@ import User from "@assets/user.svg?react"
 import { DialogWrapper } from "@components/common/DialogWrapper.tsx"
 import { LoginForm } from "@/components/login-form.tsx"
 import { useDialog } from "@/contexts/dialog-context.tsx"
+import { useAuth } from "@/features/auth/context/auth-context.tsx"
+import { UserPanel } from "./UserPanel"
 
 export const Header: FC = () => {
   const { isAnnouncementsOpen, openAnnouncements, closeAnnouncements } = useDialog()
   const [isLoginOpen, setLoginOpen] = useState(false)
+  const { authState } = useAuth()
 
   return (
     <header className="sticky top-0 z-40 mb-6 box-content flex h-[90px] items-center border-b-2 border-zinc-300 bg-zinc-100">
@@ -40,7 +43,7 @@ export const Header: FC = () => {
           />
 
           <DialogWrapper
-            headless={true}
+            headless={!authState.isAuthenticated}
             open={isLoginOpen}
             onOpenChange={setLoginOpen}
             showCloseButton={false}
@@ -52,7 +55,11 @@ export const Header: FC = () => {
                 <User />
               </a>
             }>
-            <LoginForm onSuccess={() => setLoginOpen(false)} />
+            {authState.isAuthenticated ? (
+              <UserPanel userData={authState.userData} onLogout={() => setLoginOpen(false)} />
+            ) : (
+              <LoginForm onSuccess={() => setLoginOpen(false)} />
+            )}
           </DialogWrapper>
         </li>
       </ul>

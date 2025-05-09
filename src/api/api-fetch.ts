@@ -1,55 +1,75 @@
 import { ApiError } from "./api-error"
-import { getXsrfToken, setXsrfToken } from "@/features/auth/utils/tokens.ts"
-import { refresh } from "@/features/auth/refresh.ts"
+import { getXsrfToken, setXsrfToken } from "@/features/auth/utils/tokens"
+import { refresh } from "@/features/auth/refresh"
+import { getAntiforgeryRefreshUrl } from "@/api/urls.ts"
+
+let refreshPromise: Promise<void> | null = null
+let xsrfRenewPromise: Promise<void> | null = null
 
 export async function apiFetch(
   input: RequestInfo,
   init?: RequestInit & { useCredentials?: boolean; useXsrfProtection?: boolean }
 ): Promise<Response> {
-  const { useCredentials = true, useXsrfProtection = true, ...fetchInit } = init || {}
+  const { useCredentials = true, useXsrfProtection = true, ...baseInit } = init ?? {}
 
-  fetchInit.credentials = useCredentials ? "include" : "omit"
+  async function doFetch(tries = 0): Promise<Response> {
+    const fetchInit: RequestInit = { ...baseInit }
+    fetchInit.credentials = useCredentials ? "include" : "omit"
 
-  const headers = new Headers(fetchInit.headers)
-  const method = fetchInit.method?.toUpperCase() || "GET"
+    const headers = new Headers(fetchInit.headers)
+    const method = (fetchInit.method ?? "GET").toUpperCase()
 
-  if (method === "PATCH") {
-    headers.set("Content-Type", "application/json-patch+json")
-  } else if (fetchInit.body) {
-    headers.set("Content-Type", "application/json")
-  }
-
-  if (useXsrfProtection && ["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-    const xsrf = getXsrfToken()
-    if (xsrf) {
-      headers.set("XSRF-TOKEN", xsrf)
-    }
-  }
-
-  fetchInit.headers = headers
-
-  async function doFetch(retried = false): Promise<Response> {
-    const res = await fetch(input, fetchInit)
-
-    if (res.status === 401 && useCredentials && !retried) {
-      await refresh()
-      return doFetch(true)
+    if (
+      !headers.has("Content-Type") &&
+      (method === "PATCH" || (fetchInit.body && typeof fetchInit.body === "string"))
+    ) {
+      headers.set(
+        "Content-Type",
+        method === "PATCH" ? "application/json-patch+json" : "application/json"
+      )
     }
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => null)
-      throw new ApiError(res, data)
+    if (
+      useXsrfProtection &&
+      useCredentials &&
+      ["POST", "PUT", "PATCH", "DELETE"].includes(method)
+    ) {
+      const token = getXsrfToken()
+      if (token) headers.set("XSRF-TOKEN", token)
     }
 
-    return res
+    fetchInit.headers = headers
+
+    const response = await fetch(input, fetchInit)
+
+    // 401 -> один общий refresh
+    if (response.status === 401 && useCredentials && tries < 2) {
+      if (!refreshPromise) refreshPromise = refresh().finally(() => (refreshPromise = null))
+      await refreshPromise
+      return doFetch(tries + 1)
+    }
+
+    // 403 -> пробуем получить новый request‑токен и повторить
+    if (response.status === 403 && useXsrfProtection && tries < 2) {
+      if (!xsrfRenewPromise) {
+        xsrfRenewPromise = fetch(getAntiforgeryRefreshUrl(), { credentials: "include" })
+          .then(r => setXsrfToken(r.headers.get("XSRF-TOKEN") || ""))
+          .finally(() => (xsrfRenewPromise = null))
+      }
+      await xsrfRenewPromise
+      return doFetch(tries + 1)
+    }
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => null)
+      throw new ApiError(response, data)
+    }
+
+    const newXsrf = response.headers.get("XSRF-TOKEN")
+    if (newXsrf) setXsrfToken(newXsrf)
+
+    return response
   }
 
-  const response = await doFetch()
-
-  const newXsrf = response.headers.get("XSRF-TOKEN")
-  if (newXsrf) {
-    setXsrfToken(newXsrf)
-  }
-
-  return response
+  return doFetch()
 }

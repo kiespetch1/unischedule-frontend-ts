@@ -8,6 +8,7 @@ import { getPluralForm, getRussianDayName, numberToDayOfWeek } from "@/utils/for
 import clsx from "clsx"
 import Dot from "@components/Dot.tsx"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
+import { PermissionGate } from "@/features/auth/components/auth-gate.tsx"
 
 export interface DayHeaderProps {
   dayOfWeek: DayOfWeek
@@ -53,14 +54,16 @@ export const DayHeader: FC<DayHeaderProps> = ({
           {getClassesCount(classesCount)}
         </div>
       </div>
-      <ButtonsBlock
-        editing={editing}
-        setIsEditing={onEditing}
-        onActiveChange={onActiveChange}
-        onEditingExit={onEditingExit}
-        onClassesCopy={onClassesCopy}
-        onClassesClear={onClassesClear}
-      />
+      <PermissionGate permission="can_update_class">
+        <ButtonsBlock
+          editing={editing}
+          setIsEditing={onEditing}
+          onActiveChange={onActiveChange}
+          onEditingExit={onEditingExit}
+          onClassesCopy={onClassesCopy}
+          onClassesClear={onClassesClear}
+        />
+      </PermissionGate>
     </div>
   )
 }

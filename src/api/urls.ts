@@ -4,6 +4,14 @@ export const getLoginUrl = () => `${IDENTITY_URL}/api/v1/account/sign_in`
 
 export const getRefreshUrl = () => `${IDENTITY_URL}/api/v1/account/refresh`
 
+export const getAntiforgeryRefreshUrl = () => `${IDENTITY_URL}/api/v1/account/antiforgery`
+
+export const getCurrentUserUrl = () => `${IDENTITY_URL}/api/v1/account/me`
+
+export const getLogoutUrl = () => `${IDENTITY_URL}/api/v1/account/sign_out`
+
+export const getPermissionsUrl = () => `${IDENTITY_URL}/api/v1/account/me/permissions`
+
 export const getGroupByIdUrl = (groupId: string) => `${SCHEDULE_URL}/api/v1/groups/${groupId}`
 
 export const getGroupsUrl = () => `${SCHEDULE_URL}/api/v1/groups`

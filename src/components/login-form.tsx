@@ -9,6 +9,7 @@ import { z } from "zod"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { getErrorMessages } from "@/utils/formatters"
 import { login, LoginParams } from "@/features/auth/login.ts"
+import { useAuth } from "@/features/auth/context/auth-context.tsx"
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -16,6 +17,7 @@ interface LoginFormProps {
 }
 
 export const LoginForm: FC<LoginFormProps> = ({ className, onSuccess, ...props }) => {
+  const { login: setLogin } = useAuth()
   const defaultCredentials: LoginParams = { login: "", password: "" }
   const credentialsSchema = z.object({
     login: z.string().trim().email("Некорректный формат почты"),
@@ -35,6 +37,7 @@ export const LoginForm: FC<LoginFormProps> = ({ className, onSuccess, ...props }
         const ok = await login(value)
         if (ok) {
           onSuccess?.()
+          setLogin()
         }
       } catch {
         // do nothing
