@@ -65,3 +65,26 @@ export const teacherSchema = z.object({
   name: z.string().min(1, { message: "ФИО преподавателя не может быть пустым" }),
   full_name: z.string().optional(),
 })
+
+export const locationSchema = z
+  .object({
+    name: z.string().min(1, { message: "Название локации не может быть пустым" }),
+    type: z.enum(["irl", "online"] as const, {
+      errorMap: (issue, ctx) => {
+        if (issue.code === ZodIssueCode.invalid_enum_value) {
+          return { message: "Тип локации должен быть очно или дистант" }
+        }
+        return { message: ctx.defaultError }
+      },
+    }),
+    link: z.string().url({ message: "Ссылка должна быть валидным URL" }).optional().nullable(),
+  })
+  .refine(
+    data => {
+      return (
+        data.type !== "online" ||
+        (data.link !== undefined && data.link !== null && data.link !== "")
+      )
+    },
+    { message: "Для дистанционной локации необходимо указать ссылку", path: ["link"] }
+  )

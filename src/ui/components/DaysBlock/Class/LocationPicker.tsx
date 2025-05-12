@@ -15,12 +15,14 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx"
 import { useGetLocations } from "@/features/classes-schedule/locations/hooks/use-locations-query.ts"
-import { getRussianLocationTypeName } from "@components/DaysBlock/formatters.ts"
+import { getRussianLocationTypeName } from "@/ui/components/DaysBlock/formatters.ts"
+import { LocationForm } from "./LocationForm.tsx"
 
 export interface LocationPickerProps {
   value: string
@@ -47,6 +49,11 @@ export const LocationPicker: FC<LocationPickerProps> = ({
   const displayType =
     (currentLocation && getRussianLocationTypeName(currentLocation?.type)) ?? "Н/Д"
 
+  const handleLocationAddSuccess = () => {
+    setAddDialogOpen(false)
+    refetch()
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -72,14 +79,7 @@ export const LocationPicker: FC<LocationPickerProps> = ({
           <CommandList>
             <CommandEmpty className="font-raleway">Нет результатов</CommandEmpty>
             <CommandGroup>
-              <Dialog
-                open={addDialogOpen}
-                onOpenChange={isOpen => {
-                  if (!isOpen) {
-                    refetch()
-                  }
-                  setAddDialogOpen(isOpen)
-                }}>
+              <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
                 <DialogTrigger asChild>
                   <CommandItem
                     className="font-raleway"
@@ -90,10 +90,16 @@ export const LocationPicker: FC<LocationPickerProps> = ({
                     Добавить локацию
                   </CommandItem>
                 </DialogTrigger>
-                <DialogContent>
-                  <DialogTitle>
-                    <DialogHeader>Добавить новую локацию</DialogHeader>
-                  </DialogTitle>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="font-raleway text-lg">
+                      Добавить новую локацию
+                    </DialogTitle>
+                    <DialogDescription className="font-raleway text-sm">
+                      Заполните информацию о локации. После сохранения она появится в списке.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <LocationForm onSuccess={handleLocationAddSuccess} />
                 </DialogContent>
               </Dialog>
               {options.map(item => (
