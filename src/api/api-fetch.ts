@@ -1,10 +1,14 @@
 import { ApiError } from "./api-error"
 import { getXsrfToken, setXsrfToken } from "@/features/auth/utils/tokens"
 import { refresh } from "@/features/auth/refresh"
-import { getAntiforgeryRefreshUrl } from "@/api/urls.ts"
+import { getAntiforgeryRefreshUrl, getServiceTypeFromUrl } from "@/api/urls.ts"
 
 let refreshPromise: Promise<void> | null = null
-let xsrfRenewPromise: Promise<void> | null = null
+const xsrfRenewPromises: Record<string, Promise<void> | null> = {
+  identity: null,
+  schedule: null,
+  events: null,
+}
 
 export async function apiFetch(
   input: RequestInfo,
@@ -49,14 +53,18 @@ export async function apiFetch(
       return doFetch(tries + 1)
     }
 
-    // 403 -> пробуем получить новый request‑токен и повторить
+    // 403 -> пробуем получить новый request‑токен с нужного сервиса и повторить
     if (response.status === 403 && useXsrfProtection && tries < 2) {
-      if (!xsrfRenewPromise) {
-        xsrfRenewPromise = fetch(getAntiforgeryRefreshUrl(), { credentials: "include" })
+      const url = typeof input === "string" ? input : input.url
+      const serviceType = getServiceTypeFromUrl(url)
+
+      if (!xsrfRenewPromises[serviceType]) {
+        const antiforgeryUrl = getAntiforgeryRefreshUrl(serviceType)
+        xsrfRenewPromises[serviceType] = fetch(antiforgeryUrl, { credentials: "include" })
           .then(r => setXsrfToken(r.headers.get("XSRF-TOKEN") || ""))
-          .finally(() => (xsrfRenewPromise = null))
+          .finally(() => (xsrfRenewPromises[serviceType] = null))
       }
-      await xsrfRenewPromise
+      await xsrfRenewPromises[serviceType]
       return doFetch(tries + 1)
     }
 

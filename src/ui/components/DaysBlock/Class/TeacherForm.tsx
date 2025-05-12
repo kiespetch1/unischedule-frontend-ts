@@ -46,6 +46,7 @@ export const TeacherForm: FC<TeacherFormProps> = ({ onSuccess }) => {
       className="space-y-6"
       onSubmit={e => {
         e.preventDefault()
+        e.stopPropagation()
         teacherForm.handleSubmit(e)
       }}>
       <teacherForm.Field name="name">

@@ -1,10 +1,35 @@
-﻿import { IDENTITY_URL, SCHEDULE_URL } from "@/config/api.ts"
+﻿import { IDENTITY_URL, SCHEDULE_URL, EVENTS_URL } from "@/config/api.ts"
+
+export type ApiServiceType = "identity" | "schedule" | "events"
+
+export const getServiceBaseUrl = (serviceType: ApiServiceType): string => {
+  switch (serviceType) {
+    case "identity":
+      return IDENTITY_URL
+    case "schedule":
+      return SCHEDULE_URL
+    case "events":
+      return EVENTS_URL
+    default:
+      return IDENTITY_URL
+  }
+}
+
+export const getServiceTypeFromUrl = (url: string): ApiServiceType => {
+  if (url.startsWith(IDENTITY_URL)) return "identity"
+  if (url.startsWith(SCHEDULE_URL)) return "schedule"
+  if (url.startsWith(EVENTS_URL)) return "events"
+
+  return "identity"
+}
+
+export const getAntiforgeryRefreshUrl = (serviceType: ApiServiceType = "identity"): string => {
+  return `${getServiceBaseUrl(serviceType)}/api/v1/account/antiforgery`
+}
 
 export const getLoginUrl = () => `${IDENTITY_URL}/api/v1/account/sign_in`
 
 export const getRefreshUrl = () => `${IDENTITY_URL}/api/v1/account/refresh`
-
-export const getAntiforgeryRefreshUrl = () => `${IDENTITY_URL}/api/v1/account/antiforgery`
 
 export const getCurrentUserUrl = () => `${IDENTITY_URL}/api/v1/account/me`
 
