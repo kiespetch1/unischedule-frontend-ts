@@ -58,7 +58,7 @@ export const Header: FC = () => {
             {authState.isAuthenticated ? (
               <UserPanel userData={authState.userData} onLogout={() => setLoginOpen(false)} />
             ) : (
-              <LoginForm onSuccess={() => setLoginOpen(false)} />
+              <LoginForm />
             )}
           </DialogWrapper>
         </li>

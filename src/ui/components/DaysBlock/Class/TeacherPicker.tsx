@@ -16,10 +16,12 @@ import { useGetTeachers } from "@/features/classes-schedule/teachers/hooks/use-t
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx"
+import { TeacherForm } from "./TeacherForm.tsx"
 
 export interface TeacherPickerProps {
   value: string
@@ -43,6 +45,11 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
 
   const displayLabel = options.find(opt => opt.id === currentValue)?.name ?? "Выбрать..."
 
+  const handleTeacherAddSuccess = () => {
+    setAddDialogOpen(false)
+    refetch()
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -65,9 +72,6 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
               <Dialog
                 open={addDialogOpen}
                 onOpenChange={isOpen => {
-                  if (!isOpen) {
-                    refetch()
-                  }
                   setAddDialogOpen(isOpen)
                 }}>
                 <DialogTrigger asChild>
@@ -80,10 +84,16 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
                     Добавить преподавателя
                   </CommandItem>
                 </DialogTrigger>
-                <DialogContent>
-                  <DialogTitle>
-                    <DialogHeader>Добавить нового преподавателя</DialogHeader>
-                  </DialogTitle>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="font-raleway text-lg">
+                      Добавить нового преподавателя
+                    </DialogTitle>
+                    <DialogDescription className="font-raleway text-sm">
+                      Заполните информацию о преподавателе. После сохранения он появится в списке.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <TeacherForm onSuccess={handleTeacherAddSuccess} />
                 </DialogContent>
               </Dialog>
               {options.map(item => (

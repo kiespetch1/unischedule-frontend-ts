@@ -60,3 +60,8 @@ export const classDefaultSchema = z.object({
     }),
   is_new: z.boolean(),
 })
+
+export const teacherSchema = z.object({
+  name: z.string().min(1, { message: "ФИО преподавателя не может быть пустым" }),
+  full_name: z.string().optional(),
+})
