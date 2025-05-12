@@ -1,6 +1,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { FC, useState } from "react"
+import { FC, useMemo, useState } from "react"
 import Switch from "@assets/switch.svg?react"
 import { cn } from "@/lib/utils.ts"
 import { Check, PlusIcon } from "lucide-react"
@@ -21,7 +21,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog.tsx"
 import { useGetLocations } from "@/features/classes-schedule/locations/hooks/use-locations-query.ts"
-import { getRussianLocationTypeName } from "@/ui/components/DaysBlock/formatters.ts"
+import {
+  extractDomain,
+  formatLocationName,
+  getRussianLocationTypeName,
+} from "@/ui/components/DaysBlock/formatters.ts"
 import { LocationForm } from "./LocationForm.tsx"
 
 export interface LocationPickerProps {
@@ -39,19 +43,55 @@ export const LocationPicker: FC<LocationPickerProps> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
   const { data: locations, refetch } = useGetLocations()
-  const options = locations?.data ?? []
+  const options = useMemo(() => locations?.data ?? [], [locations])
+
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return [...options].sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
+    }
+
+    const query = searchQuery.toLowerCase().trim()
+
+    return options
+      .filter(item => {
+        const name = item.name.toLowerCase()
+        const domain =
+          item.type === "online" && item.link ? extractDomain(item.link).toLowerCase() : ""
+
+        return (
+          name.includes(query) ||
+          domain.includes(query) ||
+          (item.link && item.link.toLowerCase().includes(query)) ||
+          item.type.toLowerCase().includes(query)
+        )
+      })
+      .sort((a, b) => {
+        const aName = a.name.toLowerCase()
+        const bName = b.name.toLowerCase()
+
+        const aStartsWith = aName.startsWith(query)
+        const bStartsWith = bName.startsWith(query)
+
+        if (aStartsWith && !bStartsWith) return -1
+        if (!aStartsWith && bStartsWith) return 1
+
+        return aName < bName ? -1 : aName > bName ? 1 : 0
+      })
+  }, [options, searchQuery])
 
   const currentValue = value || options[0]?.id || ""
   const currentLocation = options.find(opt => opt.id === currentValue)
 
-  const displayLabel = currentLocation?.name ?? "Выбрать..."
+  const displayLabel = currentLocation ? formatLocationName(currentLocation) : "Выбрать..."
+
   const displayType =
     (currentLocation && getRussianLocationTypeName(currentLocation?.type)) ?? "Н/Д"
 
   const handleLocationAddSuccess = () => {
     setAddDialogOpen(false)
-    refetch()
+    void refetch()
   }
 
   return (
@@ -71,10 +111,12 @@ export const LocationPicker: FC<LocationPickerProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent sideOffset={0} className={cn("w-full p-0", className)}>
-        <Command>
+        <Command shouldFilter={false}>
           <CommandInput
             placeholder={"Поиск по названию локации/домену"}
             className="font-raleway h-9"
+            value={searchQuery}
+            onValueChange={setSearchQuery}
           />
           <CommandList>
             <CommandEmpty className="font-raleway">Нет результатов</CommandEmpty>
@@ -102,7 +144,7 @@ export const LocationPicker: FC<LocationPickerProps> = ({
                   <LocationForm onSuccess={handleLocationAddSuccess} />
                 </DialogContent>
               </Dialog>
-              {options.map(item => (
+              {filteredOptions.map(item => (
                 <CommandItem
                   key={item.id}
                   value={item.id}
@@ -111,7 +153,7 @@ export const LocationPicker: FC<LocationPickerProps> = ({
                     onChange(val)
                     setOpen(false)
                   }}>
-                  {item.name}
+                  {formatLocationName(item)}
                   <Check
                     className={cn(
                       "ml-auto",

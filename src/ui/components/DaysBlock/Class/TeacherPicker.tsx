@@ -1,6 +1,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { FC, useState } from "react"
+import { FC, useMemo, useState } from "react"
 import Switch from "@assets/switch.svg?react"
 import { cn } from "@/lib/utils.ts"
 import { Check, PlusIcon } from "lucide-react"
@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dialog.tsx"
 import { TeacherForm } from "./TeacherForm.tsx"
 
+// Функция больше не нужна, так как мы не будем отображать полное ФИО в списке
+
 export interface TeacherPickerProps {
   value: string
   onChange: (value: string) => void
@@ -38,16 +40,65 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
   const { data: teachers, refetch } = useGetTeachers()
-  const options = teachers?.data ?? []
+  const options = useMemo(() => teachers?.data ?? [], [teachers])
+
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return [...options].sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
+    }
+
+    const query = searchQuery.toLowerCase().trim()
+
+    const filtered = options.filter(item => {
+      const name = String(item.name).toLowerCase()
+      const fullName = item.full_name ? String(item.full_name).toLowerCase() : ""
+      const id = String(item.id).toLowerCase()
+
+      if (fullName && fullName.includes(query)) {
+        return true
+      }
+
+      return name.includes(query) || id.includes(query)
+    })
+
+    return filtered.sort((a, b) => {
+      const aName = String(a.name).toLowerCase()
+      const bName = String(b.name).toLowerCase()
+      const aFullName = a.full_name ? String(a.full_name).toLowerCase() : ""
+      const bFullName = b.full_name ? String(b.full_name).toLowerCase() : ""
+
+      const aFullNameStartsWith = aFullName && aFullName.startsWith(query)
+      const bFullNameStartsWith = bFullName && bFullName.startsWith(query)
+
+      if (aFullNameStartsWith && !bFullNameStartsWith) return -1
+      if (!aFullNameStartsWith && bFullNameStartsWith) return 1
+
+      const aNameStartsWith = aName.startsWith(query)
+      const bNameStartsWith = bName.startsWith(query)
+
+      if (aNameStartsWith && !bNameStartsWith) return -1
+      if (!aNameStartsWith && bNameStartsWith) return 1
+
+      const aFullNameIncludes = aFullName && aFullName.includes(query)
+      const bFullNameIncludes = bFullName && bFullName.includes(query)
+
+      if (aFullNameIncludes && !bFullNameIncludes) return -1
+      if (!aFullNameIncludes && bFullNameIncludes) return 1
+
+      return aName < bName ? -1 : aName > bName ? 1 : 0
+    })
+  }, [options, searchQuery])
 
   const currentValue = value || options[0]?.id || ""
+  const currentTeacher = options.find(opt => opt.id === currentValue)
 
-  const displayLabel = options.find(opt => opt.id === currentValue)?.name ?? "Выбрать..."
+  const displayLabel = currentTeacher ? currentTeacher.name : "Выбрать..."
 
   const handleTeacherAddSuccess = () => {
     setAddDialogOpen(false)
-    refetch()
+    void refetch()
   }
 
   return (
@@ -64,23 +115,24 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent sideOffset={0} className={cn("w-full p-0", className)}>
-        <Command>
-          <CommandInput placeholder={"Поиск по ФИО"} className="font-raleway h-9" />
+        <Command shouldFilter={false}>
+          <CommandInput
+            placeholder={"Поиск по ФИО"}
+            className="font-raleway h-9"
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+          />
           <CommandList>
             <CommandEmpty className="font-raleway">Нет результатов</CommandEmpty>
             <CommandGroup>
-              <Dialog
-                open={addDialogOpen}
-                onOpenChange={isOpen => {
-                  setAddDialogOpen(isOpen)
-                }}>
+              <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
                 <DialogTrigger asChild>
                   <CommandItem
                     className="font-raleway"
                     onSelect={() => {
                       setAddDialogOpen(true)
                     }}>
-                    <PlusIcon />
+                    <PlusIcon className="mr-2 h-4 w-4" />
                     Добавить преподавателя
                   </CommandItem>
                 </DialogTrigger>
@@ -96,7 +148,7 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
                   <TeacherForm onSuccess={handleTeacherAddSuccess} />
                 </DialogContent>
               </Dialog>
-              {options.map(item => (
+              {filteredOptions.map(item => (
                 <CommandItem
                   key={item.id}
                   value={item.id}
