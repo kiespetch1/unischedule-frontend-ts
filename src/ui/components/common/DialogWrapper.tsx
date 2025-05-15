@@ -50,9 +50,9 @@ export const DialogWrapper: FC<DialogWrapperProps> = ({
         )}>
         {!headless && (title || description) && (
           <DialogHeader className="mb-4">
-            {title && <DialogTitle className="font-raleway">{title}</DialogTitle>}
+            {title && <DialogTitle>{title}</DialogTitle>}
             {description && (
-              <DialogDescription className="font-raleway">{description}</DialogDescription>
+              <DialogDescription>{description}</DialogDescription>
             )}
           </DialogHeader>
         )}

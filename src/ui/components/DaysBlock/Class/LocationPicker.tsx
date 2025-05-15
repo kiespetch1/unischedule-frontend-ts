@@ -102,18 +102,18 @@ export const LocationPicker: FC<LocationPickerProps> = ({
           size="thin"
           role="combobox"
           aria-expanded={open}
-          className={cn("h-full justify-between p-0", widthClass, className)}>
-          <div className="flex flex-col items-center justify-center gap-2">
+          className={cn("overflow-hidden h-full w-full justify-between p-0", widthClass, className)}>
+          <div className="flex flex-col items-center justify-center gap-2 min-w-0">
             <div className="font-raleway text-lg font-normal">{displayType}</div>
-            <div className="font-raleway text-lg font-semibold">{displayLabel}</div>
+            <div className="font-raleway text-lg text-ellipsis font-semibold w-full overflow-hidden min-w-0">{displayLabel}</div>
           </div>
           <Switch className="rotate-45 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent sideOffset={0} className={cn("w-full p-0", className)}>
+      <PopoverContent sideOffset={0} className={cn("w-full p-0 [*>&]:min-w-52", className)}>
         <Command shouldFilter={false}>
           <CommandInput
-            placeholder={"Поиск по названию локации/домену"}
+            placeholder={"Поиск по названию"}
             className="font-raleway h-9"
             value={searchQuery}
             onValueChange={setSearchQuery}

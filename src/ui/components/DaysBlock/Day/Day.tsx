@@ -16,7 +16,7 @@ import { sortByStartTime } from "@components/DaysBlock/formatters.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import toast from "react-hot-toast"
 import { Button } from "@/components/ui/button.tsx"
-import { getWarningToastSettings } from "@/lib/toastSettings.tsx"
+import { getWarningToastSettings } from "@/lib/toast-settings.tsx"
 import {
   useClearClasses,
   useCopyClasses,
@@ -100,7 +100,7 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
   if (isEditing) {
     return (
       <>
-        <div className="group relative flex flex-col *:z-20">
+        <div className="group relative flex flex-col *:z-20 items-center">
           <DayHeader
             dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
             classesCount={dayData?.classes?.length || 0}
@@ -183,7 +183,7 @@ const ClassesList: FC<ClassesListProps> = ({
     const sorted = sortByStartTime(classes)
 
     return (
-      <>
+      <div className="flex flex-col items-center">
         {sorted.map((classData, index) => (
           <Class
             key={classData.id}
@@ -199,7 +199,7 @@ const ClassesList: FC<ClassesListProps> = ({
             onUnsavedDelete={onUnsavedDelete}
           />
         ))}
-      </>
+      </div>
     )
   }
 

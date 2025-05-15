@@ -66,11 +66,11 @@ export const Class: FC<ClassProps> = ({
   onUnsavedDelete = () => {},
 }) => {
   const baseBlockClass =
-    "flex flex-row items-center justify-between py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
+    "flex flex-row items-center justify-between py-1 mb-[6px] h-[133px] rounded-b-sm"
   const baseBlockFinalClass = clsx(
     baseBlockClass,
     !isFirst ? "rounded-t-sm" : "",
-    editing ? "bg-zinc-200 px-3" : "bg-zinc-120 px-8",
+    editing ? "bg-zinc-200 px-3 w-[625px]" : "bg-zinc-120 px-8 w-[600px]",
     clickable ? "cursor-pointer" : "cursor-default"
   )
 
@@ -241,7 +241,7 @@ export const Class: FC<ClassProps> = ({
                   <LocationPicker
                     value={fieldApi.state.value}
                     onChange={fieldApi.setValue}
-                    className="text-sm font-normal"
+                    className="text-sm font-normal max-w-32"
                   />
                 )
               }}
@@ -295,7 +295,11 @@ export const Class: FC<ClassProps> = ({
         <TooltipWrapper
           message={getIrlLocationTooltipMessage(classData.location.name)}
           disabled={classData.location.name.length !== 5}>
-          <span className="font-raleway text-lg font-bold">{classData.location.name}</span>
+          {classData.location.type === "online" ? (
+            <a href={classData.location.link ?? "#" } className="font-raleway text-lg underline font-bold text-blue-950">Ссылка</a>
+          ) : (
+            <span className="font-raleway text-lg font-bold">{classData.location.name}</span>
+          )}
         </TooltipWrapper>
       </div>
     </div>
