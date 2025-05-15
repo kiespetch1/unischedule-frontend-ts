@@ -42,19 +42,11 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = ({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-          <Button
-            variant={confirmButtonVariant}
-            onClick={handleConfirm}
-            className="w-1/2"
-          >
+        <DialogFooter className="sm:justify-between">
+          <Button variant={confirmButtonVariant} onClick={handleConfirm} className="w-1/2">
             {confirmButtonText}
           </Button>
-        <DialogFooter className="sm:justify-between">
-          <Button 
-            variant="outline" 
-            onClick={() => onOpenChange(false)}
-            className="w-1/2"
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-1/2">
             {cancelButtonText}
           </Button>
         </DialogFooter>

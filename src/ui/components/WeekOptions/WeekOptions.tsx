@@ -9,18 +9,20 @@ import { FC, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 export interface WeekOptionsProps {
+  hasFixedSubgroups: boolean
+  selectedWeekType: WeekTypeStrict
   selectedSubgroup: SubgroupStrict
   onSubgroupSelect: (subgroup?: SubgroupStrict) => void
-  selectedWeekType: WeekTypeStrict
   onWeekTypeSelect: (weekType?: WeekTypeStrict) => void
   groupName: string | undefined
   loading: boolean
 }
 
 export const WeekOptions: FC<WeekOptionsProps> = ({
+  hasFixedSubgroups,
+  selectedWeekType,
   selectedSubgroup,
   onSubgroupSelect,
-  selectedWeekType,
   onWeekTypeSelect,
   groupName,
   loading,
@@ -64,14 +66,16 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
         value={selectedWeekType}
         onValue="even"
       />
-      <Toggle
-        labelText="Подгруппа"
-        optionTexts={["Первая", "Вторая"]}
-        optionIcons={[<FirstGroup />, <SecondGroup />]}
-        setOppositeOption={handleSubgroupToggle}
-        value={selectedSubgroup}
-        onValue="second"
-      />
+      {hasFixedSubgroups && (
+        <Toggle
+          labelText="Подгруппа"
+          optionTexts={["Первая", "Вторая"]}
+          optionIcons={[<FirstGroup />, <SecondGroup />]}
+          setOppositeOption={handleSubgroupToggle}
+          value={selectedSubgroup}
+          onValue="second"
+        />
+      )}
     </div>
   )
 }

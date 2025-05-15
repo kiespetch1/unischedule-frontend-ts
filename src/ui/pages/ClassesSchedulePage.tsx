@@ -15,8 +15,19 @@ export const ClassesSchedulePage = () => {
   if (!groupId) throw new Error("groupId search param is not defined")
 
   const { data: group, isLoading } = useGetGroupById({ id: groupId })
+  const hasFixedSubgroups = (group?.has_subgroups && group?.has_fixed_subgroups) || false
+
   const oddWeek = group?.weeks.find(week => week.type === "odd") || defaultWeek
   const evenWeek = group?.weeks.find(week => week.type === "even") || defaultWeek
+
+  const oddWeekFirstSubgroup =
+    group?.weeks.find(week => week.type === "odd" && week.subgroup === "first") || defaultWeek
+  const evenWeekFirstSubgroup =
+    group?.weeks.find(week => week.type === "even" && week.subgroup === "first") || defaultWeek
+  const oddWeekSecondSubgroup =
+    group?.weeks.find(week => week.type === "odd" && week.subgroup === "second") || defaultWeek
+  const evenWeekSecondSubgroup =
+    group?.weeks.find(week => week.type === "even" && week.subgroup === "second") || defaultWeek
 
   useEffect(() => {
     if (group) {
@@ -27,6 +38,7 @@ export const ClassesSchedulePage = () => {
   return (
     <div className="mx-8 flex flex-col items-start gap-2">
       <WeekOptions
+        hasFixedSubgroups={hasFixedSubgroups}
         selectedWeekType={selectedWeekType}
         selectedSubgroup={selectedSubgroup}
         onSubgroupSelect={setSelectedSubgroup}
@@ -39,8 +51,14 @@ export const ClassesSchedulePage = () => {
 
       <DaysBlock
         selectedWeekType={selectedWeekType}
+        selectedSubgroup={selectedSubgroup}
+        hasFixedSubgroups={hasFixedSubgroups}
         oddWeek={oddWeek}
         evenWeek={evenWeek}
+        oddWeekFirstSubgroup={oddWeekFirstSubgroup}
+        evenWeekFirstSubgroup={evenWeekFirstSubgroup}
+        oddWeekSecondSubgroup={oddWeekSecondSubgroup}
+        evenWeekSecondSubgroup={evenWeekSecondSubgroup}
         loading={isLoading}
         groupId={groupId}
       />
