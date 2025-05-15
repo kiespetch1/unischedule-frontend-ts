@@ -159,7 +159,7 @@ export const Class: FC<ClassProps> = ({
                           aria-invalid={isTouched && errors.length > 0}
                           type="class-time"
                           className="text-2xl font-semibold"
-                          placeholder="10:45"
+                          placeholder="10:35"
                           required
                         />
                       </TooltipWrapper>

@@ -53,7 +53,7 @@ export const defaultClass: ClassModel = {
   id: defaultId,
   name: "Новая пара",
   started_at: "09:00:00",
-  finished_at: "10:45:00",
+  finished_at: "10:35:00",
   type: "lecture" as ClassType,
   week_type: "every" as WeekType,
   subgroup: "none" as Subgroup,
@@ -66,7 +66,7 @@ export const defaultClass: ClassModel = {
 export const defaultClassEdit: ClassEditModel = {
   name: "Новая пара",
   started_at: "09:00",
-  finished_at: "10:45",
+  finished_at: "10:35",
   type: "lecture" as ClassType,
   features: { week_type: "every" as WeekType, subgroup: "none" as Subgroup },
   location_id: defaultId,

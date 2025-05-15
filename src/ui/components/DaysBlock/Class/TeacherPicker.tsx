@@ -23,8 +23,6 @@ import {
 } from "@/components/ui/dialog.tsx"
 import { TeacherForm } from "./TeacherForm.tsx"
 
-// Функция больше не нужна, так как мы не будем отображать полное ФИО в списке
-
 export interface TeacherPickerProps {
   value: string
   onChange: (value: string) => void
@@ -132,7 +130,7 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
                     onSelect={() => {
                       setAddDialogOpen(true)
                     }}>
-                    <PlusIcon className="mr-2 h-4 w-4" />
+                    <PlusIcon />
                     Добавить преподавателя
                   </CommandItem>
                 </DialogTrigger>
