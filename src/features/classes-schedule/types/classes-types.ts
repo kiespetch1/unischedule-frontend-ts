@@ -43,9 +43,9 @@ export interface AnnouncementModel {
   is_time_limited: boolean
   available_until: string
   created_at: string
-  created_by: UserModel
+  created_by: UserModel | null
   updated_at: string
-  updated_by: UserModel
+  updated_by: UserModel | null
 }
 
 export interface AnnouncementBlockModel {

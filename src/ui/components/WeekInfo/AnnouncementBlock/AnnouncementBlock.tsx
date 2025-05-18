@@ -66,7 +66,7 @@ export const AnnouncementBlock: FC<AnnouncementBlockProps> = ({ blockData, loadi
             !blockData?.last_time_limited.is_anonymous && (
               <span
                 className={cn("font-raleway text-lg italic text-neutral-400", !isOpen && "hidden")}>
-                {`— ${blockData.last?.created_by.surname} ${blockData.last?.created_by.name}`}
+                {`— ${blockData.last_time_limited?.created_by.surname} ${blockData.last_time_limited?.created_by.name}`}
               </span>
             )}
         </div>

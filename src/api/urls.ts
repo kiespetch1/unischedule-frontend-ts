@@ -54,3 +54,5 @@ export const getClassesCopyByDayIdUrl = (dayId: string) =>
 
 export const getClassesClearByDayIdUrl = (dayId: string) =>
   `${SCHEDULE_URL}/api/v1/classes/clear/${dayId}`
+
+export const getAnnouncementsUrl = () => `${SCHEDULE_URL}/api/v1/announcements`
