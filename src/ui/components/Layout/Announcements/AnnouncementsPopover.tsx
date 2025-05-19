@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const AnnouncementsList = lazy(
   () => import("@/ui/components/Layout/Announcements/AnnouncementsList.tsx")
@@ -45,23 +46,32 @@ export const AnnouncementsPopover: FC<AnnouncementsPopoverProps> = ({
           <Notifications />
         </a>
       </DialogTrigger>
-      <DialogContent id={descriptionId}>
-        <DialogDescription
+      <DialogContent
+        className="w-[80vw] max-w-2xl max-h-[80vh] overflow-hidden"
+        id={descriptionId}
+      >
+      <DialogDescription
           className="sr-only"
           id={descriptionId}>{`Объявления группы ${groupName}`}</DialogDescription>
         <DialogHeader>
-          <DialogTitle>{`Объявления группы ${groupName}`}</DialogTitle>
+          <DialogTitle className="flex flex-row gap-1">
+            <span className="font-raleway text-bold">Объявления группы</span>
+            <button
+              type="button"
+              onClick={() => {}}
+              className="font-raleway text-semibold text-blue-950 underline cursor-pointer">{`${groupName}`}</button>
+          </DialogTitle>
         </DialogHeader>
-        <Suspense
-          fallback={
-            <>
-              <div className="flex flex-col gap-2">
-                <p className="font-raleway text-sm"> Загрузка1...</p>
-              </div>
-            </>
-          }>
-          <AnnouncementsList groupId={groupId} ref={announcementsContainer} />
-        </Suspense>
+          <ScrollArea className="w-full max-h-[calc(80vh-100px)]">
+            <Suspense
+              fallback={
+                <>
+                  <p className="font-raleway text-sm"> Загрузка...</p>
+                </>
+              }>
+              <AnnouncementsList groupId={groupId} ref={announcementsContainer} />
+            </Suspense>
+          </ScrollArea>
       </DialogContent>
     </Dialog>
   )
