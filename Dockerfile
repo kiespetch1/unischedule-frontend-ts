@@ -26,4 +26,4 @@ RUN npm install --only=production
 EXPOSE 3001
 RUN npm install -g serve
 
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "dist", "-l", "3001"]
