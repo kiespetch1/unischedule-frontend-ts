@@ -26,7 +26,6 @@ export const useCreateLocation: ApiMutation<LocationCreateModel, LocationModel> 
       toast.success("Локация успешно добавлена")
       options?.onSuccess?.(...args)
     },
-    retry: 3,
     ...options,
   })
 }

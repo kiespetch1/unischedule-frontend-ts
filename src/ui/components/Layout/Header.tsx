@@ -1,12 +1,12 @@
 import { FC, useState } from "react"
 import IateLogo from "@assets/iate-logo.svg?react"
-import Notifications from "@assets/notification.svg?react"
 import User from "@assets/user.svg?react"
 import { DialogWrapper } from "@components/common/DialogWrapper.tsx"
 import { LoginForm } from "@/components/login-form.tsx"
 import { useDialog } from "@/contexts/dialog-context.tsx"
 import { useAuth } from "@/features/auth/context/auth-context.tsx"
 import { UserPanel } from "./UserPanel"
+import { AnnouncementsPopover } from "@components/Layout/Announcements/AnnouncementsPopover.tsx"
 
 export const Header: FC = () => {
   const { isAnnouncementsOpen, openAnnouncements, closeAnnouncements } = useDialog()
@@ -23,23 +23,12 @@ export const Header: FC = () => {
           </a>
         </li>
         <li className="flex-row gap-9">
-          <DialogWrapper
-            title="Объявления группы"
-            description="Объявления"
+          <AnnouncementsPopover
+            groupId={"340cb1cf-b29f-4d21-b0b5-6a5f68e26647"}
+            groupName="ИВТ-Б21"
             open={isAnnouncementsOpen}
-            onOpenChange={open => !open && closeAnnouncements()}
-            trigger={
-              <a
-                href="#"
-                className="hover:bg-zinc-150 flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-xl transition-colors duration-300"
-                aria-label="Открыть объявления"
-                onClick={e => {
-                  e.preventDefault()
-                  openAnnouncements()
-                }}>
-                <Notifications />
-              </a>
-            }
+            closeAnnouncements={closeAnnouncements}
+            openAnnouncements={openAnnouncements}
           />
 
           <DialogWrapper

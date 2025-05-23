@@ -27,7 +27,6 @@ export const useCreateTeacher: ApiMutation<TeacherCreateModel, TeacherModel> = (
       toast.success("Преподаватель успешно добавлен")
       options?.onSuccess?.(...args)
     },
-    retry: 3,
     ...options,
   })
 }

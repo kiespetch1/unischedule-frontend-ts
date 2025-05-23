@@ -1,4 +1,4 @@
 export interface DataPage<TData> {
   data: TData[];
-  totalCount: number;
+  total_count: number;
 }

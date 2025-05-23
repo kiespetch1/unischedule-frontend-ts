@@ -66,11 +66,11 @@ export const Class: FC<ClassProps> = ({
   onUnsavedDelete = () => {},
 }) => {
   const baseBlockClass =
-    "flex flex-row items-center justify-between py-1 mb-[6px] h-[133px] rounded-b-sm"
+    "flex flex-row items-center py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
   const baseBlockFinalClass = clsx(
     baseBlockClass,
     !isFirst ? "rounded-t-sm" : "",
-    editing ? "bg-zinc-200 px-3 w-[625px]" : "bg-zinc-120 px-8 w-[600px]",
+    editing ? "bg-zinc-200 px-[2px] justify-around " : "bg-zinc-120 px-8 justify-between",
     clickable ? "cursor-pointer" : "cursor-default"
   )
 

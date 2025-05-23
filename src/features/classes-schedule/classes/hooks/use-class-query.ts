@@ -54,7 +54,6 @@ export const useCreateClass: ApiMutationWithParams<ClassCreateParameters, ClassC
       toast.success("Пара успешно создана")
       options?.onSuccess?.(...args)
     },
-    retry: 3,
     ...options,
   })
 }
@@ -80,7 +79,6 @@ export const useUpdateClass: ApiMutationWithParams<ClassMutateParameters, ClassE
       toast.success("Пара успешно обновлена")
       options?.onSuccess?.(...args)
     },
-    retry: 3,
     ...options,
   })
 }
@@ -135,7 +133,6 @@ export const useDeleteClass: ApiMutationWithParams<ClassMutateParameters> = <TCo
       toast.success("Пара успешно удалена")
       options?.onSuccess?.(...args)
     },
-    retry: 3,
     ...options,
   })
 }
@@ -164,7 +161,6 @@ export const useCopyClasses: ApiMutationWithParams<ClassesCopyParameters> = <TCo
       toast.error("Не удалось скопировать пары")
       options?.onError?.(err, _vars, context)
     },
-    retry: 3,
     ...options,
   })
 }
@@ -193,7 +189,6 @@ export const useClearClasses: ApiMutationWithParams<ClassesClearParameters> = <T
       toast.error("Не удалось удалить пары дня")
       options?.onError?.(err, _vars, context)
     },
-    retry: 3,
     ...options,
   })
 }

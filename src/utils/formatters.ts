@@ -104,3 +104,15 @@ export const getErrorMessages = (
     .filter(Boolean)
     .join(", ")
 }
+
+export const toReadableDate = (
+  date: string,
+  opts?: { useYear?: boolean; useDigitFormat?: boolean }
+) => {
+  const { useYear = false, useDigitFormat = false } = opts || {}
+  return new Date(date).toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: useDigitFormat ? "2-digit" : "short",
+    year: useYear ? "numeric" : undefined,
+  })
+}

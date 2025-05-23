@@ -15,7 +15,7 @@ export const ClassSideButtons: FC<ClassSideButtonsProps> = ({ onClassDelete }) =
           type="submit"
           variant="block"
           size="thin"
-          className="absolute left-[631px] top-0 h-[63px] w-[60px] flex-col">
+          className="absolute left-[606px] top-0 h-[63px] w-[60px] flex-col">
           <Check />
         </Button>
       </TooltipWrapper>
@@ -24,7 +24,7 @@ export const ClassSideButtons: FC<ClassSideButtonsProps> = ({ onClassDelete }) =
           type="button"
           variant="block"
           size="thin"
-          className="absolute left-[631px] top-[69px] h-[63px] w-[60px] flex-col"
+          className="absolute left-[606px] top-[69px] h-[63px] w-[60px] flex-col"
           onClick={onClassDelete}>
           <Trash color="red" />
         </Button>
