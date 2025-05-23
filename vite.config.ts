@@ -23,4 +23,5 @@ export default defineConfig({
       "@components": fileURLToPath(new URL("./src/ui/components", import.meta.url)),
     },
   },
+  server: { port: 3001 },
 })
