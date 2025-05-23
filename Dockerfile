@@ -23,7 +23,7 @@ COPY --from=build /app/dist ./dist
 
 COPY package*.json ./
 RUN npm install --only=production
-EXPOSE 3000
+EXPOSE 3001
 RUN npm install -g serve
 
 CMD ["serve", "-s", "dist", "-l", "3000"]
