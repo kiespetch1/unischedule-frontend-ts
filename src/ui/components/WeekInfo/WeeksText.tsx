@@ -8,6 +8,7 @@ export interface WeeksTextProps {
   startDay: number
   selectedWeekType: WeekTypeStrict
   onWeekTypeSelect: (weekType?: WeekTypeStrict) => void
+  lastAcademicWeekNumber: number
 }
 
 export const WeeksText: FC<WeeksTextProps> = ({
@@ -16,6 +17,7 @@ export const WeeksText: FC<WeeksTextProps> = ({
   startDay,
   selectedWeekType,
   onWeekTypeSelect,
+  lastAcademicWeekNumber,
 }) => {
   const getDateWithOffset = (offsetDays?: number, baseDate?: Date): Date => {
     let date: Date
@@ -122,6 +124,43 @@ export const WeeksText: FC<WeeksTextProps> = ({
 
   const currentWeekNumber = getTodayWeekNumber()
   const nextWeekNumber = currentWeekNumber + 1
+
+  console.log("currentWeekNumber", currentWeekNumber)
+  console.log("lastAcademicWeekNumber", lastAcademicWeekNumber)
+
+  if (currentWeekNumber > lastAcademicWeekNumber) {
+    return (
+      <div className="mt-3 flex flex-col items-start justify-center gap-px">
+        <p className={clsx(weekTextClass, "font-semibold")}>В этом периоде учебные пары не проводятся</p>
+        <p className={weekTextClass}>
+          Посмотреть расписание зачётов и экзаменов можно на странице "
+          <a href="/exams" className="underline text-blue-950">Расписание сессии</a>"
+        </p>
+      </div>
+    )
+  }
+
+  if (currentWeekNumber === lastAcademicWeekNumber) {
+    return (
+      <div className="mt-3 flex flex-col items-start justify-center gap-px">
+        <p
+          className={firstWeekClass}
+          onClick={
+            (selectedWeekType === "odd" && !isTodayWeekEven) ||
+            (selectedWeekType === "even" && isTodayWeekEven)
+              ? undefined
+              : () => onWeekTypeSelect()
+          }>
+          Сейчас {getWeekTypeString()} неделя с {getWeekStartString()} по {getWeekEndString()} -{" "}
+          {currentWeekNumber} неделя
+        </p>
+        <p className={weekTextClass}>
+          Следующая неделя - зачетная. Расписание для зачетов можно посмотреть на странице
+          "<a href="/exams" className="underline text-blue-950">Расписание сессии</a>"
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="mt-3 flex flex-col items-start justify-center gap-px">

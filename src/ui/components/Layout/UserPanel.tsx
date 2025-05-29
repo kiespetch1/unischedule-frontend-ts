@@ -2,7 +2,7 @@ import { RoleType, UserExtendedModel } from "@/features/classes-schedule/types/c
 import { FC } from "react"
 import { snakeCase } from "change-case"
 import { getRussianRoleName } from "@components/DaysBlock/formatters.ts"
-import { Button } from "@/components/ui/button.tsx"
+import { Button } from "@/ui/basic/button.tsx"
 import { defaultExtendedUser } from "@/utils/default-entities.ts"
 import { useAuth } from "@/features/auth/context/auth-context"
 

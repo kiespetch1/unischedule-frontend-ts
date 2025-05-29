@@ -1,5 +1,5 @@
 import { FC } from "react"
-import Dot from "../Dot.tsx"
+import Dot from "../common/Dot.tsx"
 
 export const Footer: FC = () => {
   return (

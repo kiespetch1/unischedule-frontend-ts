@@ -8,7 +8,7 @@ import {
   DialogClose,
   DialogOverlay,
   DialogPortal,
-} from "@/components/ui/dialog"
+} from "@/ui/basic/dialog.tsx"
 import { FC, ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"

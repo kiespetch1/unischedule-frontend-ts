@@ -6,8 +6,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog.tsx"
-import { Button, ButtonVariant } from "@/components/ui/button.tsx"
+} from "@/ui/basic/dialog.tsx"
+import { Button, ButtonVariant } from "@/ui/basic/button.tsx"
 
 export interface ConfirmDialogProps {
   open: boolean

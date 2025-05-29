@@ -1,7 +1,7 @@
 import { GroupModel } from "@/features/classes-schedule/types/classes-types.ts"
 import { FC } from "react"
 import { GroupButton } from "@components/GroupsList/GroupButton.tsx"
-import { Skeleton } from "@/components/ui/skeleton.tsx"
+import { Skeleton } from "@/ui/basic/skeleton.tsx"
 
 export interface CourseGroupsRowProps {
   grade: number

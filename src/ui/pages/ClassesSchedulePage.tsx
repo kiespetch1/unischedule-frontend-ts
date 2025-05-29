@@ -46,7 +46,11 @@ export const ClassesSchedulePage = () => {
         groupName={group?.name}
         loading={isLoading}
       />
-      <WeekInfo selectedWeekType={selectedWeekType} onWeekTypeSelect={setSelectedWeekType} />
+      <WeekInfo
+        selectedWeekType={selectedWeekType}
+        onWeekTypeSelect={setSelectedWeekType}
+        lastAcademicWeekNumber={group?.last_academic_week_number || 16}
+      />
       <AnnouncementBlock blockData={group?.announcements_block || undefined} loading={isLoading} />
 
       <DaysBlock

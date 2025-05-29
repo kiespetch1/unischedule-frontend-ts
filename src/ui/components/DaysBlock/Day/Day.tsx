@@ -15,7 +15,7 @@ import { BlurElement } from "@components/DaysBlock/BlurElement.tsx"
 import { sortByStartTime } from "@components/DaysBlock/formatters.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import toast from "react-hot-toast"
-import { Button } from "@/components/ui/button.tsx"
+import { Button } from "@/ui/basic/button.tsx"
 import { getWarningToastSettings } from "@/lib/toast-settings.tsx"
 import {
   useClearClasses,
@@ -91,7 +91,7 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
       toast.success("Пара успешно удалена")
     } else {
       toast(
-        "Незаполненные пары были очищены при выходе из редактирования",
+        "Несохраненные пары были очищены при выходе из режима редактирования",
         getWarningToastSettings()
       )
     }

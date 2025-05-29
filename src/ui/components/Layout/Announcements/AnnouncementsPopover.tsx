@@ -7,8 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog.tsx"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "@/ui/basic/dialog.tsx"
+import { ScrollArea } from "@/ui/basic/scroll-area.tsx"
 
 const AnnouncementsList = lazy(
   () => import("@/ui/components/Layout/Announcements/AnnouncementsList.tsx")
@@ -18,22 +18,22 @@ export interface AnnouncementsPopoverProps {
   open: boolean
   groupId: string
   groupName: string | undefined
-  openAnnouncements: () => void
-  closeAnnouncements: () => void
+  onOpen: () => void
+  onClose: () => void
 }
 
 export const AnnouncementsPopover: FC<AnnouncementsPopoverProps> = ({
   open,
   groupId,
   groupName = "",
-  openAnnouncements,
-  closeAnnouncements,
+  onOpen,
+  onClose,
 }) => {
   const announcementsContainer = useRef<HTMLDivElement>(null)
   const descriptionId = useId()
 
   return (
-    <Dialog open={open} onOpenChange={open => !open && closeAnnouncements()}>
+    <Dialog open={open} onOpenChange={open => !open && onClose()}>
       <DialogTrigger>
         <a
           href="#"
@@ -41,7 +41,7 @@ export const AnnouncementsPopover: FC<AnnouncementsPopoverProps> = ({
           aria-label="Открыть объявления"
           onClick={e => {
             e.preventDefault()
-            openAnnouncements()
+            onOpen()
           }}>
           <Notifications />
         </a>

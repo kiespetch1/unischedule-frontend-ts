@@ -1,5 +1,5 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx"
-import { Button } from "@/components/ui/button.tsx"
+import { Popover, PopoverContent, PopoverTrigger } from "@/ui/basic/popover.tsx"
+import { Button } from "@/ui/basic/button.tsx"
 import { FC, useMemo, useState } from "react"
 import Switch from "@assets/switch.svg?react"
 import { cn } from "@/lib/utils.ts"
@@ -11,7 +11,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command.tsx"
+} from "@/ui/basic/command.tsx"
 import { useGetTeachers } from "@/features/classes-schedule/teachers/hooks/use-teachers-query.ts"
 import {
   Dialog,
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog.tsx"
+} from "@/ui/basic/dialog.tsx"
 import { TeacherForm } from "./TeacherForm.tsx"
 
 export interface TeacherPickerProps {

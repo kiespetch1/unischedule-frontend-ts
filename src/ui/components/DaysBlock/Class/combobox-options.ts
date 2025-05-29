@@ -1,4 +1,4 @@
-import { Options } from "@/components/ui/combobox.tsx"
+import { Options } from "@/ui/basic/combobox.tsx"
 import { ClassType, Subgroup, WeekType } from "@/features/classes-schedule/types/classes-types.ts"
 
 export const ClassTypeOptions: Options<ClassType>[] = [

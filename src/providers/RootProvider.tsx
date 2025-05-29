@@ -2,7 +2,7 @@
 import { FC, PropsWithChildren } from "react"
 import { ToasterProvider } from "@/providers/ToasterProvider.tsx"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { TooltipProvider } from "@/components/ui/tooltip.tsx"
+import { TooltipProvider } from "@/ui/basic/tooltip.tsx"
 import { DialogProvider } from "@/contexts/dialog-context.tsx"
 import { AuthProvider } from "@/features/auth/context/auth-context"
 

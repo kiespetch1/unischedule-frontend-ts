@@ -1,6 +1,6 @@
 import { FC } from "react"
 import clsx from "clsx"
-import Dot from "@components/Dot.tsx"
+import Dot from "@components/common/Dot.tsx"
 import FirstGroup from "@assets/first-group.svg?react"
 import SecondGroup from "@assets/second-group.svg?react"
 import EvenWeek from "@assets/even-week.svg?react"
@@ -26,8 +26,8 @@ import {
   toClassEditModel,
   toClassEditModelFlat,
 } from "@/features/classes-schedule/dto/edit-class-model.ts"
-import { Input } from "@/components/ui/input.tsx"
-import { Combobox } from "@/components/ui/combobox"
+import { Input } from "@/ui/basic/input.tsx"
+import { Combobox } from "@/ui/basic/combobox.tsx"
 import { ClassFeaturesPopover } from "@components/DaysBlock/Class/ClassFeaturesPopover.tsx"
 import { ZodType } from "zod"
 import { ClassTypeOptions } from "@components/DaysBlock/Class/combobox-options.ts"

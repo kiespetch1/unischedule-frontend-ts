@@ -6,10 +6,10 @@ import Cross from "@assets/cross.svg?react"
 import { ActionDispatch, FC, useState } from "react"
 import { getPluralForm, getRussianDayName, numberToDayOfWeek } from "@/utils/formatters.ts"
 import clsx from "clsx"
-import Dot from "@components/Dot.tsx"
+import Dot from "@components/common/Dot.tsx"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { PermissionGate } from "@/features/auth/components/auth-gate.tsx"
-import { ConfirmDialog } from "@/components/confirm-dialog.tsx"
+import { ConfirmDialog } from "@components/common/confirm-dialog.tsx"
 
 export interface DayHeaderProps {
   dayOfWeek: DayOfWeek

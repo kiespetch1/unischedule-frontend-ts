@@ -5,9 +5,10 @@ import { FC } from "react"
 export interface WeekInfoProps {
   selectedWeekType: WeekTypeStrict
   onWeekTypeSelect: (weekType?: WeekTypeStrict) => void
+  lastAcademicWeekNumber: number
 }
 
-export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, onWeekTypeSelect }) => {
+export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, onWeekTypeSelect, lastAcademicWeekNumber }) => {
   return (
     <div>
       <WeeksText
@@ -16,6 +17,7 @@ export const WeekInfo: FC<WeekInfoProps> = ({ selectedWeekType, onWeekTypeSelect
         startDay={3}
         selectedWeekType={selectedWeekType}
         onWeekTypeSelect={onWeekTypeSelect}
+        lastAcademicWeekNumber={lastAcademicWeekNumber}
       />
     </div>
   )

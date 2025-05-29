@@ -1,9 +1,9 @@
 ﻿import { forwardRef } from "react"
-import { Separator } from "@/components/ui/separator.tsx"
+import { Separator } from "@/ui/basic/separator.tsx"
 import { toReadableDate } from "@/utils/formatters.ts"
-import Dot from "@components/Dot.tsx"
+import Dot from "@components/common/Dot.tsx"
 import { useGetAnnouncements } from "@/features/announcements/hooks/use-get-announcements.ts"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/ui/basic/button.tsx"
 
 export interface NotificationsListProps {
   groupId: string

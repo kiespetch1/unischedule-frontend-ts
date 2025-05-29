@@ -1,4 +1,4 @@
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip.tsx"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/ui/basic/tooltip.tsx"
 import { JSX, ReactNode } from "react"
 import { TooltipProps } from "@radix-ui/react-tooltip"
 

@@ -1,5 +1,5 @@
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
-import { Button } from "@/components/ui/button.tsx"
+import { Button } from "@/ui/basic/button.tsx"
 import { Check, Trash } from "lucide-react"
 import { FC } from "react"
 

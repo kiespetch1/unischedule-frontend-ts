@@ -2,8 +2,8 @@
 
 import { Check, ChevronsUpDown } from "lucide-react"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils.ts"
+import { Button } from "@/ui/basic/button.tsx"
 import {
   Command,
   CommandEmpty,
@@ -11,8 +11,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+} from "@/ui/basic/command.tsx"
+import { Popover, PopoverContent, PopoverTrigger } from "@/ui/basic/popover.tsx"
 import { useState } from "react"
 
 export interface Options<T extends string = string> {
