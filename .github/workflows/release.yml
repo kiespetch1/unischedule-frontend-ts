@@ -23,8 +23,8 @@ jobs:
       - name: Build and push frontend Image
         uses: docker/build-push-action@v4
         with:
-          context: frontend
-          file: ${{ github.workspace }}/frontend/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           build-args: |
             VITE_IDENTITY_URL=${{ secrets.VITE_IDENTITY_URL }}
@@ -42,6 +42,23 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: |
             docker-compose.yaml
+          target: "~/unischedule-staging"
+
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Copy docker-compose files to VPS
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "./docker-compose.yaml"
           target: "~/unischedule-staging"
 
       - name: Deploy on VPS
