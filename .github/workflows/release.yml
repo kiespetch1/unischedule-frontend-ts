@@ -69,7 +69,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd unischedule-staging
-            echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+            echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             cat <<EOF > .env.frontend
             VITE_IDENTITY_URL=${{ secrets.VITE_IDENTITY_URL }}
             VITE_SCHEDULE_URL=${{ secrets.VITE_SCHEDULE_URL }}
