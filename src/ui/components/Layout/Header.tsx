@@ -8,14 +8,19 @@ import { useAuth } from "@/features/auth/context/auth-context.tsx"
 import { UserPanel } from "./UserPanel"
 import { AnnouncementsPopover } from "@components/Layout/Announcements/AnnouncementsPopover.tsx"
 import { useLocation } from "react-router-dom"
+import { useGetGroupById } from "@/features/classes-schedule/groups/hooks/use-group-query.ts"
 
 export const Header: FC = () => {
   const { isAnnouncementsOpen, openAnnouncements, closeAnnouncements } = useDialog()
   const [isLoginOpen, setLoginOpen] = useState(false)
   const { authState } = useAuth()
 
-  const location = useLocation();
-  const currentGroupId = location.pathname.split("/")[1]
+  const location = useLocation()
+  const currentGroupId = location.pathname.split("/")[2]
+  const { data: currentGroup } = useGetGroupById({ id: currentGroupId })
+  const { data: userGroup } = useGetGroupById({
+    id: authState.userData ? authState.userData!.group_id : currentGroupId,
+  })
 
   return (
     <header className="sticky top-0 z-40 mb-6 box-content flex h-[90px] items-center border-b-2 border-zinc-300 bg-zinc-100">
@@ -28,17 +33,12 @@ export const Header: FC = () => {
         </li>
         <li className="flex-row gap-9">
           <AnnouncementsPopover
-            groupId={
-              authState.isAuthenticated
-                ? authState.userData!.group_id
-                : currentGroupId
-            }
-            groupName="ИВТ-Б21"
+            groupId={authState.isAuthenticated ? authState.userData!.group_id : currentGroupId}
+            groupName={authState.isAuthenticated ? userGroup?.name : currentGroup?.name}
             open={isAnnouncementsOpen}
             onClose={closeAnnouncements}
             onOpen={openAnnouncements}
           />
-
           <DialogWrapper
             headless={!authState.isAuthenticated}
             open={isLoginOpen}
@@ -53,7 +53,7 @@ export const Header: FC = () => {
               </a>
             }>
             {authState.isAuthenticated ? (
-              <UserPanel userData={authState.userData} onLogout={() => setLoginOpen(false)} />
+              <UserPanel userData={authState.userData} onClose={() => setLoginOpen(false)} />
             ) : (
               <LoginForm />
             )}

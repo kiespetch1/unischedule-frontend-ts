@@ -5,14 +5,16 @@ import { getRussianRoleName } from "@components/DaysBlock/formatters.ts"
 import { Button } from "@/ui/basic/button.tsx"
 import { defaultExtendedUser } from "@/utils/default-entities.ts"
 import { useAuth } from "@/features/auth/context/auth-context"
+import { useNavigate } from "react-router-dom"
 
 export interface UserPanelProps {
   userData: UserExtendedModel | null
-  onLogout: () => void
+  onClose: () => void
 }
 
-export const UserPanel: FC<UserPanelProps> = ({ userData, onLogout }) => {
+export const UserPanel: FC<UserPanelProps> = ({ userData, onClose }) => {
   const { logout } = useAuth()
+  const navigate = useNavigate()
   const user: UserExtendedModel = userData ?? defaultExtendedUser
   return (
     <div className="flex flex-col items-center gap-4">
@@ -27,7 +29,13 @@ export const UserPanel: FC<UserPanelProps> = ({ userData, onLogout }) => {
         </div>
       </div>
       <div className="flex w-full flex-row items-center gap-2">
-        <Button type="button" className="w-1/2">
+        <Button
+          type="button"
+          className="w-1/2"
+          onClick={() => {
+            navigate("/settings")
+            onClose()
+          }}>
           Управление
         </Button>
         <Button
@@ -36,7 +44,7 @@ export const UserPanel: FC<UserPanelProps> = ({ userData, onLogout }) => {
           className="w-1/2"
           onClick={() => {
             logout()
-            onLogout()
+            onClose()
           }}>
           Выйти
         </Button>

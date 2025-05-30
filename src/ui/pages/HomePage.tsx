@@ -15,7 +15,7 @@ export const HomePage = () => {
           Если твоей группы в списках еще нет, напиши мне, и я добавлю ее.
         </p>
       </div>
-      <GroupsList groups={groups?.data} loading={isLoading} />
+      <GroupsList groups={groups?.data} loading={isLoading} addBottomText={true} />
     </div>
   )
 }

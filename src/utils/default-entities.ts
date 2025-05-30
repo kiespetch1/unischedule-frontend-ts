@@ -100,6 +100,7 @@ export const defaultAnnouncement: AnnouncementModel = {
   is_anonymous: false,
   is_time_limited: false,
   available_until: "",
+  is_added_using_bot: false,
   created_at: "",
   created_by: defaultUser,
   updated_at: "",

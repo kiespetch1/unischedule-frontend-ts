@@ -25,3 +25,5 @@
 - Docker
 
 Репозиторий серверной части приложения находится по ссылке: https://github.com/kiespetch1/unischedule-backend
+
+Этот проект распространяется под лицензией [CC BY-NC-SA 4.0](LICENSE).
