@@ -2,7 +2,8 @@ import { apiFetch } from "@/api/api-fetch.ts"
 import {
   getClassCancelByIdUrl,
   getClassRestoreByIdUrl,
-  getGlobalClassesCancelByDaysUrl,
+  getClassesCancelByDayNamesUrl,
+  getClassesCancelByGroupIdUrl,
 } from "@/api/urls.ts"
 import { DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
 
@@ -20,11 +21,16 @@ export interface GroupsCancelDaysData {
 }
 
 export const cancelAllClassesByDaysName = async (data: GroupsCancelDaysData) => {
-  await apiFetch(getGlobalClassesCancelByDaysUrl(), {
+  await apiFetch(getClassesCancelByDayNamesUrl(), {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
+  })
+}
+
+export const cancelAllClassesByGroupId = async (groupId: string) => {
+  await apiFetch(getClassesCancelByGroupIdUrl(groupId), {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
   })
 }

@@ -66,8 +66,7 @@ export const Class: FC<ClassProps> = ({
   dayId = "",
   onUnsavedDelete = () => {},
 }) => {
-  const baseBlockClass =
-    "flex flex-row items-center py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
+  const baseBlockClass = "flex flex-row items-center py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
   const baseBlockFinalClass = clsx(
     baseBlockClass,
     !isFirst ? "rounded-t-sm" : "",
@@ -76,9 +75,9 @@ export const Class: FC<ClassProps> = ({
   )
 
   const classData: ClassModel = data ?? defaultClass
-  const { mutateAsync: createClass } = useCreateClass({ group_id: groupId })
-  const { mutateAsync: updateClass } = useUpdateClass({ classData, group_id: groupId })
-  const { mutateAsync: deleteClass } = useDeleteClass({ classData, group_id: groupId })
+  const { mutateAsync: createClass } = useCreateClass({ groupId: groupId })
+  const { mutateAsync: updateClass } = useUpdateClass({ classData, groupId: groupId })
+  const { mutateAsync: deleteClass } = useDeleteClass({ classData, groupId: groupId })
   const handleClassDelete = () => {
     if (classData.id === defaultId) {
       onUnsavedDelete()
@@ -242,7 +241,7 @@ export const Class: FC<ClassProps> = ({
                   <LocationPicker
                     value={fieldApi.state.value}
                     onChange={fieldApi.setValue}
-                    className="text-sm font-normal max-w-32"
+                    className="max-w-32 text-sm font-normal"
                   />
                 )
               }}
@@ -270,16 +269,12 @@ export const Class: FC<ClassProps> = ({
   }
 
   return (
-    <div 
-      className={clsx(
-        baseBlockFinalClass,
-        classData.is_cancelled && "relative group"
-      )} 
-      onClick={onClick}
-    >
+    <div
+      className={clsx(baseBlockFinalClass, classData.is_cancelled && "group relative")}
+      onClick={onClick}>
       {classData.is_cancelled && (
-        <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-zinc-100/50 backdrop-blur-sm z-10 transition-opacity duration-200 group-hover:opacity-0 rounded-b-sm">
-          <span className="font-raleway text-3xl font-bold text-center">Отменена</span>
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-b-sm bg-zinc-100/50 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-0">
+          <span className="font-raleway text-center text-3xl font-bold">Отменена</span>
         </div>
       )}
       <div className="box-content flex h-full flex-col items-start justify-evenly">
@@ -291,10 +286,10 @@ export const Class: FC<ClassProps> = ({
           <span className="font-raleway text-lg font-normal">
             {getRussianClassTypeName(classData.type)}
           </span>
-          <IconsSection 
-            weekType={classData.week_type} 
-            subgroup={classData.subgroup} 
-            isCancelled={classData.is_cancelled} 
+          <IconsSection
+            weekType={classData.week_type}
+            subgroup={classData.subgroup}
+            isCancelled={classData.is_cancelled}
           />
         </div>
         <span className="font-raleway text-lg/5 font-normal">{classData.name}</span>
@@ -312,7 +307,11 @@ export const Class: FC<ClassProps> = ({
           message={getIrlLocationTooltipMessage(classData.location.name)}
           disabled={classData.location.name.length !== 5}>
           {classData.location.type === "online" ? (
-            <a href={classData.location.link ?? "#" } className="font-raleway text-lg underline font-bold text-blue-950">Ссылка</a>
+            <a
+              href={classData.location.link ?? "#"}
+              className="font-raleway text-lg font-bold text-blue-950 underline">
+              Ссылка
+            </a>
           ) : (
             <span className="font-raleway text-lg font-bold">{classData.location.name}</span>
           )}

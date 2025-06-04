@@ -43,9 +43,6 @@ export const getGroupsUrl = () => `${SCHEDULE_URL}/api/v1/groups`
 
 export const getGroupsPromoteUrl = () => `${SCHEDULE_URL}/api/v1/groups/promote`
 
-export const getGlobalClassesCancelByDaysUrl = () =>
-  `${SCHEDULE_URL}/api/v1/classes/cancel/week-days`
-
 export const getTeachersUrl = () => `${SCHEDULE_URL}/api/v1/teachers`
 
 export const getLocationsUrl = () => `${SCHEDULE_URL}/api/v1/locations`
@@ -63,16 +60,22 @@ export const getClassesClearByDayIdUrl = (dayId: string) =>
 export const getClassesClearByGroupIdUrl = (groupId: string) =>
   `${SCHEDULE_URL}/api/v1/classes/clear/group/${groupId}`
 
+export const getClassesCancelByDayNamesUrl = () => `${SCHEDULE_URL}/api/v1/classes/cancel/week-days`
+
 export const getCancelledClassesByGroupIdUrl = (groupId: string) =>
   `${SCHEDULE_URL}/api/v1/classes/cancelled/${groupId}`
 
-export const getClassesCancelByDaysUrl = () =>
-  `${SCHEDULE_URL}/api/v1/classes/cancel/days`
+export const getClassesCancelByDaysUrl = () => `${SCHEDULE_URL}/api/v1/classes/cancel/days`
+
+export const getClassesCancelByGroupIdUrl = (groupId: string) =>
+  `${SCHEDULE_URL}/api/v1/classes/cancel/group/${groupId}`
 
 export const getClassCancelByIdUrl = (classId: string) =>
   `${SCHEDULE_URL}/api/v1/classes/cancel/${classId}`
 
 export const getClassRestoreByIdUrl = (classId: string) =>
   `${SCHEDULE_URL}/api/v1/classes/restore/${classId}`
+
+export const getClassRestoreByIdsUrl = () => `${SCHEDULE_URL}/api/v1/classes/restore/multiple`
 
 export const getAnnouncementsUrl = () => `${SCHEDULE_URL}/api/v1/announcements`

@@ -7,7 +7,7 @@ import {
   ClassCreateModel,
   ClassEditModelFlat,
 } from "@/features/classes-schedule/dto/edit-class-model.ts"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { updateClass } from "@/features/classes-schedule/classes/update-class.ts"
 import {
   ClassModel,
@@ -24,22 +24,30 @@ import {
   clearClassesByDayId,
   clearClassesByGroupId,
 } from "@/features/classes-schedule/classes/clear-classes.ts"
-import { cancelClass, restoreClass } from "@/features/classes-schedule/classes/cancel-class.ts"
+import {
+  cancelAllClassesByGroupId,
+  cancelClass,
+  restoreClass,
+} from "@/features/classes-schedule/classes/cancel-class.ts"
 import { cancelClassesByDays } from "@/features/classes-schedule/classes/cancel-classes.ts"
+import { restoreClassesByIds } from "@/features/classes-schedule/classes/restore-classes.ts"
+import { getCancelledClassesByGroupId } from "@/features/classes-schedule/classes/get-cancelled-classes"
+import { ApiQueryWithParams } from "@/types/api-query.ts"
+import { DataPage } from "@/types/data-page.ts"
 
 const groupKey = "group"
 
 interface ClassMutateParameters {
   classData: ClassModel
-  group_id: string
+  groupId: string
 }
 
 interface ClassCreateParameters {
-  group_id: string
+  groupId: string
 }
 
 export const useCreateClass: ApiMutationWithParams<ClassCreateParameters, ClassCreateModel> = (
-  { group_id },
+  { groupId },
   options
 ) => {
   const queryClient = useQueryClient()
@@ -48,7 +56,7 @@ export const useCreateClass: ApiMutationWithParams<ClassCreateParameters, ClassC
       return createClass(editModel)
     },
     onSettled: (...args) => {
-      queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
       options?.onSettled?.(...args)
     },
     onError: (err, _vars, context) => {
@@ -64,7 +72,7 @@ export const useCreateClass: ApiMutationWithParams<ClassCreateParameters, ClassC
 }
 
 export const useUpdateClass: ApiMutationWithParams<ClassMutateParameters, ClassEditModelFlat> = (
-  { classData, group_id },
+  { classData, groupId },
   options
 ) => {
   const queryClient = useQueryClient()
@@ -73,7 +81,7 @@ export const useUpdateClass: ApiMutationWithParams<ClassMutateParameters, ClassE
       return updateClass(classData.id, editModel)
     },
     onSettled: (...args) => {
-      queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
       options?.onSettled?.(...args)
     },
     onError: (err, _vars, context) => {
@@ -93,16 +101,16 @@ interface DeleteClassContext {
 }
 
 export const useDeleteClass: ApiMutationWithParams<ClassMutateParameters> = <TContext = unknown>(
-  { classData, group_id }: ClassMutateParameters,
+  { classData, groupId }: ClassMutateParameters,
   options?: ApiMutationOptions<void, void, TContext>
 ): ApiMutationResult<void, void, TContext> => {
   const queryClient = useQueryClient()
 
   return useMutation<void, ApiError, void, TContext>({
     onMutate: async (): Promise<TContext> => {
-      await queryClient.cancelQueries({ queryKey: [groupKey, group_id] })
+      await queryClient.cancelQueries({ queryKey: [groupKey, groupId] })
 
-      const previousGroup = queryClient.getQueryData<GroupModel>([groupKey, group_id])
+      const previousGroup = queryClient.getQueryData<GroupModel>([groupKey, groupId])
 
       if (previousGroup) {
         const updated: GroupModel = {
@@ -115,7 +123,7 @@ export const useDeleteClass: ApiMutationWithParams<ClassMutateParameters> = <TCo
             })),
           })),
         }
-        queryClient.setQueryData([groupKey, group_id], updated)
+        queryClient.setQueryData([groupKey, groupId], updated)
       }
 
       return { previousGroup } as unknown as TContext
@@ -124,13 +132,13 @@ export const useDeleteClass: ApiMutationWithParams<ClassMutateParameters> = <TCo
     onError: (err, _vars, context) => {
       const ctx = context as unknown as DeleteClassContext | undefined
       if (ctx?.previousGroup) {
-        queryClient.setQueryData([groupKey, group_id], ctx.previousGroup)
+        queryClient.setQueryData([groupKey, groupId], ctx.previousGroup)
       }
       toast.error("Не удалось удалить пару")
       options?.onError?.(err, _vars, context)
     },
     onSettled: (...args) => {
-      queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
       options?.onSettled?.(...args)
     },
 
@@ -200,9 +208,9 @@ export const useClearClassesByDayId: ApiMutationWithParams<ClassesClearParameter
   })
 }
 
-export const useClearClassesByGroupId: ApiMutationWithParams<Omit<ClassesClearParameters, "dayId">> = <
-  TContext = unknown,
->(
+export const useClearClassesByGroupId: ApiMutationWithParams<
+  Omit<ClassesClearParameters, "dayId">
+> = <TContext = unknown>(
   { groupId }: Omit<ClassesClearParameters, "dayId">,
   options?: ApiMutationOptions<void, void, TContext>
 ): ApiMutationResult<void, void, TContext> => {
@@ -225,22 +233,52 @@ export const useClearClassesByGroupId: ApiMutationWithParams<Omit<ClassesClearPa
   })
 }
 
-export interface ClassesCancelDaysParameters {
-  dayIds: string[]
-  groupId: string
-}
-
-export const useCancelClass: ApiMutationWithParams<ClassMutateParameters> = <TContext = unknown>(
-  { classData, group_id }: ClassMutateParameters,
+export const useCancelClassesByGroupId: ApiMutationWithParams<
+  Omit<ClassesClearParameters, "dayId">
+> = <TContext = unknown>(
+  { groupId }: Omit<ClassesClearParameters, "dayId">,
   options?: ApiMutationOptions<void, void, TContext>
 ): ApiMutationResult<void, void, TContext> => {
   const queryClient = useQueryClient()
 
   return useMutation<void, ApiError, void, TContext>({
-    mutationFn: () => cancelClass(classData.id),
+    mutationFn: async () => {
+      await cancelAllClassesByGroupId(groupId)
+    },
+    onSuccess: (...args) => {
+      toast.success("Все пары группы успешно отменены")
+      void queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
+      options?.onSuccess?.(...args)
+    },
+    onError: (err, _vars, context) => {
+      toast.error("Не удалось отменить пары группы")
+      options?.onError?.(err, _vars, context)
+    },
+    ...options,
+  })
+}
+
+export interface ClassesCancelByDaysParameters {
+  dayIds: string[]
+  groupId: string
+}
+
+export interface ClassCancelParameters {
+  classId: string
+  groupId: string
+}
+
+export const useCancelClass: ApiMutationWithParams<ClassCancelParameters> = <TContext = unknown>(
+  { classId, groupId }: ClassCancelParameters,
+  options?: ApiMutationOptions<void, void, TContext>
+): ApiMutationResult<void, void, TContext> => {
+  const queryClient = useQueryClient()
+
+  return useMutation<void, ApiError, void, TContext>({
+    mutationFn: () => cancelClass(classId),
     onSuccess: (...args) => {
       toast.success("Пара успешно отменена")
-      void queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      void queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
       options?.onSuccess?.(...args)
     },
     onError: (err, _vars, context) => {
@@ -248,7 +286,7 @@ export const useCancelClass: ApiMutationWithParams<ClassMutateParameters> = <TCo
       options?.onError?.(err, _vars, context)
     },
     onSettled: (...args) => {
-      queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
       options?.onSettled?.(...args)
     },
     ...options,
@@ -256,7 +294,7 @@ export const useCancelClass: ApiMutationWithParams<ClassMutateParameters> = <TCo
 }
 
 export const useRestoreClass: ApiMutationWithParams<ClassMutateParameters> = <TContext = unknown>(
-  { classData, group_id }: ClassMutateParameters,
+  { classData, groupId }: ClassMutateParameters,
   options?: ApiMutationOptions<void, void, TContext>
 ): ApiMutationResult<void, void, TContext> => {
   const queryClient = useQueryClient()
@@ -265,7 +303,7 @@ export const useRestoreClass: ApiMutationWithParams<ClassMutateParameters> = <TC
     mutationFn: () => restoreClass(classData.id),
     onSuccess: (...args) => {
       toast.success("Пара успешно восстановлена")
-      void queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      void queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
       options?.onSuccess?.(...args)
     },
     onError: (err, _vars, context) => {
@@ -273,17 +311,17 @@ export const useRestoreClass: ApiMutationWithParams<ClassMutateParameters> = <TC
       options?.onError?.(err, _vars, context)
     },
     onSettled: (...args) => {
-      queryClient.invalidateQueries({ queryKey: [groupKey, group_id] })
+      queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
       options?.onSettled?.(...args)
     },
     ...options,
   })
 }
 
-export const useCancelClassesByDays: ApiMutationWithParams<ClassesCancelDaysParameters> = <
+export const useCancelClassesByDays: ApiMutationWithParams<ClassesCancelByDaysParameters> = <
   TContext = unknown,
 >(
-  { dayIds, groupId }: ClassesCancelDaysParameters,
+  { dayIds, groupId }: ClassesCancelByDaysParameters,
   options?: ApiMutationOptions<void, void, TContext>
 ): ApiMutationResult<void, void, TContext> => {
   const queryClient = useQueryClient()
@@ -304,3 +342,47 @@ export const useCancelClassesByDays: ApiMutationWithParams<ClassesCancelDaysPara
     ...options,
   })
 }
+
+export interface ClassesRestoreParams {
+  classIds: string[]
+  groupId: string
+}
+
+export const useRestoreClassesByIds = <TContext = unknown>(
+  { classIds, groupId }: ClassesRestoreParams,
+  options?: ApiMutationOptions<void, void, TContext>
+): ApiMutationResult<void, void, TContext> => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async () => {
+      return restoreClassesByIds(classIds)
+    },
+    onSettled: (...args) => {
+      toast.success("Пары успешно восстановлены")
+      queryClient.invalidateQueries({ queryKey: [groupKey, groupId] })
+      options?.onSettled?.(...args)
+    },
+    onError: (err, _vars, context) => {
+      toast.error("Не удалось восстановить пары")
+      options?.onError?.(err, _vars, context)
+    },
+    ...options,
+  })
+}
+
+export interface CancelledClassesByGroupIdParams {
+  groupId: string
+}
+
+export const useGetCancelledClassesByGroupId: ApiQueryWithParams<
+  CancelledClassesByGroupIdParams,
+  DataPage<ClassModel>
+> = ({ groupId }, options) =>
+  useQuery({
+    queryKey: [groupKey, "cancelled", groupId],
+    queryFn: () => getCancelledClassesByGroupId(groupId),
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    ...options,
+  })

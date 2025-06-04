@@ -20,10 +20,13 @@ import { ConfirmDialog } from "@components/common/confirm-dialog.tsx"
 import { DialogWrapper } from "@components/common/DialogWrapper.tsx"
 import {
   useCancelClassesByDays,
+  useCancelClassesByGroupId,
   useClearClassesByGroupId,
+  useGetCancelledClassesByGroupId,
 } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
 import { useCancelAllClassesByDaysName } from "@/features/classes-schedule/groups/hooks/use-cancel-all-classes-by-days-name"
 import { DaysSelector, GlobalDaysResult } from "@components/GroupSettings/DaysSelector.tsx"
+import { RestoreCancelledDialog } from "@components/GroupSettings/RestoreCancelledDialog.tsx"
 import {
   MessageCircle,
   Trash2,
@@ -33,7 +36,8 @@ import {
   ArrowUp,
   Import,
   CalendarMinus,
-  ListChecks
+  ListChecks,
+  Undo2,
 } from "lucide-react"
 
 export const GroupSettingsPage = () => {
@@ -41,7 +45,7 @@ export const GroupSettingsPage = () => {
   const [isEditingGroup, setIsEditingGroup] = useState(false)
   const [isChoosingGroup, setIsChoosingGroup] = useState(false)
 
-  const [idList, setIdList] = useState<string[]>([])
+  const [classesToCancel, setClassesToCancel] = useState<string[]>([])
   const [globalDays, setGlobalDays] = useState<GlobalDaysResult>({ even: [], odd: [] })
 
   const [clearAllDialogOpen, setClearAllDialogOpen] = useState(false)
@@ -49,9 +53,11 @@ export const GroupSettingsPage = () => {
   const [cancelMultipleDialogOpen, setCancelMultipleDialogOpen] = useState(false)
   const [promoteAllGroupsDialogOpen, setPromoteAllGroupsDialogOpen] = useState(false)
   const [cancelAllGroupsDialogOpen, setCancelAllGroupsDialogOpen] = useState(false)
+  const [restoreDialogOpen, setRestoreDialogOpen] = useState(false)
 
   const { authState } = useAuth()
   const navigate = useNavigate()
+
   const { data: group, isLoading: isGroupLoading } = useGetGroupById({ id: selectedGroupId! })
   const { data: groups, isLoading: isGroupsLoading } = useGetGroups({ grade: null })
   const { mutateAsync: clearClassesByGroupId } = useClearClassesByGroupId({
@@ -60,9 +66,17 @@ export const GroupSettingsPage = () => {
   const { mutateAsync: promoteAllGroups } = usePromoteGroups()
   const { mutateAsync: cancelClassesByDayId } = useCancelClassesByDays({
     groupId: selectedGroupId!,
-    dayIds: idList,
+    dayIds: classesToCancel,
   })
   const { mutateAsync: cancelAllByDaysName } = useCancelAllClassesByDaysName(globalDays)
+  const { mutateAsync: cancelAllClassesByGroupId } = useCancelClassesByGroupId({
+    groupId: selectedGroupId!,
+  })
+  const { data: cancelledClassesData } = useGetCancelledClassesByGroupId(
+    { groupId: selectedGroupId ?? "" },
+    { enabled: !!selectedGroupId }
+  )
+  const cancelledClasses = cancelledClassesData?.data || []
 
   useEffect(() => {
     if (isChoosingGroup || !isEditingGroup) {
@@ -75,7 +89,7 @@ export const GroupSettingsPage = () => {
   const filteredGroups =
     authState.userData?.role === "Admin"
       ? groups?.data
-      : groups?.data.filter(group => authState.userData!.managed_group_ids!.includes(group.id))
+      : groups?.data.filter(grp => authState.userData!.managed_group_ids!.includes(grp.id))
 
   const handleGroupClick = (groupId: string) => {
     setSelectedGroupId(groupId)
@@ -119,9 +133,11 @@ export const GroupSettingsPage = () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+
           <p className="font-raleway mb-1 text-xl/6 font-medium">
             Управление группой {isGroupLoading ? "..." : group!.name}
           </p>
+
           <div className="flex flex-row flex-wrap gap-2">
             <Button>
               <Import className="mr-2 h-4 w-4" />
@@ -131,7 +147,19 @@ export const GroupSettingsPage = () => {
               <MessageCircle className="mr-2 h-4 w-4" />
               Привязать бота к беседе в мессенджере
             </Button>
+
+            <Button onClick={() => setRestoreDialogOpen(true)}>
+              <Undo2 className="mr-2 h-4 w-4" />
+              Восстановить отменённые пары
+            </Button>
+            <RestoreCancelledDialog
+              open={restoreDialogOpen}
+              onOpenChange={setRestoreDialogOpen}
+              groupId={selectedGroupId!}
+              cancelledClasses={cancelledClasses}
+            />
           </div>
+
           <div className="flex flex-row flex-wrap gap-2">
             <Button variant="destructive" onClick={() => setClearAllDialogOpen(true)}>
               <Trash2 className="mr-2 h-4 w-4" />
@@ -142,7 +170,9 @@ export const GroupSettingsPage = () => {
               onOpenChange={setClearAllDialogOpen}
               onConfirm={clearClassesByGroupId}
               title="Очистить расписание"
-              description={`Вы уверены, что хотите очистить расписание для группы ${isGroupLoading ? "..." : group!.name}? Это действие нельзя будет отменить.`}
+              description={`Вы уверены, что хотите очистить расписание для группы ${
+                isGroupLoading ? "..." : group!.name
+              }? Это действие нельзя будет отменить.`}
             />
 
             <Button variant="destructive" onClick={() => setCancelAllForGroupDialogOpen(true)}>
@@ -152,9 +182,11 @@ export const GroupSettingsPage = () => {
             <ConfirmDialog
               open={cancelAllForGroupDialogOpen}
               onOpenChange={setCancelAllForGroupDialogOpen}
-              onConfirm={clearClassesByGroupId}
+              onConfirm={cancelAllClassesByGroupId}
               title="Отменить все пары"
-              description={`Вы уверены, что хотите отменить все пары для группы ${isGroupLoading ? "..." : group!.name}?`}
+              description={`Вы уверены, что хотите отменить все пары для группы ${
+                isGroupLoading ? "..." : group!.name
+              }?`}
             />
 
             <DialogWrapper
@@ -174,16 +206,20 @@ export const GroupSettingsPage = () => {
                 <div className="font-raleway text-muted-foreground text-sm font-normal">
                   Выберите дни для отмены
                 </div>
-                <div className="flex flex-col max-h-[calc(80vh-100px)]">
-                  <DaysSelector mode="group" weeks={group?.weeks} onGroupChange={setIdList} />
-                  <div className="flex flex-row items-center justify-end gap-2 mt-4 pt-2">
+                <div className="flex max-h-[calc(80vh-100px)] flex-col">
+                  <DaysSelector
+                    mode="group"
+                    weeks={group?.weeks}
+                    onGroupChange={setClassesToCancel}
+                  />
+                  <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
                     <Button onClick={() => setCancelMultipleDialogOpen(false)}>
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Вернуться
                     </Button>
                     <Button
                       variant="destructive"
-                      disabled={idList.length === 0}
+                      disabled={classesToCancel.length === 0}
                       onClick={async () => {
                         await cancelClassesByDayId()
                         setCancelMultipleDialogOpen(false)
@@ -227,6 +263,7 @@ export const GroupSettingsPage = () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+
           <p className="font-raleway mb-1 text-xl/6 font-medium">Выберите группу для управления</p>
           <GroupsList
             groups={filteredGroups}
@@ -253,7 +290,9 @@ export const GroupSettingsPage = () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+
           <p className="font-raleway mb-1 text-xl/6 font-medium">Общие параметры групп</p>
+
           <div className="flex flex-row flex-wrap gap-2">
             <div className="flex flex-col gap-2">
               <Button
@@ -296,9 +335,9 @@ export const GroupSettingsPage = () => {
                       Выберите период, в течение которого будут отменены пары для всех групп.
                     </p>
                   </div>
-                  <div className="flex flex-col max-h-[calc(80vh-100px)] mt-2">
+                  <div className="mt-2 flex max-h-[calc(80vh-100px)] flex-col">
                     <DaysSelector mode="global" onGlobalChange={setGlobalDays} />
-                    <div className="flex flex-row items-center justify-end gap-2 mt-4 pt-2">
+                    <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
                       <Button onClick={() => setCancelAllGroupsDialogOpen(false)}>
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Вернуться
