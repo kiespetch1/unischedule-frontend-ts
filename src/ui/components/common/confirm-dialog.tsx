@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/ui/basic/dialog.tsx"
 import { Button, ButtonVariant } from "@/ui/basic/button.tsx"
+import { Check, X } from "lucide-react"
 
 export interface ConfirmDialogProps {
   open: boolean
@@ -44,9 +45,11 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = ({
         </DialogHeader>
         <DialogFooter className="sm:justify-between">
           <Button variant={confirmButtonVariant} onClick={handleConfirm} className="w-1/2">
+            <Check className="mr-2 h-4 w-4" />
             {confirmButtonText}
           </Button>
           <Button variant="outline" onClick={() => onOpenChange(false)} className="w-1/2">
+            <X className="mr-2 h-4 w-4" />
             {cancelButtonText}
           </Button>
         </DialogFooter>

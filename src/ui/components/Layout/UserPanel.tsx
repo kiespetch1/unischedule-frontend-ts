@@ -6,6 +6,7 @@ import { Button } from "@/ui/basic/button.tsx"
 import { defaultExtendedUser } from "@/utils/default-entities.ts"
 import { useAuth } from "@/features/auth/context/auth-context"
 import { useNavigate } from "react-router-dom"
+import { LogOut, Settings } from "lucide-react"
 
 export interface UserPanelProps {
   userData: UserExtendedModel | null
@@ -36,6 +37,7 @@ export const UserPanel: FC<UserPanelProps> = ({ userData, onClose }) => {
             navigate("/settings")
             onClose()
           }}>
+          <Settings className="mr-2 h-4 w-4" />
           Управление
         </Button>
         <Button
@@ -46,6 +48,7 @@ export const UserPanel: FC<UserPanelProps> = ({ userData, onClose }) => {
             logout()
             onClose()
           }}>
+          <LogOut className="mr-2 h-4 w-4" />
           Выйти
         </Button>
       </div>

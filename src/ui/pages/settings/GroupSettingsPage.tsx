@@ -22,21 +22,17 @@ import {
   useCancelClassesByDays,
   useClearClassesByGroupId,
 } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
-import FirstGroup from "@assets/first-group.svg?react"
-import SecondGroup from "@assets/second-group.svg?react"
-import EvenWeek from "@assets/even-week.svg?react"
-import OddWeek from "@assets/odd-week.svg?react"
-import { DayCard } from "@components/GroupSettings/DayCard.tsx"
-import { ScrollArea } from "@/ui/basic/scroll-area"
-import { 
-  MessageCircle, 
-  Trash2, 
-  Ban, 
-  CalendarX, 
-  ArrowLeft, 
-  ArrowUp, 
-  Import, 
-  CalendarMinus, 
+import { useCancelAllClassesByDaysName } from "@/features/classes-schedule/groups/hooks/use-cancel-all-classes-by-days-name"
+import { DaysSelector, GlobalDaysResult } from "@components/GroupSettings/DaysSelector.tsx"
+import {
+  MessageCircle,
+  Trash2,
+  Ban,
+  CalendarX,
+  ArrowLeft,
+  ArrowUp,
+  Import,
+  CalendarMinus,
   ListChecks
 } from "lucide-react"
 
@@ -46,6 +42,7 @@ export const GroupSettingsPage = () => {
   const [isChoosingGroup, setIsChoosingGroup] = useState(false)
 
   const [idList, setIdList] = useState<string[]>([])
+  const [globalDays, setGlobalDays] = useState<GlobalDaysResult>({ even: [], odd: [] })
 
   const [clearAllDialogOpen, setClearAllDialogOpen] = useState(false)
   const [cancelAllForGroupDialogOpen, setCancelAllForGroupDialogOpen] = useState(false)
@@ -65,6 +62,7 @@ export const GroupSettingsPage = () => {
     groupId: selectedGroupId!,
     dayIds: idList,
   })
+  const { mutateAsync: cancelAllByDaysName } = useCancelAllClassesByDaysName(globalDays)
 
   useEffect(() => {
     if (isChoosingGroup || !isEditingGroup) {
@@ -176,40 +174,8 @@ export const GroupSettingsPage = () => {
                 <div className="font-raleway text-muted-foreground text-sm font-normal">
                   Выберите дни для отмены
                 </div>
-                <div className="flex flex-col h-[calc(80vh-100px)]">
-                  <ScrollArea className="flex-grow w-full overflow-hidden">
-                    <div className="flex flex-col gap-3 pr-4">
-                      {group?.weeks.map(week => (
-                        <div key={week.id} className="flex flex-col gap-2">
-                          <div className="flex flex-row gap-2">
-                            <span className="font-raleway text-sm">
-                              {week.type == "even" ? "Четная неделя" : "Нечетная неделя"}
-                              {week.subgroup === "first"
-                                ? ", первая подгруппа"
-                                : week.subgroup === "second"
-                                  ? ", вторая подгруппа"
-                                  : null}
-                            </span>
-                            {week.type == "even" ? (
-                              <EvenWeek width="20px" height="20px" />
-                            ) : (
-                              <OddWeek width="20px" height="20px" />
-                            )}
-                            {week.subgroup === "first" && <FirstGroup width="20px" height="20px" />}
-                            {week.subgroup === "second" && (
-                              <SecondGroup width="20px" height="20px" />
-                            )}
-                          </div>
-
-                          <div className="flex flex-row flex-wrap gap-2">
-                            {week.days.map(day => (
-                              <DayCard key={day.id} day={day} setIdList={setIdList} />
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
+                <div className="flex flex-col max-h-[calc(80vh-100px)]">
+                  <DaysSelector mode="group" weeks={group?.weeks} onGroupChange={setIdList} />
                   <div className="flex flex-row items-center justify-end gap-2 mt-4 pt-2">
                     <Button onClick={() => setCancelMultipleDialogOpen(false)}>
                       <ArrowLeft className="mr-2 h-4 w-4" />
@@ -329,6 +295,25 @@ export const GroupSettingsPage = () => {
                     <p className="font-raleway text-muted-foreground text-sm">
                       Выберите период, в течение которого будут отменены пары для всех групп.
                     </p>
+                  </div>
+                  <div className="flex flex-col max-h-[calc(80vh-100px)] mt-2">
+                    <DaysSelector mode="global" onGlobalChange={setGlobalDays} />
+                    <div className="flex flex-row items-center justify-end gap-2 mt-4 pt-2">
+                      <Button onClick={() => setCancelAllGroupsDialogOpen(false)}>
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Вернуться
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        disabled={globalDays.even.length === 0 && globalDays.odd.length === 0}
+                        onClick={async () => {
+                          await cancelAllByDaysName()
+                          setCancelAllGroupsDialogOpen(false)
+                        }}>
+                        <CalendarMinus className="mr-2 h-4 w-4" />
+                        Отменить выбранные пары
+                      </Button>
+                    </div>
                   </div>
                 </DialogWrapper>
               </div>
