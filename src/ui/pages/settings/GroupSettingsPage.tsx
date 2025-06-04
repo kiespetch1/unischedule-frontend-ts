@@ -22,12 +22,7 @@ import {
   useCancelClassesByDays,
   useClearClassesByGroupId,
 } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
-import FirstGroup from "@assets/first-group.svg?react"
-import SecondGroup from "@assets/second-group.svg?react"
-import EvenWeek from "@assets/even-week.svg?react"
-import OddWeek from "@assets/odd-week.svg?react"
-import { DayCard } from "@components/GroupSettings/DayCard.tsx"
-import { ScrollArea } from "@/ui/basic/scroll-area"
+import { DaysSelector } from "@components/GroupSettings/DaysSelector.tsx"
 import { 
   MessageCircle, 
   Trash2, 
@@ -177,39 +172,7 @@ export const GroupSettingsPage = () => {
                   Выберите дни для отмены
                 </div>
                 <div className="flex flex-col h-[calc(80vh-100px)]">
-                  <ScrollArea className="flex-grow w-full overflow-hidden">
-                    <div className="flex flex-col gap-3 pr-4">
-                      {group?.weeks.map(week => (
-                        <div key={week.id} className="flex flex-col gap-2">
-                          <div className="flex flex-row gap-2">
-                            <span className="font-raleway text-sm">
-                              {week.type == "even" ? "Четная неделя" : "Нечетная неделя"}
-                              {week.subgroup === "first"
-                                ? ", первая подгруппа"
-                                : week.subgroup === "second"
-                                  ? ", вторая подгруппа"
-                                  : null}
-                            </span>
-                            {week.type == "even" ? (
-                              <EvenWeek width="20px" height="20px" />
-                            ) : (
-                              <OddWeek width="20px" height="20px" />
-                            )}
-                            {week.subgroup === "first" && <FirstGroup width="20px" height="20px" />}
-                            {week.subgroup === "second" && (
-                              <SecondGroup width="20px" height="20px" />
-                            )}
-                          </div>
-
-                          <div className="flex flex-row flex-wrap gap-2">
-                            {week.days.map(day => (
-                              <DayCard key={day.id} day={day} setIdList={setIdList} />
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
+                  <DaysSelector mode="group" weeks={group?.weeks} onGroupChange={setIdList} />
                   <div className="flex flex-row items-center justify-end gap-2 mt-4 pt-2">
                     <Button onClick={() => setCancelMultipleDialogOpen(false)}>
                       <ArrowLeft className="mr-2 h-4 w-4" />

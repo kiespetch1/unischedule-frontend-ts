@@ -43,6 +43,9 @@ export const getGroupsUrl = () => `${SCHEDULE_URL}/api/v1/groups`
 
 export const getGroupsPromoteUrl = () => `${SCHEDULE_URL}/api/v1/groups/promote`
 
+export const getGroupsCancelByDaysUrl = () =>
+  `${SCHEDULE_URL}/api/v1/groups/cancel/days`
+
 export const getTeachersUrl = () => `${SCHEDULE_URL}/api/v1/teachers`
 
 export const getLocationsUrl = () => `${SCHEDULE_URL}/api/v1/locations`
