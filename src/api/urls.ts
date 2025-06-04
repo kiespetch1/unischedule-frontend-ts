@@ -1,4 +1,4 @@
-﻿import { IDENTITY_URL, SCHEDULE_URL, EVENTS_URL } from "@/config/api.ts"
+import { IDENTITY_URL, SCHEDULE_URL, EVENTS_URL } from "@/config/api.ts"
 
 export type ApiServiceType = "identity" | "schedule" | "events"
 
@@ -41,6 +41,8 @@ export const getGroupByIdUrl = (groupId: string) => `${SCHEDULE_URL}/api/v1/grou
 
 export const getGroupsUrl = () => `${SCHEDULE_URL}/api/v1/groups`
 
+export const getGroupsPromoteUrl = () => `${SCHEDULE_URL}/api/v1/groups/promote`
+
 export const getTeachersUrl = () => `${SCHEDULE_URL}/api/v1/teachers`
 
 export const getLocationsUrl = () => `${SCHEDULE_URL}/api/v1/locations`
@@ -54,5 +56,20 @@ export const getClassesCopyByDayIdUrl = (dayId: string) =>
 
 export const getClassesClearByDayIdUrl = (dayId: string) =>
   `${SCHEDULE_URL}/api/v1/classes/clear/${dayId}`
+
+export const getClassesClearByGroupIdUrl = (groupId: string) =>
+  `${SCHEDULE_URL}/api/v1/classes/clear/group/${groupId}`
+
+export const getCancelledClassesByGroupIdUrl = (groupId: string) =>
+  `${SCHEDULE_URL}/api/v1/classes/cancelled/${groupId}`
+
+export const getClassesCancelByDaysUrl = () =>
+  `${SCHEDULE_URL}/api/v1/classes/cancel/days`
+
+export const getClassCancelByIdUrl = (classId: string) =>
+  `${SCHEDULE_URL}/api/v1/classes/cancel/${classId}`
+
+export const getClassRestoreByIdUrl = (classId: string) =>
+  `${SCHEDULE_URL}/api/v1/classes/restore/${classId}`
 
 export const getAnnouncementsUrl = () => `${SCHEDULE_URL}/api/v1/announcements`

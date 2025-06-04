@@ -43,10 +43,10 @@ export const DialogWrapper: FC<DialogWrapperProps> = ({
     <DialogPortal>
       <DialogOverlay />
       <DialogContent
-        className={cn(
-          "z-60 fixed left-1/2 top-1/2 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl",
-          headless ? "bg-transparent p-0 shadow-none" : "bg-white p-6 shadow-lg",
-          className
+        className={cn(className,
+          "z-60 fixed left-1/2 top-1/2 w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl",
+          headless ? "bg-transparent p-0 shadow-none" : "bg-white p-6 shadow-lg"
+
         )}>
         {!headless && (title || description) && (
           <DialogHeader className="mb-4">

@@ -16,7 +16,7 @@ export const GroupButton: FC<GroupButtonProps> = ({ groupName, link, groupId, on
   }
 
   const borderClass =
-    "border-iateblue box-content flex h-[36px] w-[122px] items-center justify-center rounded-[20px] border-2 bg-zinc-200 no-underline font-raleway text-lg font-semibold"
+    "cursor-pointer border-iateblue box-content flex h-[36px] w-[122px] items-center justify-center rounded-[20px] border-2 bg-zinc-200 no-underline font-raleway text-lg font-semibold"
 
   return link ? (
     <a href={link} className={borderClass} onClick={handleClick}>

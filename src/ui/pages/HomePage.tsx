@@ -15,7 +15,10 @@ export const HomePage = () => {
           Если твоей группы в списках еще нет, напиши мне, и я добавлю ее.
         </p>
       </div>
+      <div className="flex gap-3 flex-col">
+      <p className="font-raleway text-xl/6 font-medium">Группы</p>
       <GroupsList groups={groups?.data} loading={isLoading} addBottomText={true} />
+      </div>
     </div>
   )
 }

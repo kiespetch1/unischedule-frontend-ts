@@ -1,6 +1,6 @@
 import { FC, useState } from "react"
 import IateLogo from "@assets/iate-logo.svg?react"
-import User from "@assets/user.svg?react"
+import { User } from "lucide-react"
 import { DialogWrapper } from "@components/common/DialogWrapper.tsx"
 import { LoginForm } from "@components/common/login-form.tsx"
 import { useDialog } from "@/contexts/dialog-context.tsx"
@@ -44,12 +44,13 @@ export const Header: FC = () => {
             open={isLoginOpen}
             onOpenChange={setLoginOpen}
             showCloseButton={false}
+            className="max-w-md"
             trigger={
               <a
                 href="#"
                 className="hover:bg-zinc-150 flex h-[50px] w-[50px] cursor-pointer items-center justify-center rounded-xl transition-colors duration-300"
                 aria-label="В профиль">
-                <User />
+                <User width={34} height={34} />
               </a>
             }>
             {authState.isAuthenticated ? (

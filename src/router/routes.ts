@@ -3,4 +3,7 @@ export enum Routes {
   HOME = "/home",
   CLASSES = "/classes/:groupId",
   SETTINGS = "/settings",
+  PROFILE_SETTINGS = "settings/profile",
+  GROUP_SETTINGS = "settings/groups",
+  ANNOUNCEMENTS_SETTINGS = "settings/announcements",
 }

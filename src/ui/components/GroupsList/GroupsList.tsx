@@ -23,7 +23,6 @@ export const GroupsList: FC<GroupsListProps> = ({
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-3">
-        <p className="font-raleway mb-2 text-xl/6 font-medium">Группы</p>
         <GroupSearch input={filterText} onInputChange={setFilterText} />
       </div>
       <div className="flex flex-col gap-3">
