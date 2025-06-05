@@ -29,13 +29,18 @@ export const AuthGate: React.FC<AuthGateProps> = ({
       : !permsArr.some(p => authState.permissions?.[p])
   })()
 
-  if (authState.isLoading || !authState.isAuthenticated || permissionDenied) {
+  if (authState.isLoading) {
+    return <>{fallback}</>
+  }
+
+  if (!authState.isAuthenticated || permissionDenied) {
     if (redirectTo) {
       toast.error("У вас нет доступа к этой странице")
       return <Navigate to={redirectTo} />
     }
     return <>{fallback}</>
   }
+
   return <>{children}</>
 }
 
@@ -56,6 +61,10 @@ export const PermissionGate: React.FC<{
       : permsArr.some(p => authState.permissions?.[p])
   })()
 
+  if (authState.isLoading) {
+    return <>{fallback}</>
+  }
+
   if (authState.isAuthenticated && hasPermissions) {
     return <>{children}</>
   }
@@ -64,5 +73,6 @@ export const PermissionGate: React.FC<{
     toast.error("У вас нет доступа к этой странице")
     return <Navigate to={redirectTo} />
   }
+
   return <>{fallback}</>
 }

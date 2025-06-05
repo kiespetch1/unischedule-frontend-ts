@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react"
 import { Check } from "lucide-react"
 import { useToggle } from "@/hooks/use-toggle.ts"
 import { DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
+import clsx from "clsx"
 
 export interface SelectableDayCardProps<T extends string | DayOfWeek> {
   value: T
@@ -26,10 +27,13 @@ export const SelectableDayCard = <T extends string | DayOfWeek>({
 
   return (
     <Card
-      className="w-55 h-25 flex cursor-pointer flex-row items-center justify-between px-3"
+      className={clsx(
+        "h-25 flex cursor-pointer flex-row items-center justify-between px-3 min-w-40",
+        selected && "border-blue-500 bg-blue-50"
+      )}
       onClick={handleSelect}>
       <div className="flex flex-col">
-        <span className="font-semibold">{label}</span>
+        <span className="font-semibold whitespace-nowrap">{label}</span>
         {info && (
           <span className="font-raleway font-regular text-muted-foreground text-sm">{info}</span>
         )}

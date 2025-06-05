@@ -23,7 +23,6 @@ import { RestoreClassesDialog } from "@components/GroupSettings/RestoreClassesDi
 import { MessageCircle, Trash2, Ban, ArrowUp, Import, ListChecks } from "lucide-react"
 import {
   useCancelClassesByGroupId,
-  useGetCancelledClassesByGroupId,
 } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
 
 export const GroupSettingsPage = () => {
@@ -47,11 +46,6 @@ export const GroupSettingsPage = () => {
   const { mutateAsync: cancelAllClassesByGroupId } = useCancelClassesByGroupId({
     groupId: selectedGroupId!,
   })
-  const { data: cancelledClassesData } = useGetCancelledClassesByGroupId(
-    { groupId: selectedGroupId ?? "" },
-    { enabled: !!selectedGroupId }
-  )
-  const cancelledClasses = cancelledClassesData?.data || []
 
   useEffect(() => {
     if (isChoosingGroup || !isEditingGroup) {
@@ -123,7 +117,7 @@ export const GroupSettingsPage = () => {
               Привязать бота к беседе в мессенджере
             </Button>
 
-            <RestoreClassesDialog groupId={selectedGroupId!} cancelledClasses={cancelledClasses} />
+            <RestoreClassesDialog groupId={selectedGroupId!} />
           </div>
 
           <div className="flex flex-row flex-wrap gap-2">

@@ -113,5 +113,6 @@ export const useGetCancelledClassesByGroupId: ApiQueryWithParams<
     refetchOnMount: "always",
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
+    gcTime: 0,
     ...options,
   })

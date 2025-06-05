@@ -4,25 +4,26 @@ import { Button } from "@/ui/basic/button.tsx"
 import { Card } from "@/ui/basic/card.tsx"
 import { Check, ArrowLeft, Undo2 } from "lucide-react"
 import clsx from "clsx"
-import { ClassWithDayModel } from "@/features/classes-schedule/types/classes-types.ts"
 import { useRestoreClassesByIds } from "@/features/classes-schedule/classes/hooks/use-restore-class.ts"
+import { useGetCancelledClassesByGroupId } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
 import { getRussianDayName, trimEndChars } from "@/utils/formatters.ts"
 import Dot from "@components/common/Dot.tsx"
 
 interface RestoreClassesDialogProps {
-  cancelledClasses: ClassWithDayModel[]
   groupId: string
 }
 
-export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({
-  cancelledClasses,
-  groupId,
-}) => {
+export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({ groupId }) => {
   const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
   const { mutateAsync: restoreClasses } = useRestoreClassesByIds({ classIds: selected, groupId })
+  const { data: cancelledClassesData } = useGetCancelledClassesByGroupId(
+    { groupId },
+    { enabled: open, gcTime: 0 }
+  )
+  const cancelledClasses = cancelledClassesData?.data || []
 
   const toggleSelect = (id: string) => {
     setSelected(prev => (prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]))
@@ -32,14 +33,20 @@ export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({
     setLoading(true)
     await restoreClasses()
     setLoading(false)
-    setSelected([])
     setOpen(false)
+  }
+
+  const handleOpenChange = (newOpenState: boolean) => {
+    setOpen(newOpenState)
+    if (!newOpenState) {
+      setSelected([])
+    }
   }
 
   return (
     <DialogWrapper
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       showCloseButton={false}
       trigger={
         <Button>
@@ -52,7 +59,7 @@ export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({
         <div className="font-raleway text-muted-foreground text-sm font-normal">
           Выберите отменённые пары для восстановления
         </div>
-        <div className="flex max-h-[calc(80vh-100px)] flex-col gap-2 overflow-auto">
+        <div className="flex max-h-[calc(80vh-100px)] flex-row flex-wrap gap-2 overflow-auto">
           {cancelledClasses.length === 0 ? (
             <div className="font-raleway text-muted-foreground text-center">Нет отменённых пар</div>
           ) : (
@@ -60,7 +67,7 @@ export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({
               <Card
                 key={item.id}
                 className={clsx(
-                  "flex w-full cursor-pointer flex-row items-center justify-between border px-3 py-2",
+                  "flex min-w-40 cursor-pointer flex-row items-center justify-between border px-3 py-2",
                   selected.includes(item.id) && "border-blue-500 bg-blue-50"
                 )}
                 onClick={() => toggleSelect(item.id)}>
@@ -82,7 +89,7 @@ export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({
           )}
         </div>
         <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
-          <Button onClick={() => setOpen(false)} disabled={loading}>
+          <Button onClick={() => handleOpenChange(false)} disabled={loading}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Вернуться
           </Button>

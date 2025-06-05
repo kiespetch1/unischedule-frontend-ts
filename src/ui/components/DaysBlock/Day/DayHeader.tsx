@@ -55,7 +55,7 @@ export const DayHeader: FC<DayHeaderProps> = ({
           {getClassesCount(classesCount)}
         </div>
       </div>
-      <PermissionGate permission="can_update_class">
+      <PermissionGate permissions="can_update_class">
         <ButtonsBlock
           editing={editing}
           setIsEditing={onEditing}
