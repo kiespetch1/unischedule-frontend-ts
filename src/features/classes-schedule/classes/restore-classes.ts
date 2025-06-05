@@ -1,8 +1,8 @@
 import { apiFetch } from "@/api/api-fetch"
-import { getClassRestoreByIdsUrl } from "@/api/urls"
+import { getClassesRestoreByIdsUrl } from "@/api/urls"
 
 export const restoreClassesByIds = async (classIds: string[]) => {
-  await apiFetch(getClassRestoreByIdsUrl(), {
+  await apiFetch(getClassesRestoreByIdsUrl(), {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ class_ids: classIds }),

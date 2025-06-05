@@ -4,8 +4,7 @@ import { getAnnouncements } from "@/features/announcements/get-announcements.ts"
 import { AnnouncementsRequestParams } from "@/features/announcements/types/announcements-request-params.ts"
 import { AnnouncementModel } from "@/features/classes-schedule/types/classes-types.ts"
 import type { InfiniteData } from "@tanstack/query-core"
-
-export const announcementsKey = "announcements"
+import { announcementsKey } from "@/utils/query-keys"
 
 export type GetInfiniteQueryOptions = UseInfiniteQueryOptions<
   DataPage<AnnouncementModel>,

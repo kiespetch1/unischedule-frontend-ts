@@ -3,8 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { ApiError } from "@/api/api-error.ts"
 import toast from "react-hot-toast"
 import { cancelAllClassesByDaysName, GroupsCancelDaysData } from "../../classes/cancel-class"
-
-const groupKey = "group"
+import { groupKey } from "@/utils/query-keys"
 
 export const useCancelAllClassesByDaysName: ApiMutationWithParams<GroupsCancelDaysData> = <TContext = unknown>(
   params: GroupsCancelDaysData,

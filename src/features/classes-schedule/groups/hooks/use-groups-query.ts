@@ -8,8 +8,7 @@ import { promoteGroups } from "@/features/classes-schedule/groups/promote-groups
 import { ApiMutation, ApiMutationOptions, ApiMutationResult } from "@/types/api-mutation.ts"
 import { ApiError } from "@/api/api-error.ts"
 import toast from "react-hot-toast"
-
-const groupKey = "group"
+import { groupKey } from "@/utils/query-keys.ts"
 
 export const useGetGroups: ApiQueryWithParams<GroupsRequestParams, DataPage<GroupModel>> = (
   params,

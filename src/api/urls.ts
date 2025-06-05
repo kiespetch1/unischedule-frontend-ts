@@ -76,6 +76,6 @@ export const getClassCancelByIdUrl = (classId: string) =>
 export const getClassRestoreByIdUrl = (classId: string) =>
   `${SCHEDULE_URL}/api/v1/classes/restore/${classId}`
 
-export const getClassRestoreByIdsUrl = () => `${SCHEDULE_URL}/api/v1/classes/restore/multiple`
+export const getClassesRestoreByIdsUrl = () => `${SCHEDULE_URL}/api/v1/classes/restore/multiple`
 
 export const getAnnouncementsUrl = () => `${SCHEDULE_URL}/api/v1/announcements`
