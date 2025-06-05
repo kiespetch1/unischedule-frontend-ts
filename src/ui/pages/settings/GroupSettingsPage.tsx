@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react"
 import { useGetGroupById } from "@/features/classes-schedule/groups/hooks/use-group-query.ts"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/ui/basic/breadcrumb.tsx"
+import { Breadcrumbs } from "@/ui/components/common/Breadcrumbs.tsx"
 import { Button } from "@/ui/basic/button.tsx"
 import { GroupsList } from "@components/GroupsList/GroupsList.tsx"
 import {
@@ -23,17 +16,15 @@ import { RestoreClassesDialog } from "@components/GroupSettings/RestoreClassesDi
 import { MessageCircle, Trash2, Ban, ArrowUp, Import, ListChecks } from "lucide-react"
 import Eraser from "@assets/eraser.svg?react"
 import { useDeleteGroup } from "@/features/classes-schedule/groups/hooks/use-delete-group.ts"
-import {
-  useCancelClassesByGroupId,
-} from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
-import { useQueryClient } from "@tanstack/react-query";
-import { groupsKey } from "@/utils/query-keys.ts";
+import { useCancelClassesByGroupId } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
+import { useQueryClient } from "@tanstack/react-query"
+import { groupsKey } from "@/utils/query-keys.ts"
 
 export const GroupSettingsPage = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
   const [isEditingGroup, setIsEditingGroup] = useState(false)
   const [isChoosingGroup, setIsChoosingGroup] = useState(false)
-  const [needsToRefreshGroupListDisplay, setNeedsToRefreshGroupListDisplay] = useState(false);
+  const [needsToRefreshGroupListDisplay, setNeedsToRefreshGroupListDisplay] = useState(false)
 
   const [clearAllDialogOpen, setClearAllDialogOpen] = useState(false)
   const [cancelAllForGroupDialogOpen, setCancelAllForGroupDialogOpen] = useState(false)
@@ -42,10 +33,15 @@ export const GroupSettingsPage = () => {
 
   const { authState } = useAuth()
   const navigate = useNavigate()
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const { data: group, isLoading: isGroupLoading } = useGetGroupById({ id: selectedGroupId! })
-  const { data: groups, isLoading: isGroupsLoading, isSuccess: isGroupsSuccess, isFetching: isGroupsFetching } = useGetGroups({ grade: null })
+  const {
+    data: groups,
+    isLoading: isGroupsLoading,
+    isSuccess: isGroupsSuccess,
+    isFetching: isGroupsFetching,
+  } = useGetGroups({ grade: null })
   const { mutateAsync: clearClassesByGroupId } = useClearClassesByGroupId({
     groupId: selectedGroupId!,
   })
@@ -54,25 +50,23 @@ export const GroupSettingsPage = () => {
     groupId: selectedGroupId!,
   })
   const { mutateAsync: deleteGroup } = useDeleteGroup(
-    {
-      id: selectedGroupId!,
-    },
+    { id: selectedGroupId! },
     {
       onSuccess: async () => {
-        await queryClient.refetchQueries({ queryKey: [groupsKey, { grade: null }], exact: true });
-        setNeedsToRefreshGroupListDisplay(true);
+        await queryClient.refetchQueries({ queryKey: [groupsKey, { grade: null }], exact: true })
+        setNeedsToRefreshGroupListDisplay(true)
       },
-    },
+    }
   )
 
   useEffect(() => {
     if (needsToRefreshGroupListDisplay && isGroupsSuccess && !isGroupsFetching) {
-      setIsEditingGroup(false);
-      setIsChoosingGroup(true);
-      setSelectedGroupId(null);
-      setNeedsToRefreshGroupListDisplay(false);
+      setIsEditingGroup(false)
+      setIsChoosingGroup(true)
+      setSelectedGroupId(null)
+      setNeedsToRefreshGroupListDisplay(false)
     }
-  }, [needsToRefreshGroupListDisplay, groups, isGroupsSuccess, isGroupsFetching, queryClient]);
+  }, [needsToRefreshGroupListDisplay, groups, isGroupsSuccess, isGroupsFetching, queryClient])
 
   useEffect(() => {
     if (isChoosingGroup || !isEditingGroup) {
@@ -92,43 +86,32 @@ export const GroupSettingsPage = () => {
     setIsEditingGroup(true)
   }
 
+  const breadcrumbLevels = [
+    { title: "Управление", onClick: () => navigate("/settings") },
+    {
+      title: "Управление группами",
+      onClick: () => {
+        setIsEditingGroup(false)
+        setSelectedGroupId(null)
+        setIsChoosingGroup(false)
+      },
+    },
+    {
+      title: "Список групп",
+      onClick: () => {
+        setIsEditingGroup(false)
+        setSelectedGroupId(null)
+        setIsChoosingGroup(true)
+      },
+    },
+    { title: isGroupLoading ? "Группа" : (group?.name ?? "") },
+  ]
+
   if (isEditingGroup) {
     return (
       <div className="mx-8 flex flex-col items-start gap-4">
         <div className="flex flex-col gap-2">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink onClick={() => navigate("/settings")}>Управление</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink
-                  onClick={() => {
-                    setIsEditingGroup(false)
-                    setSelectedGroupId(null)
-                    setIsChoosingGroup(false)
-                  }}>
-                  Управление группами
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink
-                  onClick={() => {
-                    setIsEditingGroup(false)
-                    setSelectedGroupId(null)
-                    setIsChoosingGroup(true)
-                  }}>
-                  Список групп
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{isGroupLoading ? "Группа" : group!.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <Breadcrumbs levels={breadcrumbLevels} visibleCount={4} />
 
           <p className="font-raleway mb-1 text-xl/6 font-medium">
             Управление группой {isGroupLoading ? "..." : group!.name}
@@ -198,28 +181,7 @@ export const GroupSettingsPage = () => {
     return (
       <div className="mx-8 flex flex-col items-start gap-4">
         <div className="flex flex-col gap-2">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink onClick={() => navigate("/settings")}>Управление</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink
-                  onClick={() => {
-                    setIsEditingGroup(false)
-                    setSelectedGroupId(null)
-                    setIsChoosingGroup(false)
-                  }}>
-                  Управление группами
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Список групп</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <Breadcrumbs levels={breadcrumbLevels} visibleCount={3} />
 
           <p className="font-raleway mb-1 text-xl/6 font-medium">Выберите группу для управления</p>
           <GroupsList
@@ -236,17 +198,7 @@ export const GroupSettingsPage = () => {
     <div>
       <div className="mx-8 flex flex-col items-start gap-4">
         <div className="flex flex-col gap-2">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink onClick={() => navigate("/settings")}>Управление</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink>Управление группами</BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <Breadcrumbs levels={breadcrumbLevels} visibleCount={2} />
 
           <p className="font-raleway mb-1 text-xl/6 font-medium">Общие параметры групп</p>
 

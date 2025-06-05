@@ -1,12 +1,7 @@
 import { Bell, User, Users } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../basic/card.tsx"
 import { useNavigate } from "react-router-dom"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from "@/ui/basic/breadcrumb.tsx"
+import { Breadcrumbs } from "@/ui/components/common/Breadcrumbs.tsx"
 import { useEffect } from "react"
 
 export const SettingsPage = () => {
@@ -19,13 +14,7 @@ export const SettingsPage = () => {
   return (
     <div className="mx-8 flex flex-col items-start gap-4">
       <div className="flex flex-col gap-2">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink>Управление</BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <Breadcrumbs levels={[{ title: "Управление" }]} />
         <p className="font-raleway text-xl/6 font-medium">Выберите действие</p>
       </div>
       <div className="flex w-full flex-row flex-wrap justify-start gap-4">
