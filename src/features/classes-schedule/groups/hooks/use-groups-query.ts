@@ -8,12 +8,12 @@ import { promoteGroups } from "@/features/classes-schedule/groups/promote-groups
 import { ApiMutation, ApiMutationOptions, ApiMutationResult } from "@/types/api-mutation.ts"
 import { ApiError } from "@/api/api-error.ts"
 import toast from "react-hot-toast"
-import { groupKey } from "@/utils/query-keys.ts"
+import { groupsKey } from "@/utils/query-keys.ts"
 
 export const useGetGroups: ApiQueryWithParams<GroupsRequestParams, DataPage<GroupModel>> = (
   params,
   options
-) => useQuery({ queryKey: [groupKey, params], queryFn: () => getGroups(params), ...options })
+) => useQuery({ queryKey: [groupsKey, params], queryFn: () => getGroups(params), ...options })
 
 export const usePromoteGroups: ApiMutation = <TContext = unknown>(
   options?: ApiMutationOptions<void, void, TContext>
@@ -23,7 +23,7 @@ export const usePromoteGroups: ApiMutation = <TContext = unknown>(
   return useMutation<void, ApiError, void, TContext>({
     mutationFn: promoteGroups,
     onSettled: (...args) => {
-      queryClient.invalidateQueries({ queryKey: [groupKey] })
+      queryClient.invalidateQueries({ queryKey: [groupsKey] })
       options?.onSettled?.(...args)
     },
     onError: (err, _vars, context) => {

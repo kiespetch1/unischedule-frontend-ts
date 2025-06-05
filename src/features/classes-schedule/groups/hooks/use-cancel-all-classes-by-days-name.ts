@@ -1,13 +1,19 @@
-import { ApiMutationOptions, ApiMutationResult, ApiMutationWithParams } from "@/types/api-mutation.ts"
+import {
+  ApiMutationOptions,
+  ApiMutationResult,
+  ApiMutationWithParams,
+} from "@/types/api-mutation.ts"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { ApiError } from "@/api/api-error.ts"
 import toast from "react-hot-toast"
 import { cancelAllClassesByDaysName, GroupsCancelDaysData } from "../../classes/cancel-class"
-import { groupKey } from "@/utils/query-keys"
+import { groupsKey } from "@/utils/query-keys"
 
-export const useCancelAllClassesByDaysName: ApiMutationWithParams<GroupsCancelDaysData> = <TContext = unknown>(
+export const useCancelAllClassesByDaysName: ApiMutationWithParams<GroupsCancelDaysData> = <
+  TContext = unknown,
+>(
   params: GroupsCancelDaysData,
-  options?: ApiMutationOptions<void, void, TContext>,
+  options?: ApiMutationOptions<void, void, TContext>
 ): ApiMutationResult<void, void, TContext> => {
   const queryClient = useQueryClient()
 
@@ -17,7 +23,7 @@ export const useCancelAllClassesByDaysName: ApiMutationWithParams<GroupsCancelDa
     },
     onSuccess: (...args) => {
       toast.success("Пары успешно отменены")
-      void queryClient.invalidateQueries({ queryKey: [groupKey] })
+      void queryClient.invalidateQueries({ queryKey: [groupsKey] })
       options?.onSuccess?.(...args)
     },
     onError: (err, _vars, context) => {

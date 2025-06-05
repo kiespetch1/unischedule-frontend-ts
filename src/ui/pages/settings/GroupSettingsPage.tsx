@@ -21,24 +21,31 @@ import { useClearClassesByGroupId } from "@/features/classes-schedule/classes/ho
 import { CancelClassesDialog } from "@components/GroupSettings/CancelClassesDialog.tsx"
 import { RestoreClassesDialog } from "@components/GroupSettings/RestoreClassesDialog.tsx"
 import { MessageCircle, Trash2, Ban, ArrowUp, Import, ListChecks } from "lucide-react"
+import Eraser from "@assets/eraser.svg?react"
+import { useDeleteGroup } from "@/features/classes-schedule/groups/hooks/use-delete-group.ts"
 import {
   useCancelClassesByGroupId,
 } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
+import { useQueryClient } from "@tanstack/react-query";
+import { groupsKey } from "@/utils/query-keys.ts";
 
 export const GroupSettingsPage = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
   const [isEditingGroup, setIsEditingGroup] = useState(false)
   const [isChoosingGroup, setIsChoosingGroup] = useState(false)
+  const [needsToRefreshGroupListDisplay, setNeedsToRefreshGroupListDisplay] = useState(false);
 
   const [clearAllDialogOpen, setClearAllDialogOpen] = useState(false)
   const [cancelAllForGroupDialogOpen, setCancelAllForGroupDialogOpen] = useState(false)
   const [promoteAllGroupsDialogOpen, setPromoteAllGroupsDialogOpen] = useState(false)
+  const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false)
 
   const { authState } = useAuth()
   const navigate = useNavigate()
+  const queryClient = useQueryClient();
 
   const { data: group, isLoading: isGroupLoading } = useGetGroupById({ id: selectedGroupId! })
-  const { data: groups, isLoading: isGroupsLoading } = useGetGroups({ grade: null })
+  const { data: groups, isLoading: isGroupsLoading, isSuccess: isGroupsSuccess, isFetching: isGroupsFetching } = useGetGroups({ grade: null })
   const { mutateAsync: clearClassesByGroupId } = useClearClassesByGroupId({
     groupId: selectedGroupId!,
   })
@@ -46,6 +53,26 @@ export const GroupSettingsPage = () => {
   const { mutateAsync: cancelAllClassesByGroupId } = useCancelClassesByGroupId({
     groupId: selectedGroupId!,
   })
+  const { mutateAsync: deleteGroup } = useDeleteGroup(
+    {
+      id: selectedGroupId!,
+    },
+    {
+      onSuccess: async () => {
+        await queryClient.refetchQueries({ queryKey: [groupsKey, { grade: null }], exact: true });
+        setNeedsToRefreshGroupListDisplay(true);
+      },
+    },
+  )
+
+  useEffect(() => {
+    if (needsToRefreshGroupListDisplay && isGroupsSuccess && !isGroupsFetching) {
+      setIsEditingGroup(false);
+      setIsChoosingGroup(true);
+      setSelectedGroupId(null);
+      setNeedsToRefreshGroupListDisplay(false);
+    }
+  }, [needsToRefreshGroupListDisplay, groups, isGroupsSuccess, isGroupsFetching, queryClient]);
 
   useEffect(() => {
     if (isChoosingGroup || !isEditingGroup) {
@@ -122,7 +149,7 @@ export const GroupSettingsPage = () => {
 
           <div className="flex flex-row flex-wrap gap-2">
             <Button variant="destructive" onClick={() => setClearAllDialogOpen(true)}>
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Eraser className="mr-2 h-4 w-4" />
               Очистить расписание
             </Button>
             <ConfirmDialog
@@ -150,6 +177,17 @@ export const GroupSettingsPage = () => {
             />
 
             <CancelClassesDialog mode="group" weeks={group?.weeks} groupId={selectedGroupId!} />
+            <Button variant="destructive" onClick={() => setDeleteGroupDialogOpen(true)}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Удалить группу
+            </Button>
+            <ConfirmDialog
+              open={deleteGroupDialogOpen}
+              onOpenChange={setDeleteGroupDialogOpen}
+              onConfirm={deleteGroup}
+              title="Удалить группу"
+              description={`Вы уверены, что хотите удалить группу ${isGroupLoading ? "..." : group!.name}? Это действие нельзя будет отменить.`}
+            />
           </div>
         </div>
       </div>
@@ -160,7 +198,6 @@ export const GroupSettingsPage = () => {
     return (
       <div className="mx-8 flex flex-col items-start gap-4">
         <div className="flex flex-col gap-2">
-          {/*TODO: обертку для крошек*/}
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -179,7 +216,7 @@ export const GroupSettingsPage = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink>Список групп</BreadcrumbLink>
+                <BreadcrumbPage>Список групп</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
