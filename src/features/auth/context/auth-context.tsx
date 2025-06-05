@@ -1,13 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getPermissions } from "../api/get-permissions"
-import { CurrentUserResponse, getCurrentUser } from "../api/get-current-user"
+import { getCurrentUser } from "../api/get-current-user"
 import { logout } from "../api/logout"
 import { AuthContextType, AuthState, UserPermissions } from "../types/auth-types"
 import {
   defaultExtendedUser,
   defaultPermissions,
-  defaultPermissionsResult,
 } from "@/utils/default-entities.ts"
 
 const authStatusQueryKey = "auth-status"
@@ -37,7 +36,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     retry: 1,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    initialData: { data: defaultExtendedUser, isAuthenticated: false } as CurrentUserResponse,
   })
 
   const {
@@ -52,7 +50,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     retry: 1,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    initialData: defaultPermissionsResult,
   })
 
   useEffect(() => {
@@ -60,7 +57,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       userData: authData?.data || defaultExtendedUser,
       isAuthenticated: authData?.isAuthenticated ?? false,
       permissions: authData?.isAuthenticated ? permissionsData?.data || defaultPermissions : null,
-      isLoading: authLoading || (authData?.isAuthenticated && permissionsLoading),
+      isLoading: authLoading || (Boolean(authData?.isAuthenticated) && permissionsLoading),
       error: permissionsError ? "Ошибка при получении прав доступа" : null,
     })
   }, [authData, permissionsData, authLoading, permissionsLoading, permissionsError])
