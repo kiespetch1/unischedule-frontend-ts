@@ -4,22 +4,21 @@ import { Button } from "@/ui/basic/button.tsx"
 import { Card } from "@/ui/basic/card.tsx"
 import { Check, ArrowLeft, Undo2 } from "lucide-react"
 import clsx from "clsx"
-import { ClassModel } from "@/features/classes-schedule/types/classes-types.ts"
-import { useRestoreClassesByIds } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
+import { ClassWithDayModel } from "@/features/classes-schedule/types/classes-types.ts"
+import { useRestoreClassesByIds } from "@/features/classes-schedule/classes/hooks/use-restore-class.ts"
+import { getRussianDayName, trimEndChars } from "@/utils/formatters.ts"
+import Dot from "@components/common/Dot.tsx"
 
-interface RestoreCancelledDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  cancelledClasses: ClassModel[]
+interface RestoreClassesDialogProps {
+  cancelledClasses: ClassWithDayModel[]
   groupId: string
 }
 
-export const RestoreCancelledDialog: FC<RestoreCancelledDialogProps> = ({
-  open,
-  onOpenChange,
+export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({
   cancelledClasses,
   groupId,
 }) => {
+  const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -34,11 +33,20 @@ export const RestoreCancelledDialog: FC<RestoreCancelledDialogProps> = ({
     await restoreClasses()
     setLoading(false)
     setSelected([])
-    onOpenChange(false)
+    setOpen(false)
   }
 
   return (
-    <DialogWrapper open={open} onOpenChange={onOpenChange} showCloseButton={false} trigger={null}>
+    <DialogWrapper
+      open={open}
+      onOpenChange={setOpen}
+      showCloseButton={false}
+      trigger={
+        <Button>
+          <Undo2 className="mr-2 h-4 w-4" />
+          Восстановить отменённые пары
+        </Button>
+      }>
       <div className="flex flex-col gap-2">
         <div className="font-raleway text-base/6 font-semibold">Восстановить отменённые пары</div>
         <div className="font-raleway text-muted-foreground text-sm font-normal">
@@ -57,9 +65,15 @@ export const RestoreCancelledDialog: FC<RestoreCancelledDialogProps> = ({
                 )}
                 onClick={() => toggleSelect(item.id)}>
                 <div className="flex flex-col">
-                  <span className="font-semibold">{item.name}</span>
+                  <div className="flex flex-row items-center gap-2">
+                    <span className="font-raleway font-semibold">
+                      {getRussianDayName(item.day.day_of_week)}
+                    </span>
+                    <Dot />
+                    <span className="font-raleway font-semibold">{item.name}</span>
+                  </div>
                   <span className="text-muted-foreground text-sm">
-                    {item.started_at} - {item.finished_at}
+                    {trimEndChars(item.started_at, 3)} - {trimEndChars(item.finished_at, 3)}
                   </span>
                 </div>
                 {selected.includes(item.id) && <Check className="h-5 w-5" color="#0966BB" />}
@@ -68,7 +82,7 @@ export const RestoreCancelledDialog: FC<RestoreCancelledDialogProps> = ({
           )}
         </div>
         <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
-          <Button onClick={() => onOpenChange(false)} disabled={loading}>
+          <Button onClick={() => setOpen(false)} disabled={loading}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Вернуться
           </Button>

@@ -17,43 +17,23 @@ import {
 import { useAuth } from "@/features/auth/context/auth-context.tsx"
 import { useNavigate } from "react-router-dom"
 import { ConfirmDialog } from "@components/common/confirm-dialog.tsx"
-import { DialogWrapper } from "@components/common/DialogWrapper.tsx"
+import { useClearClassesByGroupId } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
+import { CancelClassesDialog } from "@components/GroupSettings/CancelClassesDialog.tsx"
+import { RestoreClassesDialog } from "@components/GroupSettings/RestoreClassesDialog.tsx"
+import { MessageCircle, Trash2, Ban, ArrowUp, Import, ListChecks } from "lucide-react"
 import {
-  useCancelClassesByDays,
   useCancelClassesByGroupId,
-  useClearClassesByGroupId,
   useGetCancelledClassesByGroupId,
-} from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
-import { useCancelAllClassesByDaysName } from "@/features/classes-schedule/groups/hooks/use-cancel-all-classes-by-days-name"
-import { DaysSelector, GlobalDaysResult } from "@components/GroupSettings/DaysSelector.tsx"
-import { RestoreCancelledDialog } from "@components/GroupSettings/RestoreCancelledDialog.tsx"
-import {
-  MessageCircle,
-  Trash2,
-  Ban,
-  CalendarX,
-  ArrowLeft,
-  ArrowUp,
-  Import,
-  CalendarMinus,
-  ListChecks,
-  Undo2,
-} from "lucide-react"
+} from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
 
 export const GroupSettingsPage = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
   const [isEditingGroup, setIsEditingGroup] = useState(false)
   const [isChoosingGroup, setIsChoosingGroup] = useState(false)
 
-  const [classesToCancel, setClassesToCancel] = useState<string[]>([])
-  const [globalDays, setGlobalDays] = useState<GlobalDaysResult>({ even: [], odd: [] })
-
   const [clearAllDialogOpen, setClearAllDialogOpen] = useState(false)
   const [cancelAllForGroupDialogOpen, setCancelAllForGroupDialogOpen] = useState(false)
-  const [cancelMultipleDialogOpen, setCancelMultipleDialogOpen] = useState(false)
   const [promoteAllGroupsDialogOpen, setPromoteAllGroupsDialogOpen] = useState(false)
-  const [cancelAllGroupsDialogOpen, setCancelAllGroupsDialogOpen] = useState(false)
-  const [restoreDialogOpen, setRestoreDialogOpen] = useState(false)
 
   const { authState } = useAuth()
   const navigate = useNavigate()
@@ -64,11 +44,6 @@ export const GroupSettingsPage = () => {
     groupId: selectedGroupId!,
   })
   const { mutateAsync: promoteAllGroups } = usePromoteGroups()
-  const { mutateAsync: cancelClassesByDayId } = useCancelClassesByDays({
-    groupId: selectedGroupId!,
-    dayIds: classesToCancel,
-  })
-  const { mutateAsync: cancelAllByDaysName } = useCancelAllClassesByDaysName(globalDays)
   const { mutateAsync: cancelAllClassesByGroupId } = useCancelClassesByGroupId({
     groupId: selectedGroupId!,
   })
@@ -148,16 +123,7 @@ export const GroupSettingsPage = () => {
               Привязать бота к беседе в мессенджере
             </Button>
 
-            <Button onClick={() => setRestoreDialogOpen(true)}>
-              <Undo2 className="mr-2 h-4 w-4" />
-              Восстановить отменённые пары
-            </Button>
-            <RestoreCancelledDialog
-              open={restoreDialogOpen}
-              onOpenChange={setRestoreDialogOpen}
-              groupId={selectedGroupId!}
-              cancelledClasses={cancelledClasses}
-            />
+            <RestoreClassesDialog groupId={selectedGroupId!} cancelledClasses={cancelledClasses} />
           </div>
 
           <div className="flex flex-row flex-wrap gap-2">
@@ -189,48 +155,7 @@ export const GroupSettingsPage = () => {
               }?`}
             />
 
-            <DialogWrapper
-              open={cancelMultipleDialogOpen}
-              onOpenChange={setCancelMultipleDialogOpen}
-              showCloseButton={false}
-              trigger={
-                <Button variant="destructive">
-                  <CalendarX className="mr-2 h-4 w-4" />
-                  Отменить пары для указанных дней
-                </Button>
-              }>
-              <div className="flex flex-col gap-2">
-                <div className="font-raleway text-base/6 font-semibold">
-                  Отменить пары для указанных дней
-                </div>
-                <div className="font-raleway text-muted-foreground text-sm font-normal">
-                  Выберите дни для отмены
-                </div>
-                <div className="flex max-h-[calc(80vh-100px)] flex-col">
-                  <DaysSelector
-                    mode="group"
-                    weeks={group?.weeks}
-                    onGroupChange={setClassesToCancel}
-                  />
-                  <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
-                    <Button onClick={() => setCancelMultipleDialogOpen(false)}>
-                      <ArrowLeft className="mr-2 h-4 w-4" />
-                      Вернуться
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      disabled={classesToCancel.length === 0}
-                      onClick={async () => {
-                        await cancelClassesByDayId()
-                        setCancelMultipleDialogOpen(false)
-                      }}>
-                      <CalendarMinus className="mr-2 h-4 w-4" />
-                      Отменить выбранные пары
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </DialogWrapper>
+            <CancelClassesDialog mode="group" weeks={group?.weeks} groupId={selectedGroupId!} />
           </div>
         </div>
       </div>
@@ -241,6 +166,7 @@ export const GroupSettingsPage = () => {
     return (
       <div className="mx-8 flex flex-col items-start gap-4">
         <div className="flex flex-col gap-2">
+          {/*TODO: обертку для крошек*/}
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -315,46 +241,7 @@ export const GroupSettingsPage = () => {
                   description="Вы уверены, что хотите продолжить? Все существующие группы будут переведены в следующий курс, а группы четвертого курса будут архивированы. Это действие нельзя будет отменить."
                 />
 
-                <DialogWrapper
-                  open={cancelAllGroupsDialogOpen}
-                  onOpenChange={setCancelAllGroupsDialogOpen}
-                  showCloseButton={false}
-                  trigger={
-                    <Button
-                      variant="destructive"
-                      onClick={() => setCancelAllGroupsDialogOpen(true)}>
-                      <CalendarX className="mr-2 h-4 w-4" />
-                      Отменить пары для всех групп на указанный период
-                    </Button>
-                  }>
-                  <div className="mr-2 flex flex-col gap-2">
-                    <p className="font-raleway text-lg font-semibold leading-none">
-                      Отменить пары для всех групп на указанный период
-                    </p>
-                    <p className="font-raleway text-muted-foreground text-sm">
-                      Выберите период, в течение которого будут отменены пары для всех групп.
-                    </p>
-                  </div>
-                  <div className="mt-2 flex max-h-[calc(80vh-100px)] flex-col">
-                    <DaysSelector mode="global" onGlobalChange={setGlobalDays} />
-                    <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
-                      <Button onClick={() => setCancelAllGroupsDialogOpen(false)}>
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Вернуться
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        disabled={globalDays.even.length === 0 && globalDays.odd.length === 0}
-                        onClick={async () => {
-                          await cancelAllByDaysName()
-                          setCancelAllGroupsDialogOpen(false)
-                        }}>
-                        <CalendarMinus className="mr-2 h-4 w-4" />
-                        Отменить выбранные пары
-                      </Button>
-                    </div>
-                  </div>
-                </DialogWrapper>
+                <CancelClassesDialog mode="global" />
               </div>
             </div>
           </div>

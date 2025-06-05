@@ -102,6 +102,21 @@ export interface ClassModel {
   teacher: TeacherModel
 }
 
+export interface ClassWithDayModel {
+  id: string
+  name: string
+  started_at: string
+  finished_at: string
+  type: ClassType
+  week_type: WeekType
+  subgroup: Subgroup
+  is_cancelled: boolean
+  day_id: string
+  day: DayModel
+  location: LocationModel
+  teacher: TeacherModel
+}
+
 export interface LocationModel {
   id: string
   name: string

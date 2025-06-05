@@ -14,7 +14,7 @@ import { ClassesClearParameters } from "@/features/classes-schedule/classes/hook
 import { cancelClassesByDays } from "@/features/classes-schedule/classes/cancel-classes.ts"
 import { ApiQueryWithParams } from "@/types/api-query.ts"
 import { DataPage } from "@/types/data-page.ts"
-import { ClassModel } from "@/features/classes-schedule/types/classes-types.ts"
+import { ClassWithDayModel } from "@/features/classes-schedule/types/classes-types.ts"
 import { getCancelledClassesByGroupId } from "@/features/classes-schedule/classes/get-cancelled-classes.ts"
 import { groupKey } from "@/utils/query-keys.ts"
 
@@ -105,7 +105,7 @@ export interface CancelledClassesByGroupIdParams {
 
 export const useGetCancelledClassesByGroupId: ApiQueryWithParams<
   CancelledClassesByGroupIdParams,
-  DataPage<ClassModel>
+  DataPage<ClassWithDayModel>
 > = ({ groupId }, options) =>
   useQuery({
     queryKey: [groupKey, "cancelled", groupId],
