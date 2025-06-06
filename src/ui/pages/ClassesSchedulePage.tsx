@@ -15,7 +15,7 @@ export const ClassesSchedulePage = () => {
   if (!groupId) throw new Error("groupId search param is not defined")
 
   const { data: group, isLoading } = useGetGroupById({ id: groupId })
-  const hasFixedSubgroups = (group?.has_subgroups && group?.has_fixed_subgroups) || false
+  const hasFixedSubgroups = group?.has_fixed_subgroups || false
 
   const oddWeek = group?.weeks.find(week => week.type === "odd") || defaultWeek
   const evenWeek = group?.weeks.find(week => week.type === "even") || defaultWeek

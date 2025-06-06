@@ -111,7 +111,6 @@ export const defaultGroup: GroupModel = {
   id: defaultId,
   name: "",
   grade: 0,
-  has_subgroups: false,
   has_fixed_subgroups: false,
   announcements_block: null,
   last_academic_week_number: 0,

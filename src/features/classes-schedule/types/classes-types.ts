@@ -28,7 +28,6 @@ export interface GroupModel {
   id: string
   name: string
   grade: number
-  has_subgroups: boolean
   has_fixed_subgroups: boolean
   announcements_block: AnnouncementBlockModel | null
   last_academic_week_number: number
