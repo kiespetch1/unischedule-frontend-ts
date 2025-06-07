@@ -1,11 +1,11 @@
-﻿import { Breadcrumbs } from "@components/common/Breadcrumbs.tsx"
+import { Breadcrumbs } from "@components/common/Breadcrumbs.tsx"
 import { useNavigate } from "react-router-dom"
 
-export const ProfileSettingsPage = () => {
+export const TeachersSettingsPage = () => {
   const navigate = useNavigate()
   const breadcrumbLevels = [
     { title: "Управление", onClick: () => navigate("/settings") },
-    { title: "Управление профилем", onClick: () => {} },
+    { title: "Управление преподавателями", onClick: () => {} },
   ]
   return (
     <div className="mx-8 flex flex-col items-start gap-4">

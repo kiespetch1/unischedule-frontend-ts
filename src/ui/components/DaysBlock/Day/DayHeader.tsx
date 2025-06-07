@@ -103,7 +103,7 @@ const ButtonsBlock: FC<ButtonsBlock> = ({
           </button>
         </TooltipWrapper>
         <TooltipWrapper message="Удалить все пары текущего дня">
-          <button className="cursor-pointer pb-px" onClick={() => setClearDialogOpen(true)}>
+          <button className="cursor-pointer" onClick={() => setClearDialogOpen(true)}>
             <Eraser />
           </button>
         </TooltipWrapper>

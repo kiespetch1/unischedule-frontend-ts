@@ -13,7 +13,8 @@ import { ConfirmDialog } from "@components/common/confirm-dialog.tsx"
 import { useClearClassesByGroupId } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
 import { CancelClassesDialog } from "@components/GroupSettings/CancelClassesDialog.tsx"
 import { RestoreClassesDialog } from "@components/GroupSettings/RestoreClassesDialog.tsx"
-import { MessageCircle, Trash2, Ban, ArrowUp, Import, ListChecks } from "lucide-react"
+import { ImportClassesDialog } from "@components/GroupSettings/ImportClassesDialog.tsx"
+import { MessageCircle, Trash2, Ban, ArrowUp, ListChecks } from "lucide-react"
 import Eraser from "@assets/eraser.svg?react"
 import { useDeleteGroup } from "@/features/classes-schedule/groups/hooks/use-delete-group.ts"
 import { useCancelClassesByGroupId } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
@@ -118,10 +119,7 @@ export const GroupSettingsPage = () => {
           </p>
 
           <div className="flex flex-row flex-wrap gap-2">
-            <Button>
-              <Import className="mr-2 h-4 w-4" />
-              Импортировать расписание с оф. сайта
-            </Button>
+            <ImportClassesDialog groupId={selectedGroupId!} />
             <Button>
               <MessageCircle className="mr-2 h-4 w-4" />
               Привязать бота к беседе в мессенджере

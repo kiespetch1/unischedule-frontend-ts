@@ -11,3 +11,7 @@ export const GroupSettingsPage = lazy(() => import("@/pages/group-settings-page"
 export const ProfileSettingsPage = lazy(() => import("@/pages/profile-settings-page"))
 
 export const AnnouncementsSettingsPage = lazy(() => import("@/pages/announcements-settings-page"))
+
+export const TeachersSettingsPage = lazy(() => import("@/pages/teachers-settings-page"))
+
+export const LocationsSettingsPage = lazy(() => import("@/pages/locations-settings-page"))

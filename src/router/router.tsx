@@ -8,6 +8,8 @@ import {
   ProfileSettingsPage,
   GroupSettingsPage,
   AnnouncementsSettingsPage,
+  TeachersSettingsPage,
+  LocationsSettingsPage,
 } from "@/router/pages.ts"
 
 export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
@@ -22,6 +24,8 @@ export const router: ReturnType<typeof createBrowserRouter> = createBrowserRoute
       { path: Routes.PROFILE_SETTINGS, element: <ProfileSettingsPage /> },
       { path: Routes.GROUP_SETTINGS, element: <GroupSettingsPage /> },
       { path: Routes.ANNOUNCEMENTS_SETTINGS, element: <AnnouncementsSettingsPage /> },
+      { path: Routes.TEACHERS_SETTINGS, element: <TeachersSettingsPage /> },
+      { path: Routes.LOCATIONS_SETTINGS, element: <LocationsSettingsPage /> },
     ],
   },
 ])
