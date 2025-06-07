@@ -28,7 +28,6 @@ export interface GroupModel {
   id: string
   name: string
   grade: number
-  has_subgroups: boolean
   has_fixed_subgroups: boolean
   announcements_block: AnnouncementBlockModel | null
   last_academic_week_number: number
@@ -41,7 +40,8 @@ export interface AnnouncementModel {
   priority: AnnouncementPriority
   is_anonymous: boolean
   is_time_limited: boolean
-  available_until: string
+  available_until: string | null
+  is_added_using_bot: boolean
   created_at: string
   created_by: UserModel | null
   updated_at: string
@@ -97,6 +97,21 @@ export interface ClassModel {
   subgroup: Subgroup
   is_cancelled: boolean
   day_id: string
+  location: LocationModel
+  teacher: TeacherModel
+}
+
+export interface ClassWithDayModel {
+  id: string
+  name: string
+  started_at: string
+  finished_at: string
+  type: ClassType
+  week_type: WeekType
+  subgroup: Subgroup
+  is_cancelled: boolean
+  day_id: string
+  day: DayModel
   location: LocationModel
   teacher: TeacherModel
 }

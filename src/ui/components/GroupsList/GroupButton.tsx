@@ -1,16 +1,30 @@
-import { FC } from "react"
+import { FC, MouseEvent as ReactMouseEvent } from "react"
 
 export interface GroupButtonProps {
   groupName: string
-  link: string
+  link?: string
+  groupId?: string
+  onClick?: (groupId: string, event: ReactMouseEvent<HTMLElement>) => void
 }
 
-export const GroupButton: FC<GroupButtonProps> = ({ groupName, link }) => {
-  return (
-    <div className="border-iateblue box-content flex h-[36px] w-[122px] items-center justify-center rounded-[20px] border-2 bg-zinc-200 no-underline">
-      <a href={link} className="group-button">
-        <div className="font-raleway text-lg font-semibold">{groupName}</div>
-      </a>
-    </div>
+export const GroupButton: FC<GroupButtonProps> = ({ groupName, link, groupId, onClick }) => {
+  const handleClick = (event: ReactMouseEvent<HTMLElement>) => {
+    if (onClick && groupId) {
+      event.preventDefault()
+      onClick(groupId, event)
+    }
+  }
+
+  const borderClass =
+    "cursor-pointer border-iateblue box-content flex h-[36px] w-[122px] items-center justify-center rounded-[20px] border-2 bg-zinc-200 no-underline font-raleway text-lg font-semibold"
+
+  return link ? (
+    <a href={link} className={borderClass} onClick={handleClick}>
+      {groupName}
+    </a>
+  ) : (
+    <button type="button" className={borderClass} onClick={handleClick}>
+      {groupName}
+    </button>
   )
 }

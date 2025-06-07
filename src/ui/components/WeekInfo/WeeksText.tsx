@@ -125,16 +125,18 @@ export const WeeksText: FC<WeeksTextProps> = ({
   const currentWeekNumber = getTodayWeekNumber()
   const nextWeekNumber = currentWeekNumber + 1
 
-  console.log("currentWeekNumber", currentWeekNumber)
-  console.log("lastAcademicWeekNumber", lastAcademicWeekNumber)
-
   if (currentWeekNumber > lastAcademicWeekNumber) {
     return (
       <div className="mt-3 flex flex-col items-start justify-center gap-px">
-        <p className={clsx(weekTextClass, "font-semibold")}>В этом периоде учебные пары не проводятся</p>
+        <p className={clsx(weekTextClass, "font-semibold")}>
+          В этом периоде учебные пары не проводятся
+        </p>
         <p className={weekTextClass}>
           Посмотреть расписание зачётов и экзаменов можно на странице "
-          <a href="/exams" className="underline text-blue-950">Расписание сессии</a>"
+          <a href="/exams" className="text-blue-950 underline">
+            Расписание сессии
+          </a>
+          "
         </p>
       </div>
     )
@@ -155,8 +157,11 @@ export const WeeksText: FC<WeeksTextProps> = ({
           {currentWeekNumber} неделя
         </p>
         <p className={weekTextClass}>
-          Следующая неделя - зачетная. Расписание для зачетов можно посмотреть на странице
-          "<a href="/exams" className="underline text-blue-950">Расписание сессии</a>"
+          Следующая неделя - зачетная. Расписание для зачетов можно посмотреть на странице "
+          <a href="/exams" className="text-blue-950 underline">
+            Расписание сессии
+          </a>
+          "
         </p>
       </div>
     )

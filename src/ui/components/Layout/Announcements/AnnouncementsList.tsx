@@ -4,6 +4,7 @@ import { toReadableDate } from "@/utils/formatters.ts"
 import Dot from "@components/common/Dot.tsx"
 import { useGetAnnouncements } from "@/features/announcements/hooks/use-get-announcements.ts"
 import { Button } from "@/ui/basic/button.tsx"
+import { Bot } from "lucide-react"
 
 export interface NotificationsListProps {
   groupId: string
@@ -46,6 +47,7 @@ const AnnouncementsList = forwardRef<HTMLDivElement, NotificationsListProps>(({ 
                 </span>
               </>
             )}
+            {announcement.is_added_using_bot && <Bot size={16} color="gray" className="-ml-1" />}
           </div>
           <div className="font-raleway text-base">{announcement.message}</div>
         </div>

@@ -1,5 +1,4 @@
-﻿import Notifications from "@assets/notification.svg?react"
-import { FC, lazy, Suspense, useId, useRef } from "react"
+﻿import { FC, lazy, Suspense, useId, useRef } from "react"
 import {
   Dialog,
   DialogContent,
@@ -9,6 +8,7 @@ import {
   DialogTrigger,
 } from "@/ui/basic/dialog.tsx"
 import { ScrollArea } from "@/ui/basic/scroll-area.tsx"
+import { Bell } from "lucide-react"
 
 const AnnouncementsList = lazy(
   () => import("@/ui/components/Layout/Announcements/AnnouncementsList.tsx")
@@ -43,14 +43,11 @@ export const AnnouncementsPopover: FC<AnnouncementsPopoverProps> = ({
             e.preventDefault()
             onOpen()
           }}>
-          <Notifications />
+          <Bell width={32} height={32} />
         </a>
       </DialogTrigger>
-      <DialogContent
-        className="w-[80vw] max-w-2xl max-h-[80vh] overflow-hidden"
-        id={descriptionId}
-      >
-      <DialogDescription
+      <DialogContent className="max-h-[80vh] w-[80vw] max-w-2xl overflow-hidden" id={descriptionId}>
+        <DialogDescription
           className="sr-only"
           id={descriptionId}>{`Объявления группы ${groupName}`}</DialogDescription>
         <DialogHeader>
@@ -59,19 +56,19 @@ export const AnnouncementsPopover: FC<AnnouncementsPopoverProps> = ({
             <button
               type="button"
               onClick={() => {}}
-              className="font-raleway text-semibold text-blue-950 underline cursor-pointer">{`${groupName}`}</button>
+              className="font-raleway text-semibold cursor-pointer text-blue-950 underline">{`${groupName}`}</button>
           </DialogTitle>
         </DialogHeader>
-          <ScrollArea className="w-full max-h-[calc(80vh-100px)]">
-            <Suspense
-              fallback={
-                <>
-                  <p className="font-raleway text-sm"> Загрузка...</p>
-                </>
-              }>
-              <AnnouncementsList groupId={groupId} ref={announcementsContainer} />
-            </Suspense>
-          </ScrollArea>
+        <ScrollArea className="max-h-[calc(80vh-100px)] w-full">
+          <Suspense
+            fallback={
+              <>
+                <p className="font-raleway text-sm"> Загрузка...</p>
+              </>
+            }>
+            <AnnouncementsList groupId={groupId} ref={announcementsContainer} />
+          </Suspense>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )

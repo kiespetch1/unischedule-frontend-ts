@@ -1,5 +1,5 @@
 import { GroupModel } from "@/features/classes-schedule/types/classes-types.ts"
-import { FC } from "react"
+import { FC, MouseEvent as ReactMouseEvent } from "react"
 import { GroupButton } from "@components/GroupsList/GroupButton.tsx"
 import { Skeleton } from "@/ui/basic/skeleton.tsx"
 
@@ -8,9 +8,10 @@ export interface CourseGroupsRowProps {
   groups: GroupModel[]
   filter: string
   loading: boolean
+  onGroupClick?: (groupId: string, event: ReactMouseEvent<HTMLElement>) => void
 }
 
-export const CourseGroupsRow: FC<CourseGroupsRowProps> = ({ grade, groups, filter, loading }) => {
+export const CourseGroupsRow: FC<CourseGroupsRowProps> = ({ grade, groups, filter, loading, onGroupClick }) => {
   const filteredGroups = groups
     .filter(group => group.grade == grade)
     .filter(group => (!filter ? true : group.name.toLowerCase().includes(filter.toLowerCase())))
@@ -31,9 +32,29 @@ export const CourseGroupsRow: FC<CourseGroupsRowProps> = ({ grade, groups, filte
       </div>
 
       <div className="flex flex-row gap-4">
-        {filteredGroups.map(group => (
-          <GroupButton key={group.id} groupName={group.name} link={"/classes/" + group.id} />
-        ))}
+        {filteredGroups.map(group => {
+          const handleGroupClick = (groupId: string, event: ReactMouseEvent<HTMLElement>) => {
+            if (onGroupClick) {
+              onGroupClick(groupId, event);
+            }
+          };
+          
+          return onGroupClick ? (
+            <GroupButton 
+              key={group.id} 
+              groupName={group.name} 
+              groupId={group.id} 
+              onClick={handleGroupClick} 
+            />
+          ) : (
+            <GroupButton 
+              key={group.id} 
+              groupName={group.name} 
+              link={"/classes/" + group.id} 
+              groupId={group.id}
+            />
+          );
+        })}
       </div>
     </div>
   )

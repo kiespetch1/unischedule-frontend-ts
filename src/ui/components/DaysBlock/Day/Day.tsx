@@ -1,4 +1,4 @@
-﻿import { FC, ReactNode, useState } from "react"
+import { FC, ReactNode, useState } from "react"
 import {
   ClassModel,
   DayModel,
@@ -18,7 +18,7 @@ import toast from "react-hot-toast"
 import { Button } from "@/ui/basic/button.tsx"
 import { getWarningToastSettings } from "@/lib/toast-settings.tsx"
 import {
-  useClearClasses,
+  useClearClassesByDayId,
   useCopyClasses,
 } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
 
@@ -34,7 +34,7 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
   const [activeClassIndex, setActiveClassIndex] = useState<number | undefined>(undefined)
   const queryClient = useQueryClient()
   const { mutateAsync: copyClasses } = useCopyClasses({ dayId: day.id, groupId: groupId })
-  const { mutateAsync: clearClasses } = useClearClasses({ dayId: day.id, groupId: groupId })
+  const { mutateAsync: clearClasses } = useClearClassesByDayId({ dayId: day.id, groupId: groupId })
   const handleAddClass = (weekId: string, dayId: string) => {
     queryClient.setQueryData<GroupModel>(["group", groupId], oldGroup => {
       if (!oldGroup) return oldGroup
@@ -103,7 +103,7 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
         <div className="group relative flex flex-col *:z-20 items-center">
           <DayHeader
             dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
-            classesCount={dayData?.classes?.length || 0}
+            classesCount={dayData?.classes?.filter(x => !x.is_cancelled).length || 0}
             editing={isEditing}
             onEditing={setIsEditing}
             onActiveChange={setActiveClassIndex}
@@ -135,7 +135,7 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
     <div className="group flex flex-col">
       <DayHeader
         dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
-        classesCount={dayData?.classes?.length || 0}
+        classesCount={dayData?.classes?.filter(x => !x.is_cancelled).length || 0}
         editing={isEditing}
         onEditing={setIsEditing}
         onActiveChange={setActiveClassIndex}
