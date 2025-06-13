@@ -88,3 +88,56 @@ export const locationSchema = z
     },
     { message: "Для дистанционной локации необходимо указать ссылку", path: ["link"] }
   )
+
+export const announcementSchema = z.object({
+  message: z.string().min(1, { message: "Текст объявления не может быть пустым" }).nullable(),
+  priority: z.enum(["normal", "high", "very_high"] as const),
+  is_anonymous: z.boolean(),
+  is_time_limited: z.boolean(),
+  available_until: z.string().optional().nullable(),
+  target: z.object({
+    included_grades: z
+      .array(z.number())
+      .default([])
+      .transform(val => val ?? []),
+    included_groups: z
+      .array(z.string())
+      .default([])
+      .transform(val => val ?? []),
+    included_departments: z
+      .array(z.string())
+      .default([])
+      .transform(val => val ?? []),
+    excluded_grades: z
+      .array(z.number())
+      .default([])
+      .transform(val => val ?? []),
+    excluded_groups: z
+      .array(z.string())
+      .default([])
+      .transform(val => val ?? []),
+    excluded_departments: z
+      .array(z.string())
+      .default([])
+      .transform(val => val ?? []),
+  }),
+})
+
+export const importSchema = z.object({ url: z.string().trim().url("Введите корректный URL") })
+
+export const groupSchema = z.object({
+  name: z.string().min(1, { message: "Название группы обязательно" }),
+  grade: z
+    .coerce
+    .number()
+    .refine(val => !isNaN(val), {
+      message: "Курс должен быть числом"
+    })
+    .refine(val => val >= 1 && val <= 4, {
+      message: "Курс должен быть от 1 до 4"
+    }),
+  has_fixed_subgroups: z.boolean(),
+  last_academic_week_number: z
+    .number()
+    .min(1, { message: "Количество недель должно быть больше 0" }),
+})

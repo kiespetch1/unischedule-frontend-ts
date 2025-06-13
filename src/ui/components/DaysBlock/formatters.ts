@@ -27,7 +27,7 @@ export const getRussianLocationTypeName = (location: LocationType) => {
 }
 
 export const getRussianRoleName = (role: RoleType) => {
-  switch (role) {
+  switch (role.toLowerCase()) {
     case "admin":
       return "Администратор"
     case "staff":

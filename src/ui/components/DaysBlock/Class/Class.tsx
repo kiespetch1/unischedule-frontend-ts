@@ -39,6 +39,7 @@ import {
   useUpdateClass,
 } from "@/features/classes-schedule/classes/hooks/use-class-query.ts"
 import { ClassSideButtons } from "@components/DaysBlock/Class/ClassSideButtons.tsx"
+import Cancel from "@assets/cancelled.svg?react"
 
 export interface ClassProps {
   isFirst?: boolean
@@ -65,8 +66,7 @@ export const Class: FC<ClassProps> = ({
   dayId = "",
   onUnsavedDelete = () => {},
 }) => {
-  const baseBlockClass =
-    "flex flex-row items-center py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
+  const baseBlockClass = "flex flex-row items-center py-1 mb-[6px] w-[600px] h-[133px] rounded-b-sm"
   const baseBlockFinalClass = clsx(
     baseBlockClass,
     !isFirst ? "rounded-t-sm" : "",
@@ -75,9 +75,9 @@ export const Class: FC<ClassProps> = ({
   )
 
   const classData: ClassModel = data ?? defaultClass
-  const { mutateAsync: createClass } = useCreateClass({ group_id: groupId })
-  const { mutateAsync: updateClass } = useUpdateClass({ classData, group_id: groupId })
-  const { mutateAsync: deleteClass } = useDeleteClass({ classData, group_id: groupId })
+  const { mutateAsync: createClass } = useCreateClass({ groupId: groupId })
+  const { mutateAsync: updateClass } = useUpdateClass({ classData, groupId: groupId })
+  const { mutateAsync: deleteClass } = useDeleteClass({ classData, groupId: groupId })
   const handleClassDelete = () => {
     if (classData.id === defaultId) {
       onUnsavedDelete()
@@ -241,7 +241,7 @@ export const Class: FC<ClassProps> = ({
                   <LocationPicker
                     value={fieldApi.state.value}
                     onChange={fieldApi.setValue}
-                    className="text-sm font-normal max-w-32"
+                    className="max-w-32 text-sm font-normal"
                   />
                 )
               }}
@@ -263,13 +263,20 @@ export const Class: FC<ClassProps> = ({
   if (isWeekend) {
     return (
       <div className={baseBlockFinalClass}>
-        <span className="font-raleway w-full text-center text-3xl font-normal">Выходной день</span>
+        <span className="font-raleway w-full text-center text-3xl font-normal">Выходной день</span>
       </div>
     )
   }
 
   return (
-    <div className={baseBlockFinalClass} onClick={onClick}>
+    <div
+      className={clsx(baseBlockFinalClass, classData.is_cancelled && "group relative")}
+      onClick={onClick}>
+      {classData.is_cancelled && (
+        <div className="z-5 pointer-events-none absolute inset-0 flex items-center justify-center rounded-b-sm bg-zinc-100/50 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-0">
+          <span className="font-raleway text-center text-3xl font-bold">Отменена</span>
+        </div>
+      )}
       <div className="box-content flex h-full flex-col items-start justify-evenly">
         <div className="flex flex-row items-center gap-4">
           <span className="font-raleway text-2xl font-semibold">
@@ -279,7 +286,11 @@ export const Class: FC<ClassProps> = ({
           <span className="font-raleway text-lg font-normal">
             {getRussianClassTypeName(classData.type)}
           </span>
-          <IconsSection weekType={classData.week_type} subgroup={classData.subgroup} />
+          <IconsSection
+            weekType={classData.week_type}
+            subgroup={classData.subgroup}
+            isCancelled={classData.is_cancelled}
+          />
         </div>
         <span className="font-raleway text-lg/5 font-normal">{classData.name}</span>
         <TooltipWrapper
@@ -296,7 +307,11 @@ export const Class: FC<ClassProps> = ({
           message={getIrlLocationTooltipMessage(classData.location.name)}
           disabled={classData.location.name.length !== 5}>
           {classData.location.type === "online" ? (
-            <a href={classData.location.link ?? "#" } className="font-raleway text-lg underline font-bold text-blue-950">Ссылка</a>
+            <a
+              href={classData.location.link ?? "#"}
+              className="font-raleway text-lg font-bold text-blue-950 underline">
+              Ссылка
+            </a>
           ) : (
             <span className="font-raleway text-lg font-bold">{classData.location.name}</span>
           )}
@@ -309,41 +324,39 @@ export const Class: FC<ClassProps> = ({
 interface IconsSectionProps {
   weekType: WeekType
   subgroup: Subgroup
+  isCancelled?: boolean
 }
 
-const IconsSection: FC<IconsSectionProps> = ({ weekType, subgroup }) => {
+const IconsSection: FC<IconsSectionProps> = ({ weekType, subgroup, isCancelled }) => {
   return (
     <div className="flex flex-row items-center justify-end gap-4">
-      {(weekType !== "every" || subgroup !== "none") && (
+      {(weekType !== "every" || subgroup !== "none" || isCancelled) && (
         <Dot sizeClass={"w-1 h-1"} colorClass={"bg-black"} />
       )}
       {weekType === "even" && (
-        <>
-          <TooltipWrapper message="Четная неделя">
-            <EvenWeek width="25px" height="25px" />
-          </TooltipWrapper>
-        </>
+        <TooltipWrapper message="Четная неделя">
+          <EvenWeek width="25px" height="25px" />
+        </TooltipWrapper>
       )}
       {weekType === "odd" && (
-        <>
-          <TooltipWrapper message="Нечетная неделя">
-            <OddWeek width="25px" height="25px" />
-          </TooltipWrapper>
-        </>
+        <TooltipWrapper message="Нечетная неделя">
+          <OddWeek width="25px" height="25px" />
+        </TooltipWrapper>
       )}
       {subgroup === "first" && (
-        <>
-          <TooltipWrapper message="Первая подгруппа">
-            <FirstGroup width="25px" height="25px" />
-          </TooltipWrapper>
-        </>
+        <TooltipWrapper message="Первая подгруппа">
+          <FirstGroup width="25px" height="25px" />
+        </TooltipWrapper>
       )}
       {subgroup === "second" && (
-        <>
-          <TooltipWrapper message="Вторая подгруппа">
-            <SecondGroup width="25px" height="25px" />
-          </TooltipWrapper>
-        </>
+        <TooltipWrapper message="Вторая подгруппа">
+          <SecondGroup width="25px" height="25px" />
+        </TooltipWrapper>
+      )}
+      {isCancelled && (
+        <TooltipWrapper message="Пара отменена">
+          <Cancel width="25px" height="25px" color="#DC2626" />
+        </TooltipWrapper>
       )}
     </div>
   )

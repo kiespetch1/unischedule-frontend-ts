@@ -1,7 +1,16 @@
 import { createBrowserRouter, Navigate } from "react-router-dom"
 import { Routes } from "./routes.ts"
 import { Layout } from "@components/Layout/Layout.tsx"
-import { ClassesSchedulePage, HomePage } from "@/router/pages.ts"
+import {
+  ClassesSchedulePage,
+  HomePage,
+  SettingsPage,
+  ProfileSettingsPage,
+  GroupSettingsPage,
+  AnnouncementsSettingsPage,
+  TeachersSettingsPage,
+  LocationsSettingsPage,
+} from "@/router/pages.ts"
 
 export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
   {
@@ -11,6 +20,12 @@ export const router: ReturnType<typeof createBrowserRouter> = createBrowserRoute
       { index: true, element: <Navigate to={Routes.HOME} /> },
       { path: Routes.CLASSES, element: <ClassesSchedulePage /> },
       { path: Routes.HOME, element: <HomePage /> },
+      { path: Routes.SETTINGS, element: <SettingsPage /> },
+      { path: Routes.PROFILE_SETTINGS, element: <ProfileSettingsPage /> },
+      { path: Routes.GROUP_SETTINGS, element: <GroupSettingsPage /> },
+      { path: Routes.ANNOUNCEMENTS_SETTINGS, element: <AnnouncementsSettingsPage /> },
+      { path: Routes.TEACHERS_SETTINGS, element: <TeachersSettingsPage /> },
+      { path: Routes.LOCATIONS_SETTINGS, element: <LocationsSettingsPage /> },
     ],
   },
 ])

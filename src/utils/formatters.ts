@@ -7,7 +7,7 @@ export type UnformattedSearchParams = Record<
   number | string | Date | (number | string | Date)[] | boolean | null | undefined
 >
 
-export const formatSearchParams = (params: UnformattedSearchParams) => {
+export const formatSearchParameters = (params: UnformattedSearchParams) => {
   const searchParam = new URLSearchParams()
 
   for (const [key, value] of Object.entries(params)) {

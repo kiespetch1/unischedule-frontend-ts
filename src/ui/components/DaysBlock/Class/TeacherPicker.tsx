@@ -50,9 +50,9 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
     const query = searchQuery.toLowerCase().trim()
 
     const filtered = options.filter(item => {
-      const name = String(item.name).toLowerCase()
-      const fullName = item.full_name ? String(item.full_name).toLowerCase() : ""
-      const id = String(item.id).toLowerCase()
+      const name = item.name.toLowerCase()
+      const fullName = item.full_name ? item.full_name.toLowerCase() : ""
+      const id = item.id.toLowerCase()
 
       if (fullName && fullName.includes(query)) {
         return true
@@ -62,10 +62,10 @@ export const TeacherPicker: FC<TeacherPickerProps> = ({
     })
 
     return filtered.sort((a, b) => {
-      const aName = String(a.name).toLowerCase()
-      const bName = String(b.name).toLowerCase()
-      const aFullName = a.full_name ? String(a.full_name).toLowerCase() : ""
-      const bFullName = b.full_name ? String(b.full_name).toLowerCase() : ""
+      const aName = a.name.toLowerCase()
+      const bName = b.name.toLowerCase()
+      const aFullName = a.full_name ? a.full_name.toLowerCase() : ""
+      const bFullName = b.full_name ? b.full_name.toLowerCase() : ""
 
       const aFullNameStartsWith = aFullName && aFullName.startsWith(query)
       const bFullNameStartsWith = bFullName && bFullName.startsWith(query)

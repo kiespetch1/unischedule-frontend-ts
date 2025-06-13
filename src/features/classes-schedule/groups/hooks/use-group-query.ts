@@ -2,8 +2,7 @@ import { ApiQueryWithParams } from "@/types/api-query.ts"
 import { useQuery } from "@tanstack/react-query"
 import { GroupModel } from "@/features/classes-schedule/types/classes-types.ts"
 import { getGroupById } from "@/features/classes-schedule/groups/get-group-by-id.ts"
-
-const groupKey = "group"
+import { groupKey } from "@/utils/query-keys.ts"
 
 export interface GetGroupByIdQueryParams {
   id: string

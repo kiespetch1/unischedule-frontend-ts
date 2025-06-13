@@ -1,4 +1,4 @@
-﻿export type WeekTypeStrict = "even" | "odd"
+export type WeekTypeStrict = "even" | "odd"
 
 export type SubgroupStrict = "first" | "second"
 
@@ -28,20 +28,30 @@ export interface GroupModel {
   id: string
   name: string
   grade: number
-  has_subgroups: boolean
   has_fixed_subgroups: boolean
   announcements_block: AnnouncementBlockModel | null
   last_academic_week_number: number
   weeks: WeekModel[]
 }
 
+export interface AnnouncementTargetModel {
+  included_grades: number[]
+  included_groups: string[]
+  included_departments: string[]
+  excluded_grades: number[]
+  excluded_groups: string[]
+  excluded_departments: string[]
+}
+
 export interface AnnouncementModel {
   id: string
   message: string
+  target?: AnnouncementTargetModel | null
   priority: AnnouncementPriority
   is_anonymous: boolean
   is_time_limited: boolean
-  available_until: string
+  available_until: string | null
+  is_added_using_bot: boolean
   created_at: string
   created_by: UserModel | null
   updated_at: string
@@ -67,7 +77,7 @@ export interface UserExtendedModel {
   name?: string | null
   patronymic?: string | null
   email?: string | null
-  role: string
+  role: RoleType
   group_id: string
   managed_group_ids: string[]
 }
@@ -97,6 +107,21 @@ export interface ClassModel {
   subgroup: Subgroup
   is_cancelled: boolean
   day_id: string
+  location: LocationModel
+  teacher: TeacherModel
+}
+
+export interface ClassWithDayModel {
+  id: string
+  name: string
+  started_at: string
+  finished_at: string
+  type: ClassType
+  week_type: WeekType
+  subgroup: Subgroup
+  is_cancelled: boolean
+  day_id: string
+  day: DayModel
   location: LocationModel
   teacher: TeacherModel
 }
