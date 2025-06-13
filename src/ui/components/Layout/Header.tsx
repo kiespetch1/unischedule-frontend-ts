@@ -33,7 +33,6 @@ export const Header: FC = () => {
         </li>
         <li className="flex-row gap-9">
           <AnnouncementsPopover
-            groupId={authState.isAuthenticated ? authState.userData!.group_id : currentGroupId}
             groupName={authState.isAuthenticated ? userGroup?.name : currentGroup?.name}
             open={isAnnouncementsOpen}
             onClose={closeAnnouncements}

@@ -82,3 +82,10 @@ export const getClassRestoreByIdUrl = (classId: string) =>
 export const getClassesRestoreByIdsUrl = () => `${SCHEDULE_URL}/api/v1/classes/restore/multiple`
 
 export const getAnnouncementsUrl = () => `${SCHEDULE_URL}/api/v1/announcements`
+
+export const getAnnouncementByIdUrl = (id: string) =>
+  `${SCHEDULE_URL}/api/v1/announcements/${id}`
+
+export const getTeacherByIdUrl = (id: string) => `${SCHEDULE_URL}/api/v1/teachers/${id}`
+
+export const getLocationByIdUrl = (id: string) => `${SCHEDULE_URL}/api/v1/locations/${id}`

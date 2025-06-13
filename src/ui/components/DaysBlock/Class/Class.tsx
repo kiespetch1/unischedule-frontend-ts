@@ -273,7 +273,7 @@ export const Class: FC<ClassProps> = ({
       className={clsx(baseBlockFinalClass, classData.is_cancelled && "group relative")}
       onClick={onClick}>
       {classData.is_cancelled && (
-        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-b-sm bg-zinc-100/50 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-0">
+        <div className="z-5 pointer-events-none absolute inset-0 flex items-center justify-center rounded-b-sm bg-zinc-100/50 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-0">
           <span className="font-raleway text-center text-3xl font-bold">Отменена</span>
         </div>
       )}

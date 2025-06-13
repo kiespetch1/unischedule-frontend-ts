@@ -9,7 +9,7 @@ import SecondGroup from "@assets/second-group.svg?react"
 import { WeekModel, DayOfWeek } from "@/features/classes-schedule/types/classes-types.ts"
 import { SelectableDayCard } from "./SelectableDayCard.tsx"
 import { getPluralForm, getRussianDayName } from "@/utils/formatters.ts"
-import { ArrowLeft, CalendarMinus, CalendarX } from "lucide-react"
+import { CalendarMinus, CalendarX } from "lucide-react"
 import { useCancelClassesByDays } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
 import { useCancelAllClassesByDaysName } from "@/features/classes-schedule/groups/hooks/use-cancel-all-classes-by-days-name"
 
@@ -75,12 +75,14 @@ export const CancelClassesDialog: FC<CancelClassesDialogProps> = ({ mode, weeks,
             Отменить пары для указанных дней
           </Button>
         }>
-        <div className="flex flex-col gap-2">
-          <div className="font-raleway text-base/6 font-semibold">
-            Отменить пары для указанных дней
-          </div>
-          <div className="font-raleway text-muted-foreground text-sm font-normal">
-            Выберите дни для отмены
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="font-raleway text-base font-semibold">
+              Отменить пары для указанных дней
+            </div>
+            <div className="font-raleway text-muted-foreground text-sm font-normal">
+              Выберите дни для отмены
+            </div>
           </div>
           <div className="flex max-h-[calc(80vh-100px)] flex-col">
             <ScrollArea className="w-full overflow-auto">
@@ -123,10 +125,6 @@ export const CancelClassesDialog: FC<CancelClassesDialogProps> = ({ mode, weeks,
               </div>
             </ScrollArea>
             <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
-              <Button onClick={() => setOpen(false)} disabled={loading}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Вернуться
-              </Button>
               <Button variant="destructive" disabled={disableConfirm} onClick={handleConfirm}>
                 <CalendarMinus className="mr-2 h-4 w-4" />
                 Отменить выбранные пары
@@ -194,10 +192,6 @@ export const CancelClassesDialog: FC<CancelClassesDialogProps> = ({ mode, weeks,
             </div>
           </ScrollArea>
           <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
-            <Button onClick={() => setOpen(false)} disabled={loading}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Вернуться
-            </Button>
             <Button variant="destructive" disabled={disableConfirm} onClick={handleConfirm}>
               <CalendarMinus className="mr-2 h-4 w-4" />
               Отменить выбранные пары

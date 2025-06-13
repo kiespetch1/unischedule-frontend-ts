@@ -1,24 +1,31 @@
-import { FC } from "react"
+import { FC, useState } from "react"
 import { formOptions, useForm } from "@tanstack/react-form"
 import { ZodType } from "zod"
 import { teacherSchema } from "@/utils/zod-schemas.ts"
 import { defaultTeacher } from "@/utils/default-entities.ts"
 import { useCreateTeacher } from "@/features/classes-schedule/teachers/hooks/use-teacher-query.ts"
+import { useUpdateTeacher } from "@/features/classes-schedule/teachers/hooks/use-update-teacher.ts"
 import { TeacherCreateModel } from "@/features/classes-schedule/teachers/create-teacher.ts"
 import { Input } from "@/ui/basic/input.tsx"
 import { Label } from "@/ui/basic/label.tsx"
 import { Button } from "@/ui/basic/button.tsx"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { getErrorMessages } from "@/utils/formatters.ts"
+import { Check, Trash } from "lucide-react"
+import { ConfirmDialog } from "@components/common/confirm-dialog.tsx"
 
 interface TeacherFormProps {
   onSuccess: () => void
+  id?: string
+  initial?: TeacherCreateModel
 }
 
-export const TeacherForm: FC<TeacherFormProps> = ({ onSuccess }) => {
+export const TeacherForm: FC<TeacherFormProps> = ({ onSuccess, id, initial }) => {
   const { mutateAsync: createTeacher } = useCreateTeacher()
+  const { mutateAsync: updateTeacher } = useUpdateTeacher({ id: id ?? "" })
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false)
 
-  const defaultValues: TeacherCreateModel = { name: "", full_name: undefined }
+  const defaultValues: TeacherCreateModel = initial ?? { name: "", full_name: undefined }
 
   const teacherFormOptions = formOptions({
     defaultValues,
@@ -36,14 +43,18 @@ export const TeacherForm: FC<TeacherFormProps> = ({ onSuccess }) => {
         name: value.name || defaultTeacher.name,
         full_name: value.full_name,
       }
-      await createTeacher(safeValue)
+      if (id) {
+        await updateTeacher(safeValue)
+      } else {
+        await createTeacher(safeValue)
+      }
       onSuccess()
     },
   })
 
   return (
     <form
-      className="space-y-6"
+      className="flex flex-col gap-y-6"
       onSubmit={e => {
         e.preventDefault()
         e.stopPropagation()
@@ -53,7 +64,7 @@ export const TeacherForm: FC<TeacherFormProps> = ({ onSuccess }) => {
         {field => {
           const { errors, isTouched } = field.state.meta
           return (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-y-2">
               <Label htmlFor={field.name}>ФИО преподавателя (кратко)</Label>
               <TooltipWrapper
                 isOpen={isTouched && errors.length > 0}
@@ -81,7 +92,7 @@ export const TeacherForm: FC<TeacherFormProps> = ({ onSuccess }) => {
         {field => {
           const { errors, isTouched } = field.state.meta
           return (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-y-2">
               <Label htmlFor={field.name}>Полное ФИО преподавателя</Label>
               <TooltipWrapper
                 isOpen={isTouched && errors.length > 0}
@@ -107,10 +118,32 @@ export const TeacherForm: FC<TeacherFormProps> = ({ onSuccess }) => {
       <teacherForm.Subscribe
         selector={state => [state.canSubmit, state.isSubmitting]}
         children={([canSubmit, isSubmitting]) => (
-          <div className="flex justify-end">
+          <div className="flex flex-row-reverse justify-between">
             <Button type="submit" className="font-raleway" disabled={!canSubmit}>
-              {isSubmitting ? "Сохранение..." : "Добавить преподавателя"}
+              {!isSubmitting && <Check className="mr-2 h-4 w-4" />}
+              {isSubmitting ? "Сохранение..." : id ? "Сохранить" : "Добавить"}
             </Button>
+            {id && (
+              <>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => setIsConfirmDialogOpen(true)}
+                  disabled={true}>
+                  <Trash className="mr-2 h-4 w-4" />
+                  Удалить преподавателя
+                </Button>
+                <ConfirmDialog
+                  title="Вы уверены, что хотите удалить преподавателя?"
+                  description="Это действие нельзя будет отменить."
+                  onConfirm={async () => {
+                    onSuccess()
+                  }}
+                  open={isConfirmDialogOpen}
+                  onOpenChange={setIsConfirmDialogOpen}
+                />
+              </>
+            )}
           </div>
         )}
       />

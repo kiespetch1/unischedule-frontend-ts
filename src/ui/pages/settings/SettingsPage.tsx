@@ -3,11 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { useNavigate } from "react-router-dom"
 import { Breadcrumbs } from "@/ui/components/common/Breadcrumbs.tsx"
 import { useEffect } from "react"
+import { PermissionGate } from "@/features/auth/components/auth-gate.tsx"
 
 export const SettingsPage = () => {
   const navigate = useNavigate()
   const iconClass =
-    "flex-none text-[#0966BB] w-8  h-8 sm:w-7 sm:h-7 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8"
+    "flex-none text-[#0966BB] w-8 h-8 sm:w-7 sm:h-7 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8"
 
   useEffect(() => {
     document.title = "Управление"
@@ -20,19 +21,27 @@ export const SettingsPage = () => {
         <p className="font-raleway text-xl/6 font-medium">Выберите действие</p>
       </div>
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card
-          className="min-w-0 cursor-pointer transition-shadow hover:shadow-lg"
-          onClick={() => {
-            navigate("/settings/groups")
-          }}>
-          <CardHeader className="flex items-center space-x-4">
-            <Users className={iconClass} />
-            <CardTitle>Управление группами</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>Импорт, редактирование и удаление групп</CardDescription>
-          </CardContent>
-        </Card>
+        <PermissionGate
+          permissions={[
+            "can_create_group",
+            "can_update_group",
+            "can_delete_group",
+            "can_update_grades",
+          ]}>
+          <Card
+            className="min-w-0 cursor-pointer transition-shadow hover:shadow-lg"
+            onClick={() => {
+              navigate("/settings/groups")
+            }}>
+            <CardHeader className="flex items-center gap-x-4">
+              <Users className={iconClass} />
+              <CardTitle>Управление группами</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>Импорт, редактирование и удаление групп</CardDescription>
+            </CardContent>
+          </Card>
+        </PermissionGate>
         <Card
           className="min-w-0 cursor-pointer transition-shadow hover:shadow-lg"
           onClick={() => {
@@ -44,7 +53,7 @@ export const SettingsPage = () => {
           </CardHeader>
           <CardContent>
             <CardDescription>
-              Редактирование предпочтений внешнего вида и данных профиля
+              Редактирование предпочтений отображения и данных профиля
             </CardDescription>
           </CardContent>
         </Card>

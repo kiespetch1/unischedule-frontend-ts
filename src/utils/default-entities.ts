@@ -19,6 +19,8 @@ import {
 } from "@/features/classes-schedule/types/classes-types.ts"
 import { ClassEditModel } from "@/features/classes-schedule/dto/edit-class-model.ts"
 import { PermissionsResult, UserPermissions } from "@/features/auth/types/auth-types.ts"
+import { AnnouncementCreateParameters } from "@/features/announcements/types/announcement-types.ts"
+import { GroupCreateParameters } from "@/features/classes-schedule/groups/create-group.ts"
 
 export const defaultWeekType: WeekTypeStrict = "odd"
 export const defaultSubgroup: SubgroupStrict = "first"
@@ -88,7 +90,7 @@ export const defaultExtendedUser: UserExtendedModel = {
   name: null,
   patronymic: null,
   email: null,
-  role: "User",
+  role: "user",
   group_id: defaultId,
   managed_group_ids: [],
 }
@@ -105,6 +107,22 @@ export const defaultAnnouncement: AnnouncementModel = {
   created_by: defaultUser,
   updated_at: "",
   updated_by: defaultUser,
+}
+
+export const defaultAnnouncementParameters: AnnouncementCreateParameters = {
+  message: "",
+  target: {
+    included_grades: [],
+    included_groups: [],
+    included_departments: [],
+    excluded_grades: [],
+    excluded_groups: [],
+    excluded_departments: [],
+  },
+  priority: "normal",
+  is_anonymous: false,
+  is_time_limited: false,
+  available_until: null,
 }
 
 export const defaultGroup: GroupModel = {
@@ -145,3 +163,10 @@ export const defaultPermissions: UserPermissions = {
 }
 
 export const defaultPermissionsResult: PermissionsResult = { data: defaultPermissions, error: null }
+
+export const defaultGroupCreateParameters: GroupCreateParameters = {
+  name: "",
+  grade: 1,
+  has_fixed_subgroups: false,
+  last_academic_week_number: 16,
+}

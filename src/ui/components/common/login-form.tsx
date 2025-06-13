@@ -74,11 +74,13 @@ export const LoginForm: FC<LoginFormProps> = ({ className, onSuccess, ...props }
                         message={getErrorMessages(errors)}
                         delayDuration={0}>
                         <Input
-                          id={field.name}
+                          id="username"
                           value={field.state.value}
+                          name="username"
+                          autoComplete="username"
                           onChange={e => field.setValue(e.target.value)}
                           aria-invalid={isTouched && errors.length > 0}
-                          type={field.name}
+                          type="email"
                           placeholder="email@mail.ru"
                           required
                         />
@@ -123,7 +125,7 @@ export const LoginForm: FC<LoginFormProps> = ({ className, onSuccess, ...props }
             </div>
             <div className="font-raleway mt-4 text-center text-sm">
               Нет аккаунта?{" "}
-              <TooltipWrapper message="На данный момент никак :) Доступ предоставляется только сотрудникам вуза, старостам, и другим ответственным лицам в личном порядке. Регистрация студентам станет доступна позже.">
+              <TooltipWrapper message="На данный момент никак :)\nДоступ предоставляется только сотрудникам вуза, старостам, и другим ответственным лицам в личном порядке.\nРегистрация студентам станет доступна позже.">
                 <a href="#" className="font-raleway underline underline-offset-4">
                   Узнать, как создать
                 </a>

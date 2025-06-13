@@ -14,12 +14,14 @@ import { useClearClassesByGroupId } from "@/features/classes-schedule/classes/ho
 import { CancelClassesDialog } from "@components/GroupSettings/CancelClassesDialog.tsx"
 import { RestoreClassesDialog } from "@components/GroupSettings/RestoreClassesDialog.tsx"
 import { ImportClassesDialog } from "@components/GroupSettings/ImportClassesDialog.tsx"
-import { MessageCircle, Trash2, Ban, ArrowUp, ListChecks } from "lucide-react"
+import { MessageCircle, Trash, Ban, ArrowUp, ListChecks } from "lucide-react"
 import Eraser from "@assets/eraser.svg?react"
 import { useDeleteGroup } from "@/features/classes-schedule/groups/hooks/use-delete-group.ts"
 import { useCancelClassesByGroupId } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import { groupsKey } from "@/utils/query-keys.ts"
+import { PermissionGate } from "@/features/auth/components/auth-gate"
+import { CreateGroupDialog } from "@/ui/components/GroupSettings/CreateGroupDialog.tsx"
 
 export const GroupSettingsPage = () => {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
@@ -42,7 +44,7 @@ export const GroupSettingsPage = () => {
     isLoading: isGroupsLoading,
     isSuccess: isGroupsSuccess,
     isFetching: isGroupsFetching,
-  } = useGetGroups({ grade: null })
+  } = useGetGroups({ fetch_details: false })
   const { mutateAsync: clearClassesByGroupId } = useClearClassesByGroupId({
     groupId: selectedGroupId!,
   })
@@ -78,7 +80,7 @@ export const GroupSettingsPage = () => {
   }, [isEditingGroup, isChoosingGroup, group?.name])
 
   const filteredGroups =
-    authState.userData?.role === "Admin"
+    authState.userData?.role.toLowerCase() === "admin"
       ? groups?.data
       : groups?.data.filter(grp => authState.userData!.managed_group_ids!.includes(grp.id))
 
@@ -158,8 +160,9 @@ export const GroupSettingsPage = () => {
             />
 
             <CancelClassesDialog mode="group" weeks={group?.weeks} groupId={selectedGroupId!} />
+
             <Button variant="destructive" onClick={() => setDeleteGroupDialogOpen(true)}>
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash className="mr-2 h-4 w-4" />
               Удалить группу
             </Button>
             <ConfirmDialog
@@ -202,18 +205,23 @@ export const GroupSettingsPage = () => {
 
           <div className="flex flex-row flex-wrap gap-2">
             <div className="flex flex-col gap-2">
-              <Button
-                onClick={() => {
-                  setIsChoosingGroup(true)
-                }}>
-                <ListChecks className="mr-2 h-4 w-4" />
-                Выбрать группу для редактирования
-              </Button>
               <div className="flex flex-row flex-wrap gap-2">
-                <Button variant="destructive" onClick={() => setPromoteAllGroupsDialogOpen(true)}>
-                  <ArrowUp className="mr-2 h-4 w-4" />
-                  Перевести все группы на следующий курс
+                <CreateGroupDialog />
+                <Button
+                  onClick={() => {
+                    setIsChoosingGroup(true)
+                  }}>
+                  <ListChecks className="mr-2 h-4 w-4" />
+                  Выбрать группу для редактирования
                 </Button>
+              </div>
+              <div className="flex flex-row flex-wrap gap-2">
+                <PermissionGate permissions={"can_update_grades"}>
+                  <Button variant="destructive" onClick={() => setPromoteAllGroupsDialogOpen(true)}>
+                    <ArrowUp className="mr-2 h-4 w-4" />
+                    Перевести все группы на следующий курс
+                  </Button>
+                </PermissionGate>
                 <ConfirmDialog
                   open={promoteAllGroupsDialogOpen}
                   onOpenChange={setPromoteAllGroupsDialogOpen}

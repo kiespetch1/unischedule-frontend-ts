@@ -44,7 +44,11 @@ export const ConfirmDialog: FC<ConfirmDialogProps> = ({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-between">
-          <Button variant={confirmButtonVariant} onClick={handleConfirm} className="w-1/2">
+          <Button
+            type="button"
+            variant={confirmButtonVariant}
+            onClick={handleConfirm}
+            className="w-1/2">
             <Check className="mr-2 h-4 w-4" />
             {confirmButtonText}
           </Button>

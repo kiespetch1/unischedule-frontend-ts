@@ -1,7 +1,7 @@
-﻿import { RequestParams } from "@/types/request-params.ts"
+﻿import { RequestParameters } from "@/types/request-parameters.ts"
 
 export type AnnouncementsSortBy = "CreatedAt"
 
-export interface AnnouncementsRequestParams extends RequestParams<AnnouncementsSortBy> {
+export interface AnnouncementsRequestParams extends RequestParameters<AnnouncementsSortBy> {
   groupId: string
 }

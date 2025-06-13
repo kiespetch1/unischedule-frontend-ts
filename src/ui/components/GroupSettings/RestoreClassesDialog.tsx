@@ -2,7 +2,7 @@ import { FC, useState } from "react"
 import { DialogWrapper } from "@components/common/DialogWrapper.tsx"
 import { Button } from "@/ui/basic/button.tsx"
 import { Card } from "@/ui/basic/card.tsx"
-import { Check, ArrowLeft, Undo2 } from "lucide-react"
+import { Check, Undo2 } from "lucide-react"
 import clsx from "clsx"
 import { useRestoreClassesByIds } from "@/features/classes-schedule/classes/hooks/use-restore-class.ts"
 import { useGetCancelledClassesByGroupId } from "@/features/classes-schedule/classes/hooks/use-cancel-class.ts"
@@ -89,10 +89,6 @@ export const RestoreClassesDialog: FC<RestoreClassesDialogProps> = ({ groupId })
           )}
         </div>
         <div className="mt-4 flex flex-row items-center justify-end gap-2 pt-2">
-          <Button onClick={() => handleOpenChange(false)} disabled={loading}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Вернуться
-          </Button>
           <Button
             variant="default"
             disabled={selected.length === 0 || loading}

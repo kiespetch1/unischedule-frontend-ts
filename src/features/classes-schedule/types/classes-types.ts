@@ -1,4 +1,4 @@
-﻿export type WeekTypeStrict = "even" | "odd"
+export type WeekTypeStrict = "even" | "odd"
 
 export type SubgroupStrict = "first" | "second"
 
@@ -34,9 +34,19 @@ export interface GroupModel {
   weeks: WeekModel[]
 }
 
+export interface AnnouncementTargetModel {
+  included_grades: number[]
+  included_groups: string[]
+  included_departments: string[]
+  excluded_grades: number[]
+  excluded_groups: string[]
+  excluded_departments: string[]
+}
+
 export interface AnnouncementModel {
   id: string
   message: string
+  target?: AnnouncementTargetModel | null
   priority: AnnouncementPriority
   is_anonymous: boolean
   is_time_limited: boolean
@@ -67,7 +77,7 @@ export interface UserExtendedModel {
   name?: string | null
   patronymic?: string | null
   email?: string | null
-  role: string
+  role: RoleType
   group_id: string
   managed_group_ids: string[]
 }

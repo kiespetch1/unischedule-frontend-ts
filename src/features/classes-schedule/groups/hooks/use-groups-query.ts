@@ -1,5 +1,5 @@
 import { ApiQueryWithParams } from "@/types/api-query.ts"
-import { GroupsRequestParams } from "@/features/classes-schedule/groups/types/groups-request-params.ts"
+import { GroupsRequestParameters } from "@/features/classes-schedule/groups/types/groups-request-parameters.ts"
 import { DataPage } from "@/types/data-page.ts"
 import { GroupModel } from "@/features/classes-schedule/types/classes-types.ts"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
@@ -10,7 +10,7 @@ import { ApiError } from "@/api/api-error.ts"
 import toast from "react-hot-toast"
 import { groupsKey } from "@/utils/query-keys.ts"
 
-export const useGetGroups: ApiQueryWithParams<GroupsRequestParams, DataPage<GroupModel>> = (
+export const useGetGroups: ApiQueryWithParams<GroupsRequestParameters, DataPage<GroupModel>> = (
   params,
   options
 ) => useQuery({ queryKey: [groupsKey, params], queryFn: () => getGroups(params), ...options })

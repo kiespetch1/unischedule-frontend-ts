@@ -4,11 +4,11 @@ import { Button } from "@/ui/basic/button.tsx"
 import { Input } from "@/ui/basic/input.tsx"
 import { Label } from "@/ui/basic/label.tsx"
 import { formOptions, useForm } from "@tanstack/react-form"
-import { z } from "zod"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { getErrorMessages } from "@/utils/formatters.ts"
 import { useImportClasses } from "@/features/classes-schedule/classes/hooks/use-import-classes.ts"
-import { ArrowLeft, Import } from "lucide-react"
+import { Import } from "lucide-react"
+import { importSchema } from "@/utils/zod-schemas"
 
 interface ImportClassesDialogProps {
   groupId: string
@@ -19,14 +19,11 @@ export const ImportClassesDialog: FC<ImportClassesDialogProps> = ({ groupId }) =
   const [url, setUrl] = useState("")
   const { mutateAsync: importClasses } = useImportClasses({ groupId, url })
 
-  const importSchema = z.object({
-    url: z.string().trim().url("Введите корректный URL")
-  })
-
   const options = formOptions({
     defaultValues: { url: "" },
-    validators: { onChange: importSchema, onChangeAsyncDebounceMs: 400 },
-    canSubmitWhenInvalid: false
+    validators: { onChange: importSchema, onChangeAsyncDebounceMs: 400, onMount: importSchema },
+    canSubmitWhenInvalid: false,
+    validateOnMount: true,
   })
 
   const form = useForm({
@@ -42,16 +39,20 @@ export const ImportClassesDialog: FC<ImportClassesDialogProps> = ({ groupId }) =
       open={open}
       onOpenChange={setOpen}
       showCloseButton={false}
+      className="sm:max-w-[425px]"
       trigger={
         <Button>
           <Import className="mr-2 h-4 w-4" />
           Импортировать расписание с оф. сайта
         </Button>
       }>
-      <div className="flex flex-col gap-2">
-        <div className="font-raleway text-base/6 font-semibold">Импорт расписания</div>
-        <div className="font-raleway text-muted-foreground text-sm font-normal">
-          Укажите ссылку на страницу расписания на официальном сайте ИАТЭ. Другие сервисы пока не поддерживаются.
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <div className="font-raleway text-base/6 font-semibold">Импорт расписания</div>
+          <div className="font-raleway text-muted-foreground text-sm font-normal">
+            Укажите ссылку на страницу расписания на официальном сайте ИАТЭ. Другие сервисы пока не
+            поддерживаются.
+          </div>
         </div>
         <form
           className="flex flex-col gap-4 pt-2"
@@ -89,10 +90,6 @@ export const ImportClassesDialog: FC<ImportClassesDialogProps> = ({ groupId }) =
           <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
             {([canSubmit, isSubmitting]) => (
               <div className="mt-2 flex flex-row items-center justify-end gap-2 pt-2">
-                <Button type="button" onClick={() => setOpen(false)} disabled={isSubmitting}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Вернуться
-                </Button>
                 <Button type="submit" disabled={!canSubmit || isSubmitting}>
                   <Import className="mr-2 h-4 w-4" />
                   Импортировать
