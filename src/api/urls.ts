@@ -88,7 +88,8 @@ export const getTeacherByIdUrl = (id: string) => `${SCHEDULE_URL}/api/v1/teacher
 
 export const getLocationByIdUrl = (id: string) => `${SCHEDULE_URL}/api/v1/locations/${id}`
 
-export const getPreferencesUrl = () => `${SCHEDULE_URL}/api/v1/account/preferences/filtering`
+export const getPreferencesUrl = (userId?: string) =>
+  `${SCHEDULE_URL}/api/v1/account/preferences/filtering${userId ? `?user_id=${userId}` : ''}`
 
 export const getPreferenceByIdUrl = (id: string) =>
   `${SCHEDULE_URL}/api/v1/account/preferences/filtering/${id}`

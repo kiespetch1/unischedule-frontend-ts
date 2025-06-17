@@ -9,6 +9,7 @@ import { Combobox } from "@/ui/basic/combobox"
 import { Subgroup } from "@/features/classes-schedule/types/classes-types"
 import { Edit2, Plus, Save, Trash2, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/features/auth/context/auth-context"
 
 const options = [
   { value: "first" as Subgroup, label: "Первая подгруппа" },
@@ -22,7 +23,10 @@ interface PreferenceWithId extends PreferenceParameter {
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export const PreferencesForm = () => {
-  const { data: savedPreferences, isLoading } = useGetPreferences()
+  const { authState } = useAuth()
+  const currentUserId = authState.userData?.id
+
+  const { data: savedPreferences, isLoading } = useGetPreferences(currentUserId || "")
   const [preferences, setPreferences] = useState<PreferenceWithId[]>([])
   const [deletedIds, setDeletedIds] = useState<string[]>([])
   const [isEditing, setIsEditing] = useState(false)
@@ -35,6 +39,10 @@ export const PreferencesForm = () => {
       setDeletedIds([])
     }
   }, [savedPreferences])
+
+  if (!currentUserId) {
+    return <div>Загрузка данных пользователя...</div>
+  }
 
   const addPreference = () => {
     setPreferences([...preferences, { class_name: "", subgroup: "first" }])

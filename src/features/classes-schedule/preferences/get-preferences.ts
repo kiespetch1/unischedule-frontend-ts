@@ -13,8 +13,11 @@ interface PreferencesResponse {
     total_count: number
 }
 
-export const getPreferences = async () => {
-    const response = await apiFetch(getPreferencesUrl(), {
+export const getPreferences = async (userId: string) => {
+    if (!userId) {
+        throw new Error("User ID is required")
+    }
+    const response = await apiFetch(getPreferencesUrl(userId), {
         method: "GET",
     })
     const result = await response.json() as PreferencesResponse
