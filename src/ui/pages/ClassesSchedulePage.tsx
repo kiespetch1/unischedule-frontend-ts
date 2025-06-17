@@ -1,6 +1,6 @@
 import { WeekOptions } from "../components/WeekOptions/WeekOptions.tsx"
 import { WeekInfo } from "../components/WeekInfo/WeekInfo.tsx"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { AnnouncementBlock } from "@components/WeekInfo/AnnouncementBlock/AnnouncementBlock.tsx"
 import { useGetGroupById } from "@/features/classes-schedule/groups/hooks/use-group-query.ts"
 import { useSubgroup, useWeekType } from "@/hooks/use-toggle.ts"
@@ -11,6 +11,7 @@ import { DaysBlock } from "@components/DaysBlock/Day/DaysBlock.tsx"
 export const ClassesSchedulePage = () => {
   const [selectedWeekType, setSelectedWeekType] = useWeekType()
   const [selectedSubgroup, setSelectedSubgroup] = useSubgroup()
+  const [showAllClasses, setShowAllClasses] = useState(false)
   const { groupId } = useParams()
   if (!groupId) throw new Error("groupId search param is not defined")
 
@@ -29,6 +30,10 @@ export const ClassesSchedulePage = () => {
   const evenWeekSecondSubgroup =
     group?.weeks.find(week => week.type === "even" && week.subgroup === "second") || defaultWeek
 
+  const hasHiddenClasses =
+    group?.weeks.some(week => week.days.some(day => day.classes?.some(cls => cls.is_hidden))) ||
+    false
+
   useEffect(() => {
     if (group) {
       document.title = `Расписание группы ${group.name}`
@@ -38,7 +43,6 @@ export const ClassesSchedulePage = () => {
   return (
     <div className="mx-8 flex flex-col items-start gap-2">
       <WeekOptions
-        hasFixedSubgroups={hasFixedSubgroups}
         selectedWeekType={selectedWeekType}
         selectedSubgroup={selectedSubgroup}
         onSubgroupSelect={setSelectedSubgroup}
@@ -46,6 +50,10 @@ export const ClassesSchedulePage = () => {
         groupName={group?.name}
         loading={isLoading}
         groupId={groupId}
+        hasFixedSubgroups={hasFixedSubgroups}
+        hasHiddenClasses={hasHiddenClasses}
+        showAllClasses={showAllClasses}
+        onShowAllClassesChange={setShowAllClasses}
       />
       <WeekInfo
         selectedWeekType={selectedWeekType}
@@ -57,7 +65,6 @@ export const ClassesSchedulePage = () => {
       <DaysBlock
         selectedWeekType={selectedWeekType}
         selectedSubgroup={selectedSubgroup}
-        hasFixedSubgroups={hasFixedSubgroups}
         oddWeek={oddWeek}
         evenWeek={evenWeek}
         oddWeekFirstSubgroup={oddWeekFirstSubgroup}
@@ -66,6 +73,9 @@ export const ClassesSchedulePage = () => {
         evenWeekSecondSubgroup={evenWeekSecondSubgroup}
         loading={isLoading}
         groupId={groupId}
+        hasFixedSubgroups={hasFixedSubgroups}
+        showAllClasses={showAllClasses}
+        onShowAllClassesChange={setShowAllClasses}
       />
     </div>
   )

@@ -9,6 +9,7 @@ import {
   defaultPermissions,
   defaultPermissionsResult,
 } from "@/utils/default-entities.ts"
+import { groupKey } from "@/utils/query-keys.ts"
 
 const authStatusQueryKey = "auth-status"
 const permissionsQueryKey = "user-permissions"
@@ -83,6 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (): Promise<void> => {
     await refreshPermissions()
+    queryClient.invalidateQueries({ queryKey: [groupKey], exact: false })
   }
 
   const handleLogout = async (): Promise<void> => {
@@ -91,6 +93,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       queryClient.resetQueries({ queryKey: [authStatusQueryKey], exact: true })
       queryClient.resetQueries({ queryKey: [permissionsQueryKey], exact: true })
+      queryClient.invalidateQueries({ queryKey: [groupKey], exact: false })
 
       setAuthState({
         userData: null,

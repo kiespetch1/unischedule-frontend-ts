@@ -19,6 +19,8 @@ export interface DaysBlockProps {
   loading: boolean
   groupId?: string
   hasFixedSubgroups: boolean
+  showAllClasses: boolean
+  onShowAllClassesChange: (show: boolean) => void
 }
 
 export const DaysBlock: FC<DaysBlockProps> = ({
@@ -33,6 +35,8 @@ export const DaysBlock: FC<DaysBlockProps> = ({
   loading,
   groupId,
   hasFixedSubgroups,
+  showAllClasses,
+  onShowAllClassesChange,
 }) => {
   if (loading) {
     return (
@@ -50,17 +54,41 @@ export const DaysBlock: FC<DaysBlockProps> = ({
         {selectedSubgroup === "first"
           ? selectedWeekType === "odd"
             ? oddWeekFirstSubgroup?.days.map(day => (
-                <Day key={day.id} dayData={day} groupId={groupId} />
+                <Day
+                  key={day.id}
+                  dayData={day}
+                  groupId={groupId}
+                  globalShowAllClasses={showAllClasses}
+                  onGlobalShowAllClassesChange={onShowAllClassesChange}
+                />
               ))
             : evenWeekFirstSubgroup?.days.map(day => (
-                <Day key={day.id} dayData={day} groupId={groupId} />
+                <Day
+                  key={day.id}
+                  dayData={day}
+                  groupId={groupId}
+                  globalShowAllClasses={showAllClasses}
+                  onGlobalShowAllClassesChange={onShowAllClassesChange}
+                />
               ))
           : selectedWeekType === "odd"
             ? oddWeekSecondSubgroup?.days.map(day => (
-                <Day key={day.id} dayData={day} groupId={groupId} />
+                <Day
+                  key={day.id}
+                  dayData={day}
+                  groupId={groupId}
+                  globalShowAllClasses={showAllClasses}
+                  onGlobalShowAllClassesChange={onShowAllClassesChange}
+                />
               ))
             : evenWeekSecondSubgroup?.days.map(day => (
-                <Day key={day.id} dayData={day} groupId={groupId} />
+                <Day
+                  key={day.id}
+                  dayData={day}
+                  groupId={groupId}
+                  globalShowAllClasses={showAllClasses}
+                  onGlobalShowAllClassesChange={onShowAllClassesChange}
+                />
               ))}
       </div>
     )
@@ -69,8 +97,24 @@ export const DaysBlock: FC<DaysBlockProps> = ({
   return (
     <div className="mt-4 flex flex-row flex-wrap items-start justify-evenly gap-x-3 gap-y-4">
       {selectedWeekType === "odd"
-        ? oddWeek?.days.map(day => <Day key={day.id} dayData={day} groupId={groupId} />)
-        : evenWeek?.days.map(day => <Day key={day.id} dayData={day} groupId={groupId} />)}
+        ? oddWeek?.days.map(day => (
+            <Day
+              key={day.id}
+              dayData={day}
+              groupId={groupId}
+              globalShowAllClasses={showAllClasses}
+              onGlobalShowAllClassesChange={onShowAllClassesChange}
+            />
+          ))
+        : evenWeek?.days.map(day => (
+            <Day
+              key={day.id}
+              dayData={day}
+              groupId={groupId}
+              globalShowAllClasses={showAllClasses}
+              onGlobalShowAllClassesChange={onShowAllClassesChange}
+            />
+          ))}
     </div>
   )
 }

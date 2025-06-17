@@ -313,7 +313,9 @@ export const Class: FC<ClassProps> = ({
               Ссылка
             </a>
           ) : (
-            <span className="font-raleway text-lg font-bold">{classData.location.name}</span>
+            <span className="font-raleway text-center text-lg font-bold">
+              {classData.location.name}
+            </span>
           )}
         </TooltipWrapper>
       </div>

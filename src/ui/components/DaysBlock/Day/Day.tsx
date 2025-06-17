@@ -25,16 +25,44 @@ import {
 export interface DayProps {
   dayData: DayModel | undefined
   groupId?: string
+  globalShowAllClasses?: boolean
+  onGlobalShowAllClassesChange?: (show: boolean) => void
 }
 
-export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
+export const Day: FC<DayProps> = ({
+  dayData,
+  groupId = "",
+  globalShowAllClasses,
+  onGlobalShowAllClassesChange,
+}) => {
   const day: DayModel = dayData ?? defaultDay
   const classes: ClassModel[] = dayData?.classes ?? [defaultClass]
   const [isEditing, setIsEditing] = useToggle(false)
+  const [localShowAllClasses, setLocalShowAllClasses] = useState(false)
   const [activeClassIndex, setActiveClassIndex] = useState<number | undefined>(undefined)
   const queryClient = useQueryClient()
   const { mutateAsync: copyClasses } = useCopyClasses({ dayId: day.id, groupId: groupId })
   const { mutateAsync: clearClasses } = useClearClassesByDayId({ dayId: day.id, groupId: groupId })
+
+  const visibleClasses = classes.filter(x => !x.is_cancelled && !x.is_hidden)
+  const hiddenClasses = classes.filter(x => !x.is_cancelled && x.is_hidden)
+
+  const showAllClasses = globalShowAllClasses ?? localShowAllClasses
+
+  const handleShowAllClassesChange = (show: boolean) => {
+    if (onGlobalShowAllClassesChange) {
+      onGlobalShowAllClassesChange(show)
+    } else {
+      setLocalShowAllClasses(show)
+      toast(
+        show
+          ? "Скрытые пары теперь отображаются для этого дня"
+          : "Скрытые пары теперь скрыты для этого дня",
+        getWarningToastSettings()
+      )
+    }
+  }
+
   const handleAddClass = (weekId: string, dayId: string) => {
     queryClient.setQueryData<GroupModel>(["group", groupId], oldGroup => {
       if (!oldGroup) return oldGroup
@@ -76,13 +104,13 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
           w.id !== weekId
             ? w
             : {
-              ...w,
-              days: w.days.map(d =>
-                d.id !== dayId
-                  ? d
-                  : { ...d, classes: (d.classes ?? []).filter(cls => cls.id !== defaultId) }
-              ),
-            }
+                ...w,
+                days: w.days.map(d =>
+                  d.id !== dayId
+                    ? d
+                    : { ...d, classes: (d.classes ?? []).filter(cls => cls.id !== defaultId) }
+                ),
+              }
         ),
       }
     })
@@ -100,11 +128,14 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
   if (isEditing) {
     return (
       <>
-        <div className="group relative flex flex-col *:z-20 items-center">
+        <div className="group relative flex flex-col items-center *:z-20">
           <DayHeader
             dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
-            classesCount={dayData?.classes?.filter(x => !x.is_cancelled).length || 0}
+            classesCount={visibleClasses.length}
+            hiddenClassesCount={hiddenClasses.length}
             editing={isEditing}
+            showAllClasses={showAllClasses}
+            onShowAllClassesChange={handleShowAllClassesChange}
             onEditing={setIsEditing}
             onActiveChange={setActiveClassIndex}
             onEditingExit={() => handleClearUnsavedClasses(day.week_id, day.id)}
@@ -118,6 +149,7 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
             onActiveChange={setActiveClassIndex}
             groupId={groupId}
             dayId={day.id}
+            showAllClasses={showAllClasses}
             onUnsavedDelete={() => handleClearUnsavedClasses(day.week_id, day.id, true)}
           />
           <EndBlock
@@ -135,8 +167,11 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
     <div className="group flex flex-col">
       <DayHeader
         dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
-        classesCount={dayData?.classes?.filter(x => !x.is_cancelled).length || 0}
+        classesCount={visibleClasses.length}
+        hiddenClassesCount={hiddenClasses.length}
         editing={isEditing}
+        showAllClasses={showAllClasses}
+        onShowAllClassesChange={handleShowAllClassesChange}
         onEditing={setIsEditing}
         onActiveChange={setActiveClassIndex}
         onEditingExit={() => handleClearUnsavedClasses(day.week_id, day.id)}
@@ -149,6 +184,7 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
         activeIndex={activeClassIndex}
         onActiveChange={setActiveClassIndex}
         dayId={day.id}
+        showAllClasses={showAllClasses}
         onUnsavedDelete={() => handleClearUnsavedClasses(day.week_id, day.id)}
       />
       <EndBlock editing={isEditing} />
@@ -163,6 +199,7 @@ interface ClassesListProps {
   onActiveChange: (index: number | undefined) => void
   groupId?: string
   dayId: string
+  showAllClasses: boolean
   onUnsavedDelete: () => void
 }
 
@@ -173,14 +210,20 @@ const ClassesList: FC<ClassesListProps> = ({
   onActiveChange,
   groupId,
   dayId,
+  showAllClasses,
   onUnsavedDelete,
 }) => {
   const renderClasses = (): ReactNode => {
-    if (classes.length === 0) {
+    const filteredClasses =
+      showAllClasses || editing
+        ? classes.filter(classData => !classData.is_cancelled)
+        : classes.filter(classData => !classData.is_cancelled && !classData.is_hidden)
+
+    if (filteredClasses.length === 0) {
       return <Class isWeekend={true} />
     }
 
-    const sorted = sortByStartTime(classes.filter(classData => !classData.is_hidden))
+    const sorted = sortByStartTime(filteredClasses)
 
     return (
       <div className="flex flex-col items-center">

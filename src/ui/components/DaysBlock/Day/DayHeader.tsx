@@ -10,11 +10,17 @@ import Dot from "@components/common/Dot.tsx"
 import { TooltipWrapper } from "@components/common/TooltipWrapper.tsx"
 import { PermissionGate } from "@/features/auth/components/auth-gate.tsx"
 import { ConfirmDialog } from "@components/common/confirm-dialog.tsx"
+import { Eye, EyeOff } from "lucide-react"
+import toast from "react-hot-toast"
+import { getWarningToastSettings } from "@/lib/toast-settings.tsx"
 
 export interface DayHeaderProps {
   dayOfWeek: DayOfWeek
   classesCount: number
+  hiddenClassesCount: number
   editing: boolean
+  showAllClasses: boolean
+  onShowAllClassesChange: (show: boolean) => void
   onEditing: ActionDispatch<[newState: boolean | undefined]>
   onActiveChange: (index: number | undefined) => void
   onEditingExit: () => void
@@ -25,7 +31,10 @@ export interface DayHeaderProps {
 export const DayHeader: FC<DayHeaderProps> = ({
   dayOfWeek,
   classesCount,
+  hiddenClassesCount,
   editing,
+  showAllClasses,
+  onShowAllClassesChange,
   onEditing,
   onActiveChange,
   onEditingExit,
@@ -54,6 +63,28 @@ export const DayHeader: FC<DayHeaderProps> = ({
         <div className="font-raleway text-[27px] font-light text-zinc-100">
           {getClassesCount(classesCount)}
         </div>
+        {hiddenClassesCount > 0 && (
+          <TooltipWrapper
+            message={`${hiddenClassesCount} ${getPluralForm(hiddenClassesCount, ["пара скрыта", "пары скрыты", "пар скрыто"])} в соответствии с настройками личных предпочтений расписания.\nНажмите чтобы изменить видимость скрытых пар`}>
+            <button
+              className="flex cursor-pointer items-center gap-1"
+              onClick={() => {
+                onShowAllClassesChange(!showAllClasses)
+                toast(
+                  !showAllClasses
+                    ? "Скрытые пары теперь отображаются для всех дней"
+                    : "Скрытые пары теперь скрыты для всех дней",
+                  getWarningToastSettings()
+                )
+              }}>
+              {showAllClasses ? (
+                <Eye className="h-5 w-5 text-zinc-100" />
+              ) : (
+                <EyeOff className="h-5 w-5 text-zinc-100" />
+              )}
+            </button>
+          </TooltipWrapper>
+        )}
       </div>
       <PermissionGate permissions="can_update_class">
         <ButtonsBlock
@@ -99,12 +130,12 @@ const ButtonsBlock: FC<ButtonsBlock> = ({
       <div className="flex items-center gap-5">
         <TooltipWrapper message="Скопировать день с текущей недели на противоположную">
           <button className="cursor-pointer pb-px" onClick={() => setCopyDialogOpen(true)}>
-            <Copy />
+            <Copy color="#fafafa" />
           </button>
         </TooltipWrapper>
         <TooltipWrapper message="Удалить все пары текущего дня">
           <button className="cursor-pointer" onClick={() => setClearDialogOpen(true)}>
-            <Eraser />
+            <Eraser color="#fafafa" />
           </button>
         </TooltipWrapper>
         <TooltipWrapper message="Выйти из режима редактирования">
@@ -115,7 +146,7 @@ const ButtonsBlock: FC<ButtonsBlock> = ({
               onEditingExit()
             }}
             className="cursor-pointer">
-            <Cross width="20px" height="20px" color="#fff" />
+            <Cross width="20px" height="20px" color="#fafafa" />
           </button>
         </TooltipWrapper>
         <ConfirmDialog
@@ -144,7 +175,7 @@ const ButtonsBlock: FC<ButtonsBlock> = ({
       <button
         className="cursor-pointer opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         onClick={() => setIsEditing(undefined)}>
-        <Edit width="24px" height="24px" color="#fff" />
+        <Edit width="24px" height="24px" color="#fafafa" />
       </button>
     </TooltipWrapper>
   )

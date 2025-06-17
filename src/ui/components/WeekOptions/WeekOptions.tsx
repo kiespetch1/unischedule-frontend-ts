@@ -7,9 +7,11 @@ import { GroupSelector } from "./GroupSelector.tsx"
 import { SubgroupStrict, WeekTypeStrict } from "@/features/classes-schedule/types/classes-types.ts"
 import { FC, useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { LibraryBig } from "lucide-react"
+import { Eye, EyeOff, LibraryBig } from "lucide-react"
 import { TooltipWrapper } from "@/ui/components/common/TooltipWrapper"
 import { LmsDataDialog } from "@/ui/components/LmsDataDialog/LmsDataDialog"
+import toast from "react-hot-toast"
+import { getWarningToastSettings } from "@/lib/toast-settings.tsx"
 
 export interface WeekOptionsProps {
   hasFixedSubgroups: boolean
@@ -20,6 +22,9 @@ export interface WeekOptionsProps {
   groupName: string | undefined
   loading: boolean
   groupId: string
+  hasHiddenClasses: boolean
+  showAllClasses: boolean
+  onShowAllClassesChange: (show: boolean) => void
 }
 
 export const WeekOptions: FC<WeekOptionsProps> = ({
@@ -31,6 +36,9 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
   groupName,
   loading,
   groupId,
+  hasHiddenClasses,
+  showAllClasses,
+  onShowAllClassesChange,
 }) => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -61,6 +69,17 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
     onWeekTypeSelect()
   }
 
+  const handleShowAllClassesToggle = () => {
+    const newValue = !showAllClasses
+    onShowAllClassesChange(newValue)
+    toast(
+      newValue
+        ? "Скрытые пары теперь отображаются для всех дней"
+        : "Скрытые пары теперь скрыты для всех дней",
+      getWarningToastSettings()
+    )
+  }
+
   return (
     <div className="flex w-full flex-row items-center justify-between">
       <div className="flex flex-row items-center gap-8">
@@ -84,13 +103,28 @@ export const WeekOptions: FC<WeekOptionsProps> = ({
           />
         )}
       </div>
-      <TooltipWrapper message="Открыть список кодов для предметов">
-        <button
-          className="cursor-pointer rounded-xl p-2.5 transition-colors hover:bg-zinc-100"
-          onClick={() => setIsLmsDialogOpen(true)}>
-          <LibraryBig className="h-7 w-7 text-gray-500" />
-        </button>
-      </TooltipWrapper>
+      <div className="flex items-center gap-4">
+        {!hasFixedSubgroups && hasHiddenClasses && (
+          <TooltipWrapper message={showAllClasses ? "Скрыть все скрытые пары" : "Показать все скрытые пары"}>
+            <button
+              className="cursor-pointer rounded-xl p-2.5 transition-colors hover:bg-zinc-100"
+              onClick={handleShowAllClassesToggle}>
+              {showAllClasses ? (
+                <Eye className="h-7 w-7 text-gray-500" />
+              ) : (
+                <EyeOff className="h-7 w-7 text-gray-500" />
+              )}
+            </button>
+          </TooltipWrapper>
+        )}
+        <TooltipWrapper message="Открыть список кодов для предметов">
+          <button
+            className="cursor-pointer rounded-xl p-2.5 transition-colors hover:bg-zinc-100"
+            onClick={() => setIsLmsDialogOpen(true)}>
+            <LibraryBig className="h-7 w-7 text-gray-500" />
+          </button>
+        </TooltipWrapper>
+      </div>
       <LmsDataDialog open={isLmsDialogOpen} onOpenChange={setIsLmsDialogOpen} groupId={groupId} />
     </div>
   )
