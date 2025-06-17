@@ -23,6 +23,8 @@ export async function apiFetch(
     const fetchInit: RequestInit = { ...baseInit }
     fetchInit.credentials = useCredentials ? "include" : "omit"
 
+    console.log(fetchInit)
+
     const headers = new Headers(fetchInit.headers)
     const method = (fetchInit.method ?? "GET").toUpperCase()
 

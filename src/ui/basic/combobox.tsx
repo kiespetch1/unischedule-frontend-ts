@@ -75,7 +75,8 @@ export const Combobox = <T extends string>({
                   onSelect={val => {
                     onChange(val as T)
                     setOpen(false)
-                  }}>
+                  }}
+                  className="font-raleway">
                   {item.label}
                   <Check
                     className={cn(

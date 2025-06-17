@@ -8,7 +8,7 @@ export type WeekType = "every" | "even" | "odd"
 
 export type ClassType = "lecture" | "practice" | "lab_work"
 
-export type Subgroup = "none" | "first" | "second" | "third"
+export type Subgroup = "none" | "first" | "second"
 
 export type LocationType = "irl" | "online"
 
@@ -106,6 +106,7 @@ export interface ClassModel {
   week_type: WeekType
   subgroup: Subgroup
   is_cancelled: boolean
+  is_hidden?: boolean
   day_id: string
   location: LocationModel
   teacher: TeacherModel
@@ -137,4 +138,22 @@ export interface TeacherModel {
   id: string
   name: string
   full_name?: string | null
+}
+
+export interface LmsData {
+  id: string
+  subject: string
+  data: string
+  group_id: string
+}
+
+export interface LmsDataResponse {
+  data: LmsData[]
+  total_count: number
+}
+
+export interface LmsDataCreateParameters {
+  subject: string
+  data: string
+  group_id: string
 }

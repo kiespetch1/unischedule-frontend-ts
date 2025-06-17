@@ -43,8 +43,7 @@ export const getGroupsUrl = () => `${SCHEDULE_URL}/api/v1/groups`
 
 export const getGroupsPromoteUrl = () => `${SCHEDULE_URL}/api/v1/groups/promote`
 
-export const getClassesScheduleImportUrl = () =>
-  `${SCHEDULE_URL}/api/v1/groups/import-classes`
+export const getClassesScheduleImportUrl = () => `${SCHEDULE_URL}/api/v1/groups/import-classes`
 
 export const getTeachersUrl = () => `${SCHEDULE_URL}/api/v1/teachers`
 
@@ -83,9 +82,17 @@ export const getClassesRestoreByIdsUrl = () => `${SCHEDULE_URL}/api/v1/classes/r
 
 export const getAnnouncementsUrl = () => `${SCHEDULE_URL}/api/v1/announcements`
 
-export const getAnnouncementByIdUrl = (id: string) =>
-  `${SCHEDULE_URL}/api/v1/announcements/${id}`
+export const getAnnouncementByIdUrl = (id: string) => `${SCHEDULE_URL}/api/v1/announcements/${id}`
 
 export const getTeacherByIdUrl = (id: string) => `${SCHEDULE_URL}/api/v1/teachers/${id}`
 
 export const getLocationByIdUrl = (id: string) => `${SCHEDULE_URL}/api/v1/locations/${id}`
+
+export const getPreferencesUrl = () => `${SCHEDULE_URL}/api/v1/account/preferences/filtering`
+
+export const getPreferenceByIdUrl = (id: string) =>
+  `${SCHEDULE_URL}/api/v1/account/preferences/filtering/${id}`
+
+export const getLmsDataUrl = () => `${SCHEDULE_URL}/api/v1/lmsdata`
+
+export const getLmsDataUrlById = (id: string) => `${SCHEDULE_URL}/api/v1/lmsdata/${id}`

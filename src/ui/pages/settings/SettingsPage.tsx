@@ -21,6 +21,21 @@ export const SettingsPage = () => {
         <p className="font-raleway text-xl/6 font-medium">Выберите действие</p>
       </div>
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Card
+          className="min-w-0 cursor-pointer transition-shadow hover:shadow-lg"
+          onClick={() => {
+            navigate("/settings/profile")
+          }}>
+          <CardHeader className="flex items-center gap-4">
+            <User className={iconClass} />
+            <CardTitle>Управление профилем</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription>
+              Редактирование предпочтений отображения и данных профиля
+            </CardDescription>
+          </CardContent>
+        </Card>
         <PermissionGate
           permissions={[
             "can_create_group",
@@ -42,21 +57,6 @@ export const SettingsPage = () => {
             </CardContent>
           </Card>
         </PermissionGate>
-        <Card
-          className="min-w-0 cursor-pointer transition-shadow hover:shadow-lg"
-          onClick={() => {
-            navigate("/settings/profile")
-          }}>
-          <CardHeader className="flex items-center gap-4">
-            <User className={iconClass} />
-            <CardTitle>Управление профилем</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>
-              Редактирование предпочтений отображения и данных профиля
-            </CardDescription>
-          </CardContent>
-        </Card>
         <Card
           className="min-w-0 cursor-pointer transition-shadow hover:shadow-lg"
           onClick={() => {

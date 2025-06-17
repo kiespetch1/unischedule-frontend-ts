@@ -45,6 +45,7 @@ export const ClassesSchedulePage = () => {
         onWeekTypeSelect={setSelectedWeekType}
         groupName={group?.name}
         loading={isLoading}
+        groupId={groupId}
       />
       <WeekInfo
         selectedWeekType={selectedWeekType}

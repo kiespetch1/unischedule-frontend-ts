@@ -76,13 +76,13 @@ export const Day: FC<DayProps> = ({ dayData, groupId = "" }) => {
           w.id !== weekId
             ? w
             : {
-                ...w,
-                days: w.days.map(d =>
-                  d.id !== dayId
-                    ? d
-                    : { ...d, classes: (d.classes ?? []).filter(cls => cls.id !== defaultId) }
-                ),
-              }
+              ...w,
+              days: w.days.map(d =>
+                d.id !== dayId
+                  ? d
+                  : { ...d, classes: (d.classes ?? []).filter(cls => cls.id !== defaultId) }
+              ),
+            }
         ),
       }
     })
@@ -180,7 +180,7 @@ const ClassesList: FC<ClassesListProps> = ({
       return <Class isWeekend={true} />
     }
 
-    const sorted = sortByStartTime(classes)
+    const sorted = sortByStartTime(classes.filter(classData => !classData.is_hidden))
 
     return (
       <div className="flex flex-col items-center">
