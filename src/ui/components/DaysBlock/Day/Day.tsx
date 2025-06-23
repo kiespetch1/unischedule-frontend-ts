@@ -36,7 +36,6 @@ export const Day: FC<DayProps> = ({
   onGlobalShowAllClassesChange,
 }) => {
   const day: DayModel = dayData ?? defaultDay
-  const classes: ClassModel[] = dayData?.classes ?? [defaultClass]
   const [isEditing, setIsEditing] = useToggle(false)
   const [localShowAllClasses, setLocalShowAllClasses] = useState(false)
   const [activeClassIndex, setActiveClassIndex] = useState<number | undefined>(undefined)
@@ -44,10 +43,18 @@ export const Day: FC<DayProps> = ({
   const { mutateAsync: copyClasses } = useCopyClasses({ dayId: day.id, groupId: groupId })
   const { mutateAsync: clearClasses } = useClearClassesByDayId({ dayId: day.id, groupId: groupId })
 
-  const visibleClasses = classes.filter(x => !x.is_cancelled && !x.is_hidden)
-  const hiddenClasses = classes.filter(x => !x.is_cancelled && x.is_hidden)
+  const classesCount = (dayData?.classes ?? []).filter(x => !x.is_cancelled && !x.is_hidden).length
+  const hiddenClassesCount = (dayData?.classes ?? []).filter(
+    x => !x.is_cancelled && x.is_hidden
+  ).length
 
   const showAllClasses = globalShowAllClasses ?? localShowAllClasses
+
+  const renderableClasses = (dayData?.classes ?? [defaultClass]).filter(x => {
+    if (x.is_cancelled) return true
+    if (showAllClasses) return true
+    return !x.is_hidden
+  })
 
   const handleShowAllClassesChange = (show: boolean) => {
     if (onGlobalShowAllClassesChange) {
@@ -131,8 +138,8 @@ export const Day: FC<DayProps> = ({
         <div className="group relative flex flex-col items-center *:z-20">
           <DayHeader
             dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
-            classesCount={visibleClasses.length}
-            hiddenClassesCount={hiddenClasses.length}
+            classesCount={classesCount}
+            hiddenClassesCount={hiddenClassesCount}
             editing={isEditing}
             showAllClasses={showAllClasses}
             onShowAllClassesChange={handleShowAllClassesChange}
@@ -143,7 +150,7 @@ export const Day: FC<DayProps> = ({
             onClassesClear={clearClasses}
           />
           <ClassesList
-            classes={classes}
+            classes={renderableClasses}
             editing={isEditing}
             activeIndex={activeClassIndex}
             onActiveChange={setActiveClassIndex}
@@ -167,8 +174,8 @@ export const Day: FC<DayProps> = ({
     <div className="group flex flex-col">
       <DayHeader
         dayOfWeek={(dayData && dayData.day_of_week) || DayOfWeek.Monday}
-        classesCount={visibleClasses.length}
-        hiddenClassesCount={hiddenClasses.length}
+        classesCount={classesCount}
+        hiddenClassesCount={hiddenClassesCount}
         editing={isEditing}
         showAllClasses={showAllClasses}
         onShowAllClassesChange={handleShowAllClassesChange}
@@ -179,7 +186,7 @@ export const Day: FC<DayProps> = ({
         onClassesClear={clearClasses}
       />
       <ClassesList
-        classes={classes}
+        classes={renderableClasses}
         editing={isEditing}
         activeIndex={activeClassIndex}
         onActiveChange={setActiveClassIndex}
@@ -210,20 +217,14 @@ const ClassesList: FC<ClassesListProps> = ({
   onActiveChange,
   groupId,
   dayId,
-  showAllClasses,
   onUnsavedDelete,
 }) => {
   const renderClasses = (): ReactNode => {
-    const filteredClasses =
-      showAllClasses || editing
-        ? classes.filter(classData => !classData.is_cancelled)
-        : classes.filter(classData => !classData.is_cancelled && !classData.is_hidden)
-
-    if (filteredClasses.length === 0) {
+    if (classes.length === 0) {
       return <Class isWeekend={true} />
     }
 
-    const sorted = sortByStartTime(filteredClasses)
+    const sorted = sortByStartTime(classes)
 
     return (
       <div className="flex flex-col items-center">
